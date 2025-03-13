@@ -9,7 +9,7 @@
         rel="stylesheet"
     />
     <style>
-        
+
         body {
             background-color: #f8f9fa;
             height: 100vh;
@@ -34,7 +34,7 @@
 <body>
     <div class="card p-4" style="width: 400px;">
         <div class="text-center mb-4">
-            <img src="/Applications/MAMP/htdocs/cluster3/Cluster3/logo wrs full.png" alt="Logo" >
+            <img src="/Applications/MAMP/htdocs/cluster3/Cluster3/Untitled/logo wrs full.png" alt="Logo" >
             <p class="text-muted">Please enter your user information.</p>
         </div>
         <form>
