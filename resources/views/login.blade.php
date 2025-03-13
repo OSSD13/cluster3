@@ -33,7 +33,7 @@
 <body>
     <div class="card p-4" style="width: 400px;">
         <div class="text-center mb-4">
-            <img src="logo wrs full.png" alt="Logo" height="200 px">
+            <img src="/Applications/MAMP/htdocs/cluster3/Cluster3/logo wrs full.png" alt="Logo" height="200 px">
             <p class="text-muted">Please enter your user information.</p>
         </div>
         <form>
