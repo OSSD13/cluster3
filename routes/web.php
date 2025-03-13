@@ -16,3 +16,13 @@ Route::post(
     '/login',
     [LoginController::class, 'login']
 );
+Route::get('/home', function(){
+    return view ('home');
+}
+);
+
+Route::post(
+    '/Home',
+    [LoginController::class, 'Home']
+);
+
