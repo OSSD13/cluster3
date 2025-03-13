@@ -33,11 +33,7 @@
 <body>
     <div class="card p-4" style="width: 400px;">
         <div class="text-center mb-4">
-<<<<<<< HEAD
             <img src="C:\xampp\htdocs\cluster3\public\image\logo wrs full.png" alt="Logo" >
-=======
-            <img sec="" alt="Logo" >
->>>>>>> 1d4f0cc0ca5829fd6f8112192e9ca0a0fb3000ef
             <p class="text-muted">Please enter your user information.</p>
         </div>
         <form action="{{ url('/login') }}" method="post">
