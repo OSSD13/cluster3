@@ -6,5 +6,8 @@ services:
     container_name: laravel-osssd-${CLUSTER_3}
     ports:
       - "1303:80"
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
     env_file:
       - .env
