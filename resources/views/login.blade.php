@@ -9,7 +9,8 @@
         rel="stylesheet"
     />
     <style>
-           body {
+
+        body {
             background-color: #f8f9fa;
             height: 100vh;
             display: flex;
@@ -33,18 +34,17 @@
 <body>
     <div class="card p-4" style="width: 400px;">
         <div class="text-center mb-4">
-            <img src="C:\xampp\htdocs\cluster3\public\image\logo wrs full.png" alt="Logo" >
+            <img src="/Applications/MAMP/htdocs/cluster3/Cluster3/Untitled/logo wrs full.png" alt="Logo" >
             <p class="text-muted">Please enter your user information.</p>
         </div>
-        <form action="{{ url('/login') }}" method="post">
-            @csrf
+        <form>
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input
                     type="email"
                     class="form-control"
                     id="username"
-                    placeholder="Enter address here"
+                    placeholder="Enter your username here"
                 />
             </div>
             <div class="mb-3">
@@ -57,7 +57,7 @@
                 />
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Sign In</button>
+                <button type="submit" class="btn btn-primary">Login</button>
             </div>
         </form>
     </div>
