@@ -16,4 +16,3 @@ Route::post(
     '/login',
     [LoginController::class, 'login']
 );
-
