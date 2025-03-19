@@ -25,6 +25,16 @@ Route::middleware(['admin'])->group(function () {
 Route::middleware(['employee'])->group(function () {
 
 
+Route::get('/layoutA', function () {
+    return view('layouts.admin_layouts');
+});
+
+Route::get('/layoutE', function () {
+    return view('layouts.employee_layouts');
+});
+
+Route::get('/form', function () {
+    return view('create_form');
 });
 
 Route::get(
@@ -51,3 +61,4 @@ Route::get('/manage_employee', [ManageEmployeeControler::class, 'showEmployee'])
 Route::put('/edit/{id}', [ManageEmployeeControler::class, 'editEmployee'])->name('manage_employee_edit');
 Route::get('/search_employee', [ManageEmployeeControler::class, 'searchEmployee'])->name('manage_employee_search');
 */
+});

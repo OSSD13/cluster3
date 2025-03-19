@@ -85,35 +85,34 @@
 
 <script>
 
-    // function setActive(element) {
-    //     // ลบ 'active' ออกจากทุกลิงก์
-    //     document.querySelectorAll('.sidebar-link').forEach((link) => {
-    //         link.classList.remove('active');
-    //     });
+    function setActive(element) {
+        // ลบ 'active' ออกจากทุกลิงก์
+        document.querySelectorAll('.sidebar-link').forEach((link) => {
+            link.classList.remove('active');
+        });
 
-    //     // เพิ่ม 'active' ลิงก์ที่คลิก
-    //     element.classList.add('active');
-    // }
+        // เพิ่ม 'active' ลิงก์ที่คลิก
+        element.classList.add('active');
+    }
 
-    // function setActiveSubtask(element) {
-    //     // ลบ 'active' ออกจากทุกลิงก์
-    //     document.querySelectorAll('.sidebar-sub-link').forEach((link) => {
-    //         link.classList.remove('active');
-    //     });
+    function setActiveSubtask(element) {
+        // ลบ 'active' ออกจากทุกลิงก์
+        document.querySelectorAll('.sidebar-sub-link').forEach((link) => {
+            link.classList.remove('active');
+        });
+        // เพิ่ม 'active' ลิงก์ที่คลิก
+        element.classList.add('active','#A9A8F5');
+    }
 
-    //     // เพิ่ม 'active' ลิงก์ที่คลิก
-    //     element.classList.add('active','#A9A8F5');
-    // }
+    document.addEventListener("DOMContentLoaded", function () {
+        // ดึง URL ปัจจุบัน
+        const currentPath = window.location.pathname;
 
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     // ดึง URL ปัจจุบัน
-    //     const currentPath = window.location.pathname;
-
-    //     // กำหนดค่า Active ตาม URL
-    //     document.querySelectorAll('.sidebar-link').forEach((link) => {
-    //         if (link.getAttribute("href") === currentPath) {
-    //             link.classList.add('active'); // เพิ่ม active class
-    //         }
-    //     });
-    // });
+        // กำหนดค่า Active ตาม URL
+        document.querySelectorAll('.sidebar-link').forEach((link) => {
+            if (link.getAttribute("href") === currentPath) {
+                link.classList.add('active'); // เพิ่ม active class
+            }
+        });
+    });
 </script>
