@@ -8,3 +8,6 @@ services:
       - "1303:80"
     env_file:
       - .env
+    volumes:
+      - .:/var/www/html
+    
