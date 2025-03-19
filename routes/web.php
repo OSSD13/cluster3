@@ -7,6 +7,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/', function () {
+Route::get('/empLogin', function () {
     return view('emp_login');
 });
