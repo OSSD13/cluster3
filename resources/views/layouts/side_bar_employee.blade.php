@@ -24,13 +24,13 @@
         <aside class="sidebar bg-white shadow p-3 position-fixed vh-100" style="width: 250px;">
             <br><br><br><br>
             <ul class="nav flex-column">
-                <li class=" nav-item">
+                <li class="nav-item">
                     <a class="nav-link rounded p-3 sidebar-link active" href="#" onclick="setActive(this)">
                         <i class="fa-solid fa-house me-2"></i> หน้าหลัก
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link" href="#" onclick="setActive(this)">
+                    <a class="nav-link rounded p-3 sidebar-link" href="{{ url('/form') }}" onclick="setActive(this)">
                         <i class="fa-solid fa-folder-plus me-2"></i> สร้างใบสั่งงาน
                     </a>
                 </li>
@@ -53,7 +53,7 @@
                     <a class="nav-link rounded p-3 sidebar-link justify-content-between" href="#" onclick="setActive(this)" data-bs-toggle="collapse" data-bs-target="#reportMenu" aria-expanded="false"
                         aria-controls="reportMenu">
                         <div>
-                            <i class="fa-solid fa-chart-line me-2"></i> รายงาน
+                            <i class="fa-solid fa-chart-line me-1"></i> รายงาน
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
                     </a>
@@ -103,4 +103,16 @@
         // เพิ่ม 'active' ลิงก์ที่คลิก
         element.classList.add('active','#A9A8F5');
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // ดึง URL ปัจจุบัน
+        const currentPath = window.location.pathname;
+
+        // กำหนดค่า Active ตาม URL
+        document.querySelectorAll('.sidebar-link').forEach((link) => {
+            if (link.getAttribute("href") === currentPath) {
+                link.classList.add('active'); // เพิ่ม active class
+            }
+        });
+    });
 </script>
