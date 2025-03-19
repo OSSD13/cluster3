@@ -13,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Layouts</title>
+    <title></title>
 
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -30,22 +30,32 @@
 
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
 
+        main {
+            margin-left: 250px;
+            /* ให้เนื้อหาเริ่มหลัง Sidebar */
+            padding-top: 90px;
+            /* เผื่อให้ตัวหนังสือไม่โดน Header บัง */
+        }
+    </style>
 
 
 </head>
 
 <body>
     <div class="d-flex">
-        {{-- Sidebar --}}
-        @include('layouts.side_bar_employee')
-
         <div class="flex-grow-1">
+            {{-- Sidebar --}}
+            @include('layouts.side_bar_employee')
             {{-- Header --}}
             @include('layouts.header')
 
             {{-- Content Area --}}
-            <main class="p-4">
+            <main class="container-fluid" style="margin-left: 250px">
                 @yield('content')
             </main>
         </div>
