@@ -26,22 +26,14 @@ body {
 
 .logo {
     width: 200px;
-    margin-bottom: -20px;
+    margin-bottom: 50px;
 }
 
-h1 {
-    color: #6a5acd;
-    margin-bottom: 10px;
-}
 
-p {
-    color: #555;
-    font-size: 20px;
-    margin-bottom: 20px;
-}
 p1 {
     color: #555;
     font-size: 17px;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -53,6 +45,8 @@ label {
 }
 
 input {
+    font-family: 'TH Sarabun New', sans-serif;
+    font-size: 18px;
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -62,13 +56,17 @@ input {
 }
 
 button {
+    font-family: 'TH Sarabun New', sans-serif;
+    font-size: 20px;
     width: 100%;
     padding: 10px;
-    background-color: #6a5acd;
+    background-color: #4B49AC;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 25px;
+    margin-bottom: 15px;
 }
 
 button:hover {

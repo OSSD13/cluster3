@@ -1,28 +1,37 @@
+{{--
+emp_login.blade.php
+Display form login by employee
+@input : emp_email, emp_password
+@output : form login
+@author : Supasit Meedecha 66160098
+@Create Date : 2025-03-19
+--}}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('public\css\style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\emp_login_style.css') }}">
     <title>Employee - Login</title>
 </head>
 <body>
     <div class="container">
         <div class="login-box">
-            <img src="{{ asset('public\image\logo wrs full.png') }}" alt="Website Logo">
-            <!--<h1>Dash UI</h1>-->
-            <p>Please enter your user information.</p>
+            <img src="{{ asset('public\image\logo.png') }}" alt="Website Logo">
             <form action="#" method="post">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username here" required>
+                <label for="username">ชื่อผู้ใช้</label>
+                <input type="text" id="username" name="username" placeholder="กรอกชื่อผู้ใช้" required>
 
-                <label for="password">Password</label>
+                <label for="password">รหัสผ่าน</label>
                 <input type="password" id="password" name="password" placeholder="***************" required>
 
-                <button type="submit">Login</button>
+                <button type="submit">เข้าสู่ระบบ</button>
             </form>
-            <p1>Login for Employees</p1>
+            <p1>เข้าสู่ระบบ พนักงาน</p1>
         </div>
     </div>
 </body>
 </html>
+
+
