@@ -68,7 +68,7 @@
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label class="form-label">ประเภทผู้รับมอบหมาย</label>
+                            <label class="form-label">แผนกรับมอบหมาย</label>
                             <select class="form-select">
                                 <option selected>กรุณาเลือก</option>
                                 <option>บุคคล</option>
@@ -83,11 +83,6 @@
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label class="form-label">วันสิ้นสุด</label>
-                            <input type="date" class="form-control">
-                        </div>
-
-                        <div class="col mb-3">
                             <label class="form-label">ความสำคัญ</label>
                             <select class="form-select">
                                 <option selected>กรุณาเลือก</option>
@@ -95,6 +90,10 @@
                                 <option>ปานกลาง</option>
                                 <option>สูง</option>
                             </select>
+                        </div>
+                                                <div class="col mb-3">
+                            <label class="form-label">วันสิ้นสุด</label>
+                            <input type="date" class="form-control">
                         </div>
                     </div>
 

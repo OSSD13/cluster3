@@ -91,10 +91,6 @@
             link.classList.remove('active');
         });
 
-        // เพิ่ม 'active' ลิงก์ที่คลิก
-        element.classList.add('active');
-    }
-
     function setActiveSubtask(element) {
         // ลบ 'active' ออกจากทุกลิงก์
         document.querySelectorAll('.sidebar-sub-link').forEach((link) => {
