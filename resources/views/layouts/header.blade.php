@@ -25,12 +25,11 @@
                                 src="{{ asset('/public/image/logo.png') }}" alt="Website Logo"> </h5>
         </div>
 
-        {{-- โปรไฟล์  --}} 
+        {{-- Logout  --}} 
         <div class="dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center text-dark" href="#" id="profileDropdown"
+            <a class="nav-link  d-flex align-items-center text-dark" href="#" id="profileDropdown"
                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="" alt="Profile Picture" class="rounded-circle"
-                    style="width: 40px; height: 40px; object-fit: cover;">
+                <i class="fa-solid fa-right-from-bracket"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow" aria-labelledby="profileDropdown"
                 style="border-radius: 12px;">
