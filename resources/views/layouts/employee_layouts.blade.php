@@ -30,6 +30,7 @@
 
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('public\css\components\home_table_style.css') }}">
     <style>
         body {
             font-family: 'Sarabun', sans-serif;

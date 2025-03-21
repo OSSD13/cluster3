@@ -8,7 +8,7 @@ Route::get('/layoutA', function () {
 });
 
 Route::get('/feature-home-table', function () {
-    return view('feature_home_table');
+    return view('home_table');
 });
 
 Route::get('/layoutE', function () {
