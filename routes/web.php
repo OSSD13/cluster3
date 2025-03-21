@@ -7,6 +7,6 @@ Route::get('/', function () {
 });
 
 Route::get('/feature-home-table', function () {
-    return view('feature-home-table');
+    return view('feature_home_table');
 });
 
