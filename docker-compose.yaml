@@ -6,5 +6,7 @@ services:
     container_name: osssd-cluster3
     ports:
       - "1303:80"
+    volumes:
+      - .:/var/www/html
     env_file:
       - .env
