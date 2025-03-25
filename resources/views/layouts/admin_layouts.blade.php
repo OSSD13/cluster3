@@ -1,4 +1,4 @@
-{{-- 
+{{--
 * admin_layouts.blade.php
 * Layout for admin dashboard
 *
@@ -29,6 +29,13 @@
 
     {{-- Google Material Icons  --}}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    {{-- Custom CSS --}}
+    <link rel="stylesheet" href="{{ asset('public\css\pages\manage_department_style.css') }}">
+
+    {{-- Bosstrap Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
