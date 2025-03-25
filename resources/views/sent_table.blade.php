@@ -1,3 +1,11 @@
+{{--
+sent_table.blade.php
+Display form show sent_table
+@input :wrs_title ,wrs_status ,wrs_subtask ,wrs_priority,st_due_date
+@output : form show sent_table
+@author : Naphat Maneechansuk 66160099
+@Create Date : 2025-03-25
+--}}
 <!DOCTYPE html>
 <html lang="th">
 <head>
