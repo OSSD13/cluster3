@@ -1,3 +1,11 @@
+{{--
+sent_table.blade.php
+Display form show table manage employee
+@input : emp_id, emp_name, dept_id
+@output : form show table manage employee
+@author : Naphat Maneechansuk 66160099
+@Create Date : 2025-03-25
+--}}
 <!DOCTYPE html>
 <html lang="th">
 <head>
