@@ -34,8 +34,8 @@
             <tr>
                 <td class="ps-5">{{ $department->dept_name }}</td>
                 <td class="text-end">
-                    <i class="bi bi-pencil action-icon" data-bs-toggle="modal" data-bs-target="#editDepartmentModal"></i>
-                    <i class="bi bi-trash action-icon" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal"></i>
+                    <i class="bi bi-pencil action-icon" data-bs-toggle="modal" data-bs-target="#editDepartmentModal{{ $department->dept_id }}"></i>
+                    <i class="bi bi-trash action-icon" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal{{ $department->dept_id }}"></i>
                 </td>
             </tr>
             @endforeach

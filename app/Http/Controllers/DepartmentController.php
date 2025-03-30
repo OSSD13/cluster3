@@ -33,4 +33,17 @@ class DepartmentController extends Controller
         }
     }
 
+    public function updateDepartment(Request $request, $id)
+    {
+        try {
+            $department = Department::findOrFail($id);
+            $department->dept_name = $request->input('dept_name');
+            $department->dept_update_date = now();
+            $department->save();
+
+            return redirect()->back()->with('success', 'แก้ไขข้อมูลแผนกเรียบร้อย!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
+    }
 }

@@ -35,54 +35,57 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Edit Department Modal -->
-    <div class="modal fade" id="editDepartmentModal" tabindex="-1" aria-labelledby="editDepartmentModalLabel"
-        aria-hidden="true">
+<!-- Loop สำหรับแสดง Modal แก้ไขแผนก -->
+@foreach ($departments as $department)
+    <div class="modal fade" id="editDepartmentModal{{ $department->dept_id }}" tabindex="-1" aria-labelledby="editDepartmentModalLabel{{ $department->dept_id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editDepartmentModalLabel">แก้ไขข้อมูล</h5>
+                    <h5 class="modal-title" id="editDepartmentModalLabel{{ $department->dept_id }}">แก้ไขข้อมูล</h5>
                 </div>
                 <div class="modal-body">
-                    <form id="departmentFormEdit">
+                    <form id="departmentFormEdit{{ $department->dept_id }}" action="{{ route('department.updateDepartment', ['id' => $department->dept_id]) }}" method="POST">
+                        @csrf
+                        @method('put')
                         <div class="mb-3">
-                            <label for="departmentNameEdit" class="form-label">ชื่อแผนก</label>
-                            <input type="text" class="form-control" id="departmentNameEdit"
-                                placeholder="กรอกชื่อแผนก..." required>
+                            <label for="departmentNameEdit{{ $department->dept_id }}" class="form-label">ชื่อแผนก</label>
+                            <input type="text" class="form-control" name="dept_name" value="{{ $department->dept_name }}" id="departmentNameEdit{{ $department->dept_id }}" placeholder="กรอกชื่อแผนก..." required>
                             <div class="invalid-feedback">***กรุณากรอกข้อมูลให้ครบถ้วน</div>
                         </div>
                         <div class="confirmation-text">
                             <h5>ต้องการบันทึกข้อมูลแผนกหรือไม่?</h5>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
+                            <button type="submit" class="btn btn-save" id="saveDepartmentEdit{{ $department->dept_id }}">บันทึก</button>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
-                    <button type="button" class="btn btn-save" id="saveDepartmentEdit">บันทึก</button>
-                </div>
             </div>
         </div>
     </div>
-    <!-- Delete Department Modal -->
-    <div class="modal fade" id="deleteDepartmentModal" tabindex="-1" aria-labelledby="deleteDepartmentModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteDepartmentModalLabel">ลบข้อมูล</h5>
-                </div>
-                <div class="modal-body text-center">
-                    <i class="bi bi-trash-fill" style="color: #DC3545;font-size: 4rem;"></i>
-                    <div class="confirmation-text">
-                        <h5>ยืนยันการลบข้อมูลหรือไม่</h5>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
-                    <button type="button" class="btn btn-save" id="saveDepartmentDelete">ลบ</button>
-                </div>
-            </div>
-        </div>
-    </div>
+@endforeach
 
+<!-- Delete Department Modal -->
+<div class="modal fade" id="deleteDepartmentModal" tabindex="-1" aria-labelledby="deleteDepartmentModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteDepartmentModalLabel">ลบข้อมูล</h5>
+            </div>
+            <div class="modal-body text-center">
+                <i class="bi bi-trash-fill" style="color: #DC3545;font-size: 4rem;"></i>
+                <div class="confirmation-text">
+                    <h5>ยืนยันการลบข้อมูลหรือไม่</h5>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn btn-save" id="saveDepartmentDelete">ลบ</button>
+            </div>
+        </div>
+    </div>
+</div>
