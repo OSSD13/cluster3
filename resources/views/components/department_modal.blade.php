@@ -69,7 +69,8 @@
 @endforeach
 
 <!-- Delete Department Modal -->
-<div class="modal fade" id="deleteDepartmentModal" tabindex="-1" aria-labelledby="deleteDepartmentModalLabel"
+@foreach ($departments as $department)
+<div class="modal fade" id="deleteDepartmentModal{{ $department->dept_id }}" tabindex="-1" aria-labelledby="deleteDepartmentModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -84,8 +85,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
-                <button type="button" class="btn btn-save" id="saveDepartmentDelete">ลบ</button>
+                <form id="departmentFormDelete{{ $department->dept_id }}" action="{{ route('department.deleteDepartment', ['id' => $department->dept_id]) }}" method="POST">
+                    @csrf
+                    @method('delete')
+                    <button type="submit" class="btn btn-save" id="saveDepartmentDelete">ลบ</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+@endforeach
