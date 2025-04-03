@@ -61,7 +61,7 @@ class DepartmentController extends Controller
         }
     }
     /*
-    * updateDepartment()
+    * updateDepartment(Request $request, $id)
     * edit department
     * @input : new department name
     * @output : new department name in table
@@ -82,7 +82,7 @@ class DepartmentController extends Controller
         }
     }
     /*
-    * deleteDepartment()
+    * deleteDepartment($id)
     * delete department
     * @input : department id
     * @output : department deleted
