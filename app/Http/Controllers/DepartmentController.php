@@ -100,4 +100,29 @@ class DepartmentController extends Controller
             return redirect()->back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
         }
     }
+    /*
+    * searchDepartment(Request $req)
+    * search department
+    * @input : department name
+    * @output : department name in table
+    * @author : Natthanan Sirisurayut 66160352
+    * @Create Date : 2025-04-04
+    */
+    public function searchDepartment(Request $req){
+        $output = "";
+        $department = Department::where('dept_name', 'LIKE', '%' . $req->search . '%')->get();
+
+        foreach($department as $dept){
+            $output .=
+            '<tr>
+                <td class="ps-5">' . $dept->dept_name . '</td>
+                <td class="text-end">
+                    <i class="bi bi-pencil action-icon" data-bs-toggle="modal" data-bs-target="#editDepartmentModal' . $dept->dept_id . '"></i>
+                <i class="bi bi-trash action-icon" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal' . $dept->dept_id . '"></i>
+                </td>
+            </tr>';
+        }
+
+        return response($output);
+    }
 }
