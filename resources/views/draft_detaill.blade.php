@@ -17,6 +17,7 @@
         <div class="card shadow-sm p-4 ">
             <div class="mb-3">
                 <label class="form-label">ชื่อใบสั่งงาน</label>
+                {{-- ดึง database มา --}}
                 <input type="text" class="form-control">
             </div>
             <div class="mb-3">
