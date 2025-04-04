@@ -1,5 +1,5 @@
 body {
-    font-family: 'TH Sarabun', sans-serif;
+    font-family: 'Sarabun', sans-serif;
     background-color: #f4f4f4;
     display: flex;
     justify-content: center;
@@ -29,24 +29,25 @@ body {
     margin-bottom: 50px;
 }
 
-
+/*
 p1 {
     color: #555;
     font-size: 17px;
     margin-top: 20px;
     margin-bottom: 20px;
-}
+}*/
 
 label {
     display: block;
     margin: 10px 0 5px;
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: 700;
     text-align: left;
 }
 
 input {
-    font-family: 'TH Sarabun', sans-serif;
-    font-size: 18px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -56,8 +57,8 @@ input {
 }
 
 button {
-    font-family: 'TH Sarabun', sans-serif;
-    font-size: 20px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
     width: 100%;
     padding: 10px;
     background-color: #4B49AC;

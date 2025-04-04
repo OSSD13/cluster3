@@ -18,8 +18,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/empLogin', [LoginController::class, 'showLoginForm'])->name('emp_login');
-Route::post('/empLogin', [LoginController::class, 'login'])->name('emp_login');
-Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('dashboard');
+Route::get('/Login', function () {
+    return view('login');
+});
 
+Route::post('/Login',
+    [LoginController::class, 'login'])->name('login');
+
+// แสดงหน้า Dashboard ตามสิทธิ์
+Route::get('/adminDashboard', function () {
+    return view('test_admin', ['user' => session('user')]);
+})->middleware('auth')->name('adminDashboard');
+
+Route::get('/empDashboard', function () {
+    return view('test_emp', ['user' => session('user')]);
+})->middleware('auth')->name('empDashboard');
 
