@@ -55,9 +55,9 @@ class DepartmentController extends Controller
             $department->dept_update_date = now();
             $department->save();
 
-            return redirect()->back()->with('success', 'บันทึกข้อมูลแผนกเรียบร้อย!');
+            return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            return redirect()->back();
         }
     }
     /*
@@ -76,9 +76,9 @@ class DepartmentController extends Controller
             $department->dept_update_date = now();
             $department->save();
 
-            return redirect()->back()->with('success', 'แก้ไขข้อมูลแผนกเรียบร้อย!');
+            return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            return redirect()->back();
         }
     }
     /*
@@ -95,9 +95,9 @@ class DepartmentController extends Controller
             $department = Department::findOrFail($id);
             $department->delete();
 
-            return redirect()->back()->with('success', 'ลบข้อมูลแผนกเรียบร้อย!');
+            return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            return redirect()->back()->with();
         }
     }
     /*
