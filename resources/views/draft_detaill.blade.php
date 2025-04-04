@@ -45,7 +45,8 @@
     </div>
 
     <script>
-        let taskCount = 1; // เริ่มจากงานย่อย 1
+        // เริ่มจากงานย่อย 1
+        let taskCount = 1;
 
         function addTask() {
             const taskList = document.getElementById("taskList");
