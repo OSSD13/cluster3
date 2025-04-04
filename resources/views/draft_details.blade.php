@@ -20,6 +20,23 @@
                 {{-- ดึง database มา --}}
                 <input type="text" class="form-control">
             </div>
+            <div class="mb-3 col">
+    <label class="form-label">สถานะผู้สร้างใบสั่งงาน</label>
+    <div class="d-flex">
+        <div class="form-check me-3">
+            <input class="form-check-input" type="radio" name="creatorStatus" id="individual" value="individual">
+            <label class="form-check-label" for="individual">
+                นามบุคคล
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="creatorStatus" id="department" value="department">
+            <label class="form-check-label" for="department">
+                นามแผนก
+            </label>
+        </div>
+    </div>
+</div>
             <div class="mb-3">
                 <label class="form-label">คำอธิบายงาน</label>
                 <input type="text" class="form-control" style="height: 100px">
@@ -63,54 +80,58 @@
             </h2>
             <div id="${taskId}" class="accordion-collapse collapse ">
                 <div class="accordion-body">
-                    <div class="mb-3 col">
-                        <label class="form-label">
-                            ชื่อใบงานย่อย
-                        </label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label">ประเภทผู้รับมอบหมาย</label>
-                            <select class="form-select">
-                                <option selected>กรุณาเลือก</option>
-                                <option>บุคคล</option>
-                                <option>แผนก</option>
-                            </select>
-                        </div>
+    <div class="mb-3 col">
+        <label class="form-label">
+            ชื่อใบงานย่อย
+        </label>
+        <input type="text" class="form-control">
+    </div>
+    <div class="row">
+        <div class="col mb-3">
+            <label class="form-label">แผนกรับมอบหมาย</label>
+            <select class="form-select">
+                <option selected>กรุณาเลือก</option>
+                <option>บุคคล</option>
+                <option>แผนก</option>
+            </select>
+        </div>
 
-                        <div class="col mb-3">
-                            <label class="form-label">ผู้รับมอบหมาย</label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label">วันสิ้นสุด</label>
-                            <input type="date" class="form-control">
-                        </div>
+        <div class="col mb-3">
+            <label class="form-label">ผู้รับมอบหมาย</label>
+            <select class="form-select">
+                <option selected>กรุณาเลือก</option>
+                <option>บุคคล</option>
+                <option>แผนก</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mb-3">
+            <label class="form-label">ความสำคัญ</label>
+            <select class="form-select">
+                <option selected>กรุณาเลือก</option>
+                <option>ต่ำ</option>
+                <option>ปานกลาง</option>
+                <option>สูง</option>
+            </select>
+        </div>
 
-                        <div class="col mb-3">
-                            <label class="form-label">ความสำคัญ</label>
-                            <select class="form-select">
-                                <option selected>กรุณาเลือก</option>
-                                <option>ต่ำ</option>
-                                <option>ปานกลาง</option>
-                                <option>สูง</option>
-                            </select>
-                        </div>
-                    </div>
+        <div class="col mb-3">
+            <label class="form-label">วันสิ้นสุด</label>
+            <input type="date" class="form-control">
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <textarea class="form-control" rows="3" placeholder="รายละเอียดเพิ่มเติม"></textarea>
-                    </div>
+    <div class="mb-3">
+        <textarea class="form-control" rows="3" placeholder="รายละเอียดเพิ่มเติม"></textarea>
+    </div>
 
-                    <!-- ปุ่มลบงานย่อย -->
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-danger " onclick="removeTask(${taskCount})">ลบ</i></button>
-                    </div>
-                </div>
-            </div>
+    <!-- ปุ่มลบงานย่อย -->
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
+    </div>
+</div>
+
         `;
             taskList.appendChild(newTask);
             taskCount++;

@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link" href="#" onclick="setActive(this)">
+                    <a class="nav-link rounded p-3 sidebar-link" href="{{ url('/draftกน') }}" onclick="setActive(this)">
                         <i class="fa-solid fa-file-pen me-2"></i> แบบร่าง
                     </a>
                 </li>

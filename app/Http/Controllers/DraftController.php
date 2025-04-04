@@ -8,12 +8,10 @@ class DraftController extends Controller
 {
     public function showDrafts()
 {
-    $empId = auth()->user()->emp_id; // ถ้ามีระบบ auth
-    $drafts = DB::table('wrs_work_requests')
-        ->where('req_emp_id', $empId)
-        ->where('req_draft_status', 'D')
-        ->get();
+    // ดึงข้อมูลแบบร่างจากฐานข้อมูล
+    // ดึงข้อมูลจากตาราง 'wrs_work_requests'
+    $data = DB::table('wrs_work_requests')->first();
 
-    return view('employee.drafts', compact('drafts'));
+    return response()->json($data);
 }
 }

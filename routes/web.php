@@ -3,5 +3,5 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/draft', function () {
-    return view('draft_detaill');
+    return view('draft_details');
 });
