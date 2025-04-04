@@ -1,5 +1,5 @@
 body {
-    font-family: 'TH Sarabun New', sans-serif;
+    font-family: 'TH Sarabun', sans-serif;
     background-color: #f4f4f4;
     display: flex;
     justify-content: center;
@@ -45,7 +45,7 @@ label {
 }
 
 input {
-    font-family: 'TH Sarabun New', sans-serif;
+    font-family: 'TH Sarabun', sans-serif;
     font-size: 18px;
     width: 100%;
     padding: 8px;
@@ -56,7 +56,7 @@ input {
 }
 
 button {
-    font-family: 'TH Sarabun New', sans-serif;
+    font-family: 'TH Sarabun', sans-serif;
     font-size: 20px;
     width: 100%;
     padding: 10px;
