@@ -29,7 +29,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'manage-department' ? 'active' : ''}}" href="{{ url('/manage_department') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'manage-department' ? 'active' : ''}}" href="{{ url('/department') }}">
                         <i class="fa-solid fa-building me-2"></i> จัดการแผนก
                     </a>
                 </li>
