@@ -1,27 +1,27 @@
+/* Header text styling */
 .text-header {
     font-size: 30px;
     font-weight: bold;
     color: #4B49AC;
 }
 
+/* Set global font family */
 body {
     font-family: 'Sarabun', sans-serif;
 }
 
+/* Table header styling */
 th {
-    font-weight: normal; /* เปลี่ยนจากตัวหนาเป็นตัวปกติ */
+    font-weight: normal; /* Change from bold to normal */
 }
 
-
+/* Content padding and spacing adjustments */
 .content {
     padding: 20px;
-    padding-top: 100px; /* ปรับระยะขอบบนของ content สำหรับ nav bar*/
-}
-.content {
-    padding: 20px;
-    padding-top: 100px; /* ปรับระยะขอบบนของ content สำหรับ nav bar*/
+    padding-top: 100px; /* Adjust top margin for navbar */
 }
 
+/* Add button styling */
 .add-btn {
     background-color: #4B49AC;
     border-color: #4B49AC;
@@ -32,11 +32,13 @@ th {
     border-color: #3a4584;
 }
 
+/* Modal header styling */
 .modal-header {
     border-bottom: none;
     padding-bottom: 0;
 }
 
+/* Modal title styling */
 .modal-title {
     width: 100%;
     text-align: center;
@@ -45,34 +47,40 @@ th {
     color: #4B49AC;
 }
 
+/* Modal footer styling */
 .modal-footer {
     border-top: none;
     justify-content: center;
     padding-top: 0;
 }
 
+/* Cancel button styling */
 .btn-cancel {
     background-color: #dc3545;
     color: white;
     min-width: 100px;
 }
 
+/* Save button styling */
 .btn-save {
     background-color: #4B49AC;
     color: white;
     min-width: 100px;
 }
 
+/* Form label styling */
 .form-label {
     font-weight: 500;
     margin-bottom: 8px;
 }
 
+/* Confirmation text styling */
 .confirmation-text {
     text-align: center;
     margin: 20px 0;
 }
 
+/* Action icon styling */
 .action-icon {
     cursor: pointer;
     color: #6c757d;

@@ -24,7 +24,7 @@ class ManageEmployeeControler extends Controller
     }
 
     /*
-    * editEmployee()
+    * editEmployee(Request $request, $id)
     * Edit employee department
     * @input : emp_dept_id
     * @output : employee after edit to manage employee page
@@ -45,7 +45,7 @@ class ManageEmployeeControler extends Controller
         }
     }
     /*
-    * searchEmployee()
+    * searchEmployee(Request $req)
     * Search employee by name
     * @input : emp_name
     * @output : employee list to manage employee page
