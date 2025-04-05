@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ManageEmployeeControler;
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SidebarController;
 use App\Http\Controllers\DepartmentController;
@@ -62,3 +63,9 @@ Route::put('/edit/{id}', [ManageEmployeeControler::class, 'editEmployee'])->name
 Route::get('/search_employee', [ManageEmployeeControler::class, 'searchEmployee'])->name('manage_employee_search');
 */
 });
+// หน้าแบบฟอร์ม
+Route::get('/form', [FormController::class, 'index'])->name('form.index');
+Route::post('/form/create', [FormController::class, 'createWorkRequest'])->name('form.create');
+
+// AJAX ดึงพนักงานจากแผนก
+Route::get('/form/{id}', [FormController::class, 'empData']);
