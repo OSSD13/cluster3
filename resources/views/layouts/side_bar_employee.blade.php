@@ -1,8 +1,8 @@
-{{-- 
+{{--
 * side_bar_employee.blade.php
 * sidebar_for_employee
 * @input : -
-* @output : 
+* @output :
 * @author : Sarocha Dokyeesun
 * @Create Date : 2025-03-18
 --}}
@@ -60,14 +60,14 @@
                     <div class="collapse" id="reportMenu">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : ''}}"  href="#"
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : ''}}"  href="{{ url('/report-stat') }}"
                                     style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-chart-pie me-2"></i> รายงานสถิติงาน
-                                </a>        
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : ''}} " href="#"
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : ''}} " href="{{ url('/report-table') }}"
                                     style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-table-list me-2"></i> รายงานข้อมูล

@@ -1,4 +1,4 @@
-{{-- 
+{{--
 * employee_layouts.blade.php
 * Layout for employee dashboard
 *
@@ -30,6 +30,13 @@
 
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+
+    {{-- CSS --}}
+    <link rel="stylesheet" href="{{ asset('public\css\pages\report_table_style.css') }}">
+
+    {{-- jQuery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
@@ -60,6 +67,7 @@
             </main>
         </div>
     </div>
+    @yield('script')
 </body>
 
 </html>
