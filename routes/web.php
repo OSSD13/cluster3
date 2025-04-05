@@ -2,14 +2,6 @@
 
 use App\Http\Controllers\ManageEmployeeControler;
 use Illuminate\Support\Facades\Route;
-/*
-    * manage_employee
-    * Route for manage employee
-    * @input : -
-    * @output : -
-    * @author : Naphat Maneechansuk 66160099
-    * @Create Date : 2025-04-04
-*/
 
 Route::get('/', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showDepartments');
 Route::get('/manage_department', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showDepartments');
