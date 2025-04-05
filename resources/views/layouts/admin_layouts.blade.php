@@ -35,6 +35,7 @@
 
     {{-- Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('public\css\pages\manage_department_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\manage_employee.css') }}">
 
     {{-- Bosstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
@@ -42,6 +43,8 @@
     {{-- jQuery --}}
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
+
+</head>
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
