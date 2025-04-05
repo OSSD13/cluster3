@@ -4,7 +4,12 @@
     font-weight: bold;
     color: #4B49AC;
 }
-
+/**/
+.text-dept {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4B49AC;
+}
 /* Set global font family */
 body {
     font-family: 'Sarabun', sans-serif;
