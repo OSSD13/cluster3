@@ -1,13 +1,27 @@
 <?php
+/*
+* Login
+* Login Control
+* @author : Supasit Meedecha 66160098
+* @Create Date : 2025-04-05
+*/
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Session;
 
+
 class LoginController extends Controller
 {
+    /*
+    * login(Request $request)
+    * Show login page
+    * @input : emp_username ,emp_password ,emp_role
+    * @output : home employee page , department page
+    * @author : supasit Meedecha 66160098
+    * @Create Date : 2025-04-05
+    */
     public function login(Request $request)
     {
         // รับค่า username และ password จากฟอร์ม
@@ -30,38 +44,10 @@ class LoginController extends Controller
                 return redirect()->to('/empDashboard');
             } elseif ($user->emp_role == 'A') {
                 Session::put('employees', Employee::where('emp_role', 'A')->get());
-                return redirect()->to('/adminDashboard');
+                return redirect()->to('/department');
             }
 
-            /*
-            $employees = Employee::all();
-            if ($user->emp_role == 'E') {
-                // ดึงข้อมูลเฉพาะพนักงาน (emp_role = 'E')
-                $employees = Employee::where('emp_role', 'E')->get();
-                return view('test_emp', ['user' => $user, 'employees' => $employees]);
-            } elseif ($user->emp_role == 'A') {
-                $employees = Employee::where('emp_role', 'A')->get();
-                return view('test_admin', ['user' => $user, 'employees' => $employees]);
-            }
-            */
 
-            // เช็คบทบาทของ user แล้วเปลี่ยนเส้นทางไปที่ view
-            /*if ($user->emp_role == 'E') {
-                Session::put('user', $user); // ใส่ไว้เผื่อไม่ได้อยู่ข้างบน
-                return redirect()->route('empDashboard');
-            } elseif ($user->emp_role == 'A') {
-                Session::put('user', $user);
-                return redirect()->route('adminDashboard');
-            }*/
-
-
-            /*
-            if ($user->emp_role == 'E') {
-                return view('test_emp', ['user' => $user]); // ไปหน้า Employee
-            } elseif ($user->emp_role == 'A') {
-                return view('test_admin', ['user' => $user]); // ไปหน้า Admin
-            }
-            */
         } else {
             // ถ้า username หรือ password ผิด ให้ส่งกลับไปหน้า login พร้อมข้อความแจ้งเตือน
             return redirect('/login')->withErrors([
@@ -69,13 +55,31 @@ class LoginController extends Controller
             ]);
         }
     }
+    /*
+    * index()
+    * Show login page
+    * @input : emp_username ,emp_password ,emp_role
+    * @output : home employee page , department page
+    * @author : supasit Meedecha 66160098
+    * @Create Date : 2025-04-04
+    */
     public function index()
     {
         return view('login');
     }
+    /*
+    * logout(Request $request)
+    * Logout user and redirect to login page
+    * @input : emp_id
+    * @output : login page
+    * @author : supasit Meedecha 66160098
+    * @Create Date : 2025-04-05
+    */
     public function logout(Request $request)
     {
+        // ลบข้อมูล session
         $request->session()->flush();
+        // เปลี่ยนเส้นทางกลับไปยังหน้า login
         return redirect('/login');
     }
 }

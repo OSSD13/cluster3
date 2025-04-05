@@ -1,3 +1,11 @@
+{{--
+test_emp.blade.php
+Display form after login by employee
+@input : emp_email, emp_password
+@output : test form after login
+@author : Supasit Meedecha 66160098
+@Create Date : 2025-04-04
+--}}
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -21,7 +29,6 @@
                 <th>ชื่อ</th>
                 <th>Username</th>
                 <th>แผนก</th>
-                {{--<th>บทบาท</th>--}}
             </tr>
         </thead>
         <tbody>
@@ -31,8 +38,6 @@
                     <td>{{ $employee->emp_id }}</td>
                     <td>{{ $employee->emp_name }}</td>
                     <td>{{ $employee->emp_username }}</td>
-                    {{-- <td>{{ $employee->emp_dept_id }}</td> --}}
-                    {{-- <td>{{ $employee->emp_role }}</td> --}}
                     <td>
                         @if ($employee->emp_dept_id == '1')
                             ไอที
@@ -44,17 +49,6 @@
                             ไม่มีแผนก
                         @endif
                     </td>
-                    {{--
-                    <td>
-                        @if ($employee->emp_role == 'A')
-                            ผู้ดูแลระบบ
-                        @elseif($employee->emp_role == 'E')
-                            พนักงาน
-                        @else
-                            ไม่ทราบตำแหน่ง
-                        @endif
-                    </td>
-                    --}}
                 </tr>
             @endforeach
         </tbody>

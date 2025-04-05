@@ -1,27 +1,36 @@
 <?php
-/*
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SidebarController;
 use App\Http\Controllers\DepartmentController;
-
-Route::get('/department', [DepartmentController::class, 'showDepartments'])->name('manage-department');
-Route::post('/department', [DepartmentController::class, 'createDepartment'])->name('department.createDepartment');
-Route::put('/department/{id}', [DepartmentController::class, 'updateDepartment'])->name('department.updateDepartment');
-Route::delete('/department/{id}', [DepartmentController::class, 'deleteDepartment'])->name('department.deleteDepartment');
-Route::get('/search-dept', [DepartmentController::class, 'searchDepartment']);
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::get('/empLogin', function () {
-    return view('emp_login');
-});
-*/
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Middleware\AdminMiddleware;
 
+
+Route::middleware(['admin'])->group(function () {
+
+    Route::get('/adminDashboard', function () {
+        $user = session('user');
+        $employees = session('employees');
+        return view('test_admin', compact('user', 'employees'));
+    })->middleware('admin')->name('adminDashboard');
+
+    Route::get('/department', [DepartmentController::class, 'showDepartments'])->name('manage-department');
+    Route::post('/department', [DepartmentController::class, 'createDepartment'])->name('department.createDepartment');
+    Route::put('/department/{id}', [DepartmentController::class, 'updateDepartment'])->name('department.updateDepartment');
+    Route::delete('/department/{id}', [DepartmentController::class, 'deleteDepartment'])->name('department.deleteDepartment');
+    Route::get('/search-dept', [DepartmentController::class, 'searchDepartment']);
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+Route::middleware(['employee'])->group(function () {
+
+    Route::get('/empDashboard', function () {
+        $user = session('user');
+        $employees = session('employees');
+        return view('test_emp', compact('user', 'employees'));
+    })->middleware('employee')->name('empDashboard');
+});
 
 Route::get('/',
     [LoginController::class, 'index']);
@@ -33,55 +42,6 @@ Route::get('/login', function () {
 Route::post('/login',
     [LoginController::class, 'login'])->name('login');
 
-Route::get('/logout',
-    [LoginController::class, 'logout'])->name('logout');
+Route::post('/logout',
+[LoginController::class, 'logout'])->name('logout');
 
-
-    Route::get('/adminDashboard', function () {
-        $user = session('user');
-        $employees = session('employees');
-        return view('test_admin', compact('user', 'employees'));
-    })->middleware('admin')->name('adminDashboard');
-
-    Route::get('/empDashboard', function () {
-        $user = session('user');
-        $employees = session('employees');
-        return view('test_emp', compact('user', 'employees'));
-    })->middleware('employee')->name('empDashboard');
-
-/*
-Route::get('/empDashboard', function () {
-    $user = session('user');
-    $employees = session('employees');
-    return view('test_emp', compact('user', 'employees'));
-    })->name('empDashboard');
-
-Route::get('/adminDashboard', function () {
-    $user = session('user');
-    $employees = session('employees');
-    return view('test_admin', compact('user', 'employees'));
-    })->name('adminDashboard');
-*/
-    /*
-Route::get('/empDashboard', function () {
-    $user = session('user');
-    // ดึงเฉพาะพนักงาน (emp_role = 'E')
-    $employees = \App\Models\Employee::where('emp_role', 'E')->get();
-    return view('test_emp', ['user' => $user, 'employees' => $employees]);})->middleware('auth')->name('empDashboard');
-
-Route::get('/adminDashboard', function () {
-    $user = session('user');
-    $employees = \App\Models\Employee::where('emp_role', 'A')->get();
-    return view('test_admin', ['user' => $user, 'employees' => $employees]);})->middleware('auth')->name('adminDashboard');
-
-*/
-/*
-// แสดงหน้า Dashboard ตามสิทธิ์
-Route::get('/adminDashboard', function () {
-    return view('test_admin', ['user' => session('user')]);
-})->middleware('auth')->name('adminDashboard');
-
-Route::get('/empDashboard', function () {
-    return view('test_emp', ['user' => session('user')]);
-})->middleware('auth')->name('empDashboard');
-*/

@@ -46,7 +46,6 @@
         </tbody>
     </table>
 </div>
-
 @include('components.department_modal')
 
 @section('script')
