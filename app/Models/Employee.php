@@ -22,6 +22,10 @@ class Employee extends Model
         'emp_created_date',
         'emp_update_date',
     ];
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'emp_dept_id', 'dept_id');
+    }
 
 
 }
