@@ -1,0 +1,80 @@
+.text-header {
+    font-size: 30px;
+    font-weight: bold;
+    color: #4B49AC;
+}
+
+body {
+    font-family: 'Sarabun', sans-serif;
+}
+
+th {
+    font-weight: normal; /* เปลี่ยนจากตัวหนาเป็นตัวปกติ */
+}
+
+
+.content {
+    padding: 20px;
+    padding-top: 100px; /* ปรับระยะขอบบนของ content สำหรับ nav bar*/
+}
+.content {
+    padding: 20px;
+    padding-top: 100px; /* ปรับระยะขอบบนของ content สำหรับ nav bar*/
+}
+
+.add-btn {
+    background-color: #4B49AC;
+    border-color: #4B49AC;
+}
+
+.add-btn:hover {
+    background-color: #3a4584;
+    border-color: #3a4584;
+}
+
+.modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.modal-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4B49AC;
+}
+
+.modal-footer {
+    border-top: none;
+    justify-content: center;
+    padding-top: 0;
+}
+
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+    min-width: 100px;
+}
+
+.btn-save {
+    background-color: #4B49AC;
+    color: white;
+    min-width: 100px;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.confirmation-text {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.action-icon {
+    cursor: pointer;
+    color: #6c757d;
+    margin-right: 10px;
+}

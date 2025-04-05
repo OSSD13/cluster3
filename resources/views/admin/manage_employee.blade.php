@@ -9,20 +9,21 @@ Display form show table manage employee
 @extends('layouts.admin_layouts')
 
 @section('content')
-    <div class="container mt-4 content">
-        <div class="row mb-3 d-flex align-items-center justify-content-between">
-            <div class="col-md-6 d-flex align-items-center">
-                <h2 class="mb-0 text-header">จัดการพนักงาน</h2>
-            </div>
+    <div class="col-md-12 content">
+        <div class="header d-flex justify-content-between align-items-center">
+
+                <div class="h3 text-header">จัดการพนักงาน</div>
+
             <div class="position-relative" style="max-width: 386px;">
                 <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
                 <input type="text" name="search" id="search" class="form-control ps-5 rounded-4 shadow-sm"
                     placeholder="Search">
             </div>
         </div>
+
         <table class="table table-hover">
-            <thead class="table-secondary">
-                <tr>
+            <thead>
+                <tr class="table-active">
                     <th class="col-2 text-center">รหัสพนักงาน</th>
                     <th class="col-4 text-center">ชื่อ-นามสกุล</th>
                     <th class="col-1 text-center"></th>
@@ -47,6 +48,7 @@ Display form show table manage employee
         </table>
     </div>
 @endsection
+
 @include('components.employee_model')
 
 @section('script')
