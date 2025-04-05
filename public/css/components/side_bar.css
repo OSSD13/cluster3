@@ -1,0 +1,52 @@
+/* สไตล์ Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+}
+
+/* เมนูหลัก */
+.sidebar .nav-link {
+    font-size: 18px;
+    color: #5b71a0;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Active & Hover */
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background-color: #4B49AC;
+    color: #D8E6F1;
+}
+
+/* เมนูย่อย (Sub-menu) */
+.sidebar-sub-link {
+    font-size: 18px;
+    color: #3f51b5;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #ffffff; /* เปลี่ยนสีพื้นหลังเมนูย่อย */
+    text-decoration: none;
+}
+
+/* Active & Hover เมนูย่อย */
+.sidebar-sub-link.active,
+.sidebar-sub-link:hover {
+    background-color: rgba(169, 168, 245, 0.47);
+    color: #4B49AC;
+}
+
+.icon-sub{
+    color: #708AC1;
+}

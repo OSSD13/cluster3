@@ -13,3 +13,7 @@ th {
 }
 
 
+.content {
+    padding: 20px;
+    padding-top: 100px; /* ปรับระยะขอบบนของ content สำหรับ nav bar*/
+}
