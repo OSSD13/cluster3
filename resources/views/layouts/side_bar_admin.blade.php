@@ -24,7 +24,7 @@
         <br><br><br><br>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'manage-emp' ? 'active' : ''}}" href="{{ url('/manage_department') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'manage-emp' ? 'active' : ''}}" href="{{ url('/manage_employee') }}">
                         <i class="fa-solid fa-user-tie me-2"></i> จัดการพนักงาน
                     </a>
                 </li>
