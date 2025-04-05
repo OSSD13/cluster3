@@ -9,12 +9,6 @@ use App\Http\Middleware\AdminMiddleware;
 
 Route::middleware(['admin'])->group(function () {
 
-    Route::get('/adminDashboard', function () {
-        $user = session('user');
-        $employees = session('employees');
-        return view('test_admin', compact('user', 'employees'));
-    })->middleware('admin')->name('adminDashboard');
-
     Route::get('/department', [DepartmentController::class, 'showDepartments'])->name('manage-department');
     Route::post('/department', [DepartmentController::class, 'createDepartment'])->name('department.createDepartment');
     Route::put('/department/{id}', [DepartmentController::class, 'updateDepartment'])->name('department.updateDepartment');
@@ -25,11 +19,7 @@ Route::middleware(['admin'])->group(function () {
 
 Route::middleware(['employee'])->group(function () {
 
-    Route::get('/empDashboard', function () {
-        $user = session('user');
-        $employees = session('employees');
-        return view('test_emp', compact('user', 'employees'));
-    })->middleware('employee')->name('empDashboard');
+
 });
 
 Route::get('/',
