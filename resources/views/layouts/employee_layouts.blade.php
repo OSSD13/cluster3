@@ -1,4 +1,4 @@
-{{-- 
+{{--
 * employee_layouts.blade.php
 * Layout for employee dashboard
 *
@@ -62,5 +62,4 @@
         </div>
     </div>
 </body>
-
 </html>
