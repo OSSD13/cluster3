@@ -75,25 +75,22 @@ class WorkRequestController extends Controller
                               ->get(),
             ],
         ];
-
+    
+    
         // ดึงข้อมูลผู้มอบหมายจาก wrs_work_requests
         $workRequests = WorkRequest::all()->keyBy('req_id');
         $employees = Employee::all()->keyBy('req_emp_id');
         $departments = Employee::all()->keyBy('req_dept_id');
-
-        $taskEmp = Task::with(['workRequest.employee'])->get();
-        $taskDept = Task::with(['workRequest.department'])->get();
-
-
-
-
+        $allTask = Task::all()->keyBy('tsk_id');
+    
         // ส่งข้อมูลไปยัง view
         return view('home_table', [
             'tasks' => $tasks,
             'workRequests' => $workRequests,
             'employees' => $employees,
             'departments' => $departments,
-            'taskEmp' => $taskEmp
+            'allTask' => $allTask
         ]);
     }
+    
 }
