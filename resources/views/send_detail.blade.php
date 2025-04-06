@@ -1,255 +1,307 @@
+{{-- 
+* send_detail.blade.php
+* Layout for detail dashboard
+*
+* @input : -
+* @output : employee_layouts.blade.php
+* @author : Kidrakon Rattanahiran 66160342
+* @Create Date : 2025-03-21
+--}}
+
 
 @extends('layouts.employee_layouts')
 @section('content')
-    <style>
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .back-button {
-            display: flex;
-            align-items: center;
-            color: #666;
-            text-decoration: none;
-        }
-        .page-title {
-            font-size: 18px;
-            margin: 0;
-            color: #333;
-        }
-        .btn-primary {
-            background-color: #5851c2;
-            border-color: #5851c2;
-        }
-        .btn-outline-primary {
-            color: #5851c2;
-            border-color: #5851c2;
-        }
-        .btn-outline-primary:hover {
-            background-color: #5851c2;
-            color: white;
-        }
-        .task-details {
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-            display: none;
-        }
-        .table thead th {
-            background-color: #f5f5f5;
-            color: #666;
-            font-weight: normal;
-        }
-        .profile-circle {
-            width: 30px;
-            height: 30px;
-            background-color: #ccc;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-        .dropdown-selector {
-            margin-bottom: 15px;
-        }
-        .task-row {
-            cursor: pointer;
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset('public/css/components/detail_style.css') }}">
 <body>
-    <div class="container mt-4">
-        <div class="header">
-            <h1 class="fw-bold">รายการงาน</h1>
-            <div>
-                <button class="btn btn-outline-primary me-2">ใบงานของฉัน</button>
-                <button class="btn btn-primary">ใบงานของแผนก</button>
+<div class="container-fluid">
+    <!-- Header -->
+<div class="header mt-4">
+    <h1 class="page-title fw-bold fs-2" style="color: #4B49AC;">รายการงาน</h1>
+</div>
+
+
+<!-- Navigation Tabs -->
+<div class="d-flex justify-content-end mt-2">
+    <ul class="nav nav-tabs margin-bottom: 0;" >
+        <li class="nav-item">
+            <button class="nav-link active custom-tab" data-bs-toggle="tab" data-bs-target="#myTasks">ใบงานของฉัน</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link custom-tab" data-bs-toggle="tab" data-bs-target="#teamTasks">ใบงานของแผนก</button>
+        </li>
+    </ul>
+</div>
+<!-- Tab Content -->
+<div class="tab-content margin-top: 0 !important">
+    <!-- My Tasks Tab -->
+    <div class="tab-pane fade show active" id="myTasks" style="margin-top: 0; padding-top: 0;">
+    <!-- Task Table Card -->
+        <div class="card shadow-sm mb-4 border-top-left-radius: 0; border-top-right-radius: 0;">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <a href="#" class="back-button d-flex align-items-center text-decoration-none mt-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left ms-4 mt-1" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                        </svg>
+                        <span class="ms-4 fs-4">รายละเอียดใบงานทั้งหมด</span>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr class="bg-light">
+                            <th class="text-center" style="width: 10%">ลำดับงาน</th>
+                            <th style="width: 60%">ชื่องาน</th>
+                            <th style="width: 30%">ผู้รับมอบหมาย</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Task 1 -->
+                        <tr class="task-row" data-target="#details1">
+                            <td class="text-center">1</td>
+                            <td>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="task-title">จัดเก็บข้อมูล</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-circle me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
+                                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                                            </svg>
+                                        </div>
+                                        <span>นายอภิชาติ จิตภพ</span>
+                                    </div>
+                                    <span class="dropdown-indicator">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="details1" class="detail-row no-display">
+                            <td colspan="3">
+                                <div class="task-details p-3 bg-light border-top">
+                                    <h5 class="mb-3">หมายเหตุ:</h5>
+                                    <p>จัดเก็บข้อมูลประจำเดือน มีนาคม 2025 โดยแยกตามประเภทของข้อมูล</p>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Task 2 -->
+                        <tr class="task-row" data-target="#details2">
+                            <td class="text-center">2</td>
+                            <td>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="task-title">ตั้งค่าระบบและแผนซ่อมบำรุงอุปกรณ์เน็ต</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-circle me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
+                                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                                            </svg>
+                                        </div>
+                                        <span>นายอภิชิต ชินวัตร</span>
+                                    </div>
+                                    <span class="dropdown-indicator">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="details2" class="detail-row no-display">
+                            <td colspan="3">
+                                <div class="task-details p-3 bg-light border-top">
+                                    <h5 class="mb-3">หมายเหตุ:</h5>
+                                    <p>ตั้งค่าระบบและจัดทำแผนการซ่อมบำรุงอุปกรณ์เครือข่ายประจำไตรมาส</p>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Task 3 -->
+                        <tr class="task-row" data-target="#details3">
+                            <td class="text-center">3</td>
+                            <td>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="task-title">จำแนกสถิติผู้มาใช้บริการ</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-circle me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
+                                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                                            </svg>
+                                        </div>
+                                        <span>นางสาวปาริชาติ ปุ้ม</span>
+                                    </div>
+                                    <span class="dropdown-indicator">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="details3" class="detail-row no-display">
+                            <td colspan="3">
+                                <div class="task-details p-3 bg-light border-top">
+                                    <h5 class="mb-3">หมายเหตุ:</h5>
+                                    <p>จำแนกสถิติผู้มาใช้บริการตามช่วงเวลาและประเภทของการให้บริการ</p>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Task 4 -->
+                        <tr class="task-row" data-target="#details4">
+                            <td class="text-center">4</td>
+                            <td>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="task-title">สร้างฟอร์ม "แบบสอบถาม" สำหรับแผนกพนักงานใหม่บริษัท</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-circle me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
+                                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                                            </svg>
+                                        </div>
+                                        <span>นายกิตติพร</span>
+                                    </div>
+                                    <span class="dropdown-indicator">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="details4" class="detail-row no-display">
+                            <td colspan="3">
+                                <div class="task-details p-3 bg-light border-top">
+                                    <h5 class="mb-3">หมายเหตุ:</h5>
+                                    <p>สร้างแบบฟอร์มสำหรับเก็บข้อมูลความคิดเห็นของพนักงานใหม่ต่อกระบวนการปฐมนิเทศ</p>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Task 5 -->
+                        <tr class="task-row" data-target="#details5">
+                            <td class="text-center">5</td>
+                            <td>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="task-title">สำรวจวิจัยผู้ใช้ระบบ</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="profile-circle me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
+                                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                                            </svg>
+                                        </div>
+                                        <span>นางสาวกันยา ประไพรักษ์</span>
+                                    </div>
+                                    <span class="dropdown-indicator">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="details5" class="detail-row no-display">
+                            <td colspan="3">
+                                <div class="task-details p-3 bg-light border-top">
+                                    <h5 class="mb-3">หมายเหตุ:</h5>
+                                    <p>สำรวจวิจัยผู้ใช้ระบบเพื่อนำมาปรับปรุงการใช้งาน</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
-        <div class="mb-3">
-            <a href="#" class="back-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-                </svg>
-                <span class="ms-2">รายละเอียดใบงานทั้งหมด</span>
-            </a>
-        </div>
-
-        <div class="dropdown-selector">
-            <select class="form-select" id="taskType">
-                <option value="my">ใบงานของฉัน</option>
-                <option value="department">ใบงานของแผนก</option>
-            </select>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="width: 10%">ลำดับงาน</th>
-                        <th style="width: 60%">ชื่องาน</th>
-                        <th style="width: 30%">ผู้รับมอบหมาย</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="task-row" data-bs-toggle="collapse" data-bs-target="#details1">
-                        <td class="text-center">1</td>
-                        <td>จัดเก็บข้อมูล</td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="profile-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
-                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-                                    </svg>
-                                </div>
-                                <span>นายอภิชาติ จิตภพ</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="collapse" id="details1">
-                        <td colspan="3">
-                            <div class="task-details">
-                                <h5>รายละเอียดงาน:</h5>
-                                <p>จัดเก็บข้อมูลประจำเดือน มีนาคม 2025 โดยแยกตามประเภทของข้อมูล</p>
-                                <p>กำหนดส่ง: 25 มีนาคม 2025</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="task-row" data-bs-toggle="collapse" data-bs-target="#details2">
-                        <td class="text-center">2</td>
-                        <td>ตั้งค่าระบบและแผนซ่อมบำรุงอุปกรณ์เน็ต</td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="profile-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
-                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-                                    </svg>
-                                </div>
-                                <span>นายอภิชิต ชินวัตร</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="collapse" id="details2">
-                        <td colspan="3">
-                            <div class="task-details">
-                                <h5>รายละเอียดงาน:</h5>
-                                <p>ตั้งค่าระบบและจัดทำแผนการซ่อมบำรุงอุปกรณ์เครือข่ายประจำไตรมาส</p>
-                                <p>กำหนดส่ง: 30 มีนาคม 2025</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="task-row" data-bs-toggle="collapse" data-bs-target="#details3">
-                        <td class="text-center">3</td>
-                        <td>จำแนกสถิติผู้มาใช้บริการ</td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="profile-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
-                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-                                    </svg>
-                                </div>
-                                <span>นางสาวปาริชาติ ปุ้ม</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="collapse" id="details3">
-                        <td colspan="3">
-                            <div class="task-details">
-                                <h5>รายละเอียดงาน:</h5>
-                                <p>จำแนกสถิติผู้มาใช้บริการตามช่วงเวลาและประเภทของการให้บริการ</p>
-                                <p>กำหนดส่ง: 20 มีนาคม 2025</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="task-row" data-bs-toggle="collapse" data-bs-target="#details4">
-                        <td class="text-center">4</td>
-                        <td>สร้างฟอร์ม "แบบสอบถาม" สำหรับแผนกพนักงานใหม่บริษัท</td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="profile-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person" viewBox="0 0 16 16">
-                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-                                    </svg>
-                                </div>
-                                <span>นายกิตติพร</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="collapse" id="details4">
-                        <td colspan="3">
-                            <div class="task-details">
-                                <h5>รายละเอียดงาน:</h5>
-                                <p>สร้างแบบฟอร์มสำหรับเก็บข้อมูลความคิดเห็นของพนักงานใหม่ต่อกระบวนการปฐมนิเทศ</p>
-                                <p>กำหนดส่ง: 15 มีนาคม 2025</p>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show task details on click
-            const taskRows = document.querySelectorAll('.task-row');
-            taskRows.forEach(row => {
-                row.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-bs-target');
-                    const detailsRow = document.querySelector(targetId);
-                    
-                    if (detailsRow.classList.contains('show')) {
-                        // If already expanded, just toggle
-                        return;
-                    }
-                    
-                    // Make sure all details elements are displayed when expanded
-                    const detailsElement = detailsRow.querySelector('.task-details');
-                    detailsElement.style.display = 'block';
-                });
-            });
+    <!-- Team Tasks Tab -->
+    <div class="tab-pane fade" id="teamTasks">
+        <div class="card shadow-sm p-4">
+            <h5>ใบงานของแผนก (อยู่ระหว่างพัฒนา)</h5>
+        </div>
+    </div>
+</div>
 
-            // Handle task type selection
-            document.getElementById('taskType').addEventListener('change', function() {
-                const buttons = document.querySelectorAll('.header button');
-                if (this.value === 'my') {
-                    buttons[0].classList.remove('btn-outline-primary');
-                    buttons[0].classList.add('btn-primary');
-                    buttons[1].classList.remove('btn-primary');
-                    buttons[1].classList.add('btn-outline-primary');
+<!-- Style -->
+<style>
+    .custom-tab {
+        color: black; 
+        background-color: white;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .custom-tab.active, .custom-tab:focus {
+        background-color: #4B49AC !important;
+        color: white !important;
+    }
+
+    .no-display {
+        display: none;
+    }
+
+    .profile-circle {
+        background-color: #6c757d;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make task rows clickable to toggle details
+        const taskRows = document.querySelectorAll('.task-row');
+        taskRows.forEach(row => {
+            row.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const detailsRow = document.querySelector(targetId);
+                const indicator = this.querySelector('.dropdown-indicator');
+                
+                // Toggle the active class on the row
+                this.classList.toggle('active');
+                
+                // Toggle the rotation of the dropdown indicator
+                indicator.classList.toggle('open');
+                
+                // Toggle the visibility of the details row
+                if (detailsRow.classList.contains('no-display')) {
+                    detailsRow.classList.remove('no-display');
                 } else {
-                    buttons[0].classList.remove('btn-primary');
-                    buttons[0].classList.add('btn-outline-primary');
-                    buttons[1].classList.remove('btn-outline-primary');
-                    buttons[1].classList.add('btn-primary');
+                    detailsRow.classList.add('no-display');
                 }
             });
-
-            // Sync button selection with dropdown
-            document.querySelectorAll('.header button').forEach((button, index) => {
-                button.addEventListener('click', function() {
-                    document.getElementById('taskType').value = index === 0 ? 'my' : 'department';
-                    
-                    // Update button styles
-                    document.querySelectorAll('.header button').forEach(btn => {
-                        btn.classList.remove('btn-primary');
-                        btn.classList.add('btn-outline-primary');
-                    });
-                    this.classList.remove('btn-outline-primary');
-                    this.classList.add('btn-primary');
-                });
-            });
         });
-    </script>
+    });
+</script>
 </body>
-</html>
-
 @endsection

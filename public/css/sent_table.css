@@ -1,0 +1,52 @@
+
+body {
+    font-family: 'Sarabun', sans-serif;
+}
+.table th {
+    font-weight: normal;
+    color: #989BA4;
+}
+.status {
+    display: inline-block;
+    width: 150px;  /* กำหนดขนาดให้เท่ากัน */
+    text-align: center;
+    padding: 5px;
+    border-radius: 15px; /* ทำให้โค้งมน */
+    color: black;
+}
+.importance {
+    display: inline-block;
+    width: 100px;  /* กำหนดขนาดให้เท่ากัน */
+    text-align: center;
+    padding: 5px;
+    border-radius: 15px; /* ทำให้โค้งมน */
+    color: black;
+}
+
+
+.success {background-color: #A0F48B;}  /* สีเขียว */
+.warning { background-color: #FFE05A; }  /* สีเหลือง */
+.danger  { background-color: #E60000; }  /* สีแดง */
+.info    { background-color: #D9D9D9; }  /* สีเทา */
+
+
+.text-header {
+    font-size: 30px;
+    font-weight: bold;
+    color: #4B49AC;
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #ddd;
+    padding: 5px 10px;
+    border-radius: 20px;
+    width: 300px;
+}
+.search-input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}

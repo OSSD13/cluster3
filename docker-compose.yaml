@@ -11,5 +11,9 @@ services:
     env_file:
       - .env
     volumes:
+<<<<<<< HEAD
       - .:/var/www/html
     
+=======
+      - ./var/www/html
+>>>>>>> 32a7a9ff28cfa6456f0ac97592947f762c34c543

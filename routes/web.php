@@ -13,3 +13,8 @@ Route::get('/layoutE', function () {
 Route::get('/detail', function () {
     return view('send_detail');
 });
+
+Route::get('/a', function () {
+    return view('sent_table');
+});
+
