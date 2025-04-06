@@ -17,4 +17,3 @@ Route::get('/detail', function () {
 Route::get('/a', function () {
     return view('sent_table');
 });
-

@@ -12,8 +12,12 @@ services:
       - .env
     volumes:
 <<<<<<< HEAD
+<<<<<<< HEAD
       - .:/var/www/html
     
+=======
+      - ./var/www/html
+>>>>>>> 32a7a9ff28cfa6456f0ac97592947f762c34c543
 =======
       - ./var/www/html
 >>>>>>> 32a7a9ff28cfa6456f0ac97592947f762c34c543
