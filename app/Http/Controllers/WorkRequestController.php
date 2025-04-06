@@ -94,36 +94,70 @@ class WorkRequestController extends Controller
                 'dept' => collect(),
             ],
         ];
+        $allTask = Task::all();
+        // เรียง Task ตาม tsk_id ภายใต้ work request เดียวกัน
+
+
 
         foreach ($workRequestSubmit['submit'] as $workRequest) {
-            foreach ($task['received']['my'] as $tsk) {
+            foreach ($task['received']['my'] as $index => $tsk) {
                 if ($workRequest->req_id == $tsk->tsk_req_id) {
-                    $tasks['received']['my']->push($tsk);
+                    $tasksInReq = $allTask->where('tsk_req_id', $tsk->tsk_req_id)->sortBy('tsk_id')->values();
+
+                    // หาตำแหน่งของ task ปัจจุบัน
+                    $index = $tasksInReq->search(function ($item) use ($tsk) {
+                        return $item->tsk_id == $tsk->tsk_id;
+                    });
+
+                    if ($index === 0) {
+                        // ตัวแรก แสดงได้เสมอ
+                        $tasks['received']['my']->push($tsk);
+                    } else {
+                        $previousTask = $tasksInReq[$index - 1];
+                        if ($previousTask->tsk_status === 'Completed') {
+                            $tasks['received']['my']->push($tsk);
+                        }
+                    }
                 }
-                foreach ($task['received']['dept'] as $tsk) {
-                    if ($workRequest->req_id == $tsk->tsk_req_id) {
+            }
+            foreach ($task['received']['dept'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasksInReq = $allTask->where('tsk_req_id', $tsk->tsk_req_id)->sortBy('tsk_id')->values();
+
+                    // หาตำแหน่งของ task ปัจจุบัน
+                    $index = $tasksInReq->search(function ($item) use ($tsk) {
+                        return $item->tsk_id == $tsk->tsk_id;
+                    });
+
+                    if ($index === 0) {
+                        // ตัวแรก แสดงได้เสมอ
                         $tasks['received']['dept']->push($tsk);
+                    } else {
+                        $previousTask = $tasksInReq[$index - 1];
+                        if ($previousTask->tsk_status === 'Completed') {
+                            $tasks['received']['dept']->push($tsk);
+                        }
                     }
                 }
-                foreach ($task['inprogress']['my'] as $tsk) {
-                    if ($workRequest->req_id == $tsk->tsk_req_id) {
-                        $tasks['inprogress']['my']->push($tsk);
-                    }
+            }
+            foreach ($task['inprogress']['my'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['inprogress']['my']->push($tsk);
                 }
-                foreach ($task['inprogress']['dept'] as $tsk) {
-                    if ($workRequest->req_id == $tsk->tsk_req_id) {
-                        $tasks['inprogress']['dept']->push($tsk);
-                    }
+            }
+            foreach ($task['inprogress']['dept'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['inprogress']['dept']->push($tsk);
                 }
-                foreach ($task['completed']['my'] as $tsk) {
-                    if ($workRequest->req_id == $tsk->tsk_req_id) {
-                        $tasks['completed']['my']->push($tsk);
-                    }
+            }
+            foreach ($task['completed']['my'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['completed']['my']->push($tsk);
                 }
-                foreach ($task['completed']['dept'] as $tsk) {
-                    if ($workRequest->req_id == $tsk->tsk_req_id) {
-                        $tasks['completed']['dept']->push($tsk);
-                    }
+            }
+            foreach ($task['completed']['dept'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['completed']['dept']->push($tsk);
                 }
             }
         }
@@ -131,7 +165,7 @@ class WorkRequestController extends Controller
         $workRequests = WorkRequest::all()->keyBy('req_id');
         $employees = Employee::all()->keyBy('req_emp_id');
         $departments = Employee::all()->keyBy('req_dept_id');
-        $allTask = Task::all()->keyBy('tsk_id');
+
 
         // ส่งข้อมูลไปยัง view
         return view('home_table', [
