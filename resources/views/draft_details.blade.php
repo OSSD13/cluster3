@@ -1,9 +1,9 @@
 {{--
-* employee_layouts.blade.php
+* draft_details.blade.php
 * Layout for employee dashboard
 *
 * @input : -
-* @output : Employee_layout_with_header_and_sidebar
+* @output : Details_of_draft_work_request
 * @author : Salsabeela Sa-e 66160349
 * @Create Date : 2025-03-20
 --}}
@@ -14,32 +14,31 @@
         <div class="">
             <h3>แบบร่างใบสั่งงาน</h3>
         </div>
-        <div class="card shadow-sm p-4 ">
+        <div class="card shadow-sm p-4">
             <div class="mb-3">
-                <label class="form-label">ชื่อใบสั่งงาน</label>
+                <label class="form-label">ชื่อใบสั่งงาน<span class="text-danger">*</span></label>
                 {{-- ดึง database มา --}}
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" value="{{ $draft->req_name ?? ''}}" readonly >
             </div>
-            <div class="mb-3 col">
-    <label class="form-label">สถานะผู้สร้างใบสั่งงาน</label>
-    <div class="d-flex">
-        <div class="form-check me-3">
-            <input class="form-check-input" type="radio" name="creatorStatus" id="individual" value="individual">
-            <label class="form-check-label" for="individual">
-                นามบุคคล
-            </label>
+
+            <div class="mb-3">
+                <label class="form-label">สถานะผู้สร้างใบสั่งงาน<span class="text-danger">*</span></label>
+                <div class="d-inline-flex">
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="radio" name="creatorStatus" id="individual" value="ind" {{ ($draft->req_create_type ?? '') == 'ind' ? 'checked' : '' }} disabled>
+            <label class="form-check-label" for="individual">นามบุคคล</label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="creatorStatus" id="department" value="department">
-            <label class="form-check-label" for="department">
-                นามแผนก
-            </label>
+            <input class="form-check-input" type="radio" name="creatorStatus" id="department"
+                   value="dept" {{ ($draft->req_create_type ?? '') == 'dept' ? 'checked' : '' }} disabled>
+            <label class="form-check-label" for="department">นามแผนก</label>
         </div>
-    </div>
-</div>
+                </div>
+            </div>
+
             <div class="mb-3">
-                <label class="form-label">คำอธิบายงาน</label>
-                <input type="text" class="form-control" style="height: 100px">
+                <label class="form-label">คำอธิบาย</label>
+                <textarea class="form-control" style="height: 100px;">{{ $draft->req_description ?? '' }}</textarea>
             </div>
         </div>
         {{-- งานย่อย  --}}
@@ -51,12 +50,15 @@
         </div>
 
         {{-- ปุ่มเพิ่มงานย่อย --}}
-        <button class=" btn btn-outline-lightt mt-3" style="border: 1px solid #4B49AC;color:#4B49AC ;background-color:#ffffff" onclick="addTask()">+ เพิ่มงานย่อย</button>
+        <button class=" btn btn-outline-lightt mt-3"
+            style="border: 1px solid #4B49AC;color:#4B49AC ;background-color:#ffffff" onclick="addTask()">+
+            เพิ่มงานย่อย</button>
 
         <div class="d-flex justify-content-end my-4">
             <button class="btn btn-secondary">แบบร่าง</button>
             &nbsp;&nbsp;
-            <button class=" btn btn-outline-lightt"  style="border: 1px solid #2B467E;color:#ffffff ;background-color:#4B49AC">สร้างใบสั่งงาน</button>
+            <button class=" btn btn-outline-lightt"
+                style="border: 1px solid #2B467E;color:#ffffff ;background-color:#4B49AC">สร้างใบสั่งงาน</button>
         </div>
         <br>
     </div>
@@ -82,32 +84,33 @@
                 <div class="accordion-body">
     <div class="mb-3 col">
         <label class="form-label">
-            ชื่อใบงานย่อย
+            ชื่อใบงานย่อย<span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control">
     </div>
     <div class="row">
         <div class="col mb-3">
-            <label class="form-label">แผนกรับมอบหมาย</label>
-            <select class="form-select">
-                <option selected>กรุณาเลือก</option>
-                <option>บุคคล</option>
-                <option>แผนก</option>
-            </select>
-        </div>
-
-        <div class="col mb-3">
-            <label class="form-label">ผู้รับมอบหมาย</label>
-            <select class="form-select">
-                <option selected>กรุณาเลือก</option>
-                <option>บุคคล</option>
-                <option>แผนก</option>
-            </select>
-        </div>
+                        <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                        <select class="form-select" name="dept" required>
+                            <option selected value="0">กรุณาเลือก</option>
+                        @foreach ($departments as $dept)
+        <option value="{{ $dept->dept_id }}">{{ $dept->dept_name }}</option>
+    @endforeach
+                        </select>
+                    </div>
+                    <div class="col mb-3">
+                        <label class="form-label">ผู้รับมอบหมาย </label>
+                        <select class="form-select" name="emp">
+                            <option selected value="0">กรุณาเลือก</option>
+                             @foreach ($employees as $emp)
+        <option value="{{ $emp->emp_id }}">{{ $emp->emp_name }}</option>
+    @endforeach
+                        </select>
+                    </div>
     </div>
     <div class="row">
         <div class="col mb-3">
-            <label class="form-label">ความสำคัญ</label>
+            <label class="form-label">ความสำคัญ<span class="text-danger">*</span></label>
             <select class="form-select">
                 <option selected>กรุณาเลือก</option>
                 <option>ต่ำ</option>
@@ -117,7 +120,7 @@
         </div>
 
         <div class="col mb-3">
-            <label class="form-label">วันสิ้นสุด</label>
+            <label class="form-label">วันสิ้นสุด<span class="text-danger">*</span></label>
             <input type="date" class="form-control">
         </div>
     </div>
@@ -137,32 +140,32 @@
             taskCount++;
         }
 
-function removeTask(id) {
-    const taskToRemove = document.getElementById(`task-item-${id}`);
-    if (taskToRemove) {
-        taskToRemove.remove();
-        updateTaskNumbers(); // รีเซ็ตเลขงานย่อยใหม่หลังจากลบ
-    }
-}
+        function removeTask(id) {
+            const taskToRemove = document.getElementById(`task-item-${id}`);
+            if (taskToRemove) {
+                taskToRemove.remove();
+                updateTaskNumbers(); // รีเซ็ตเลขงานย่อยใหม่หลังจากลบ
+            }
+        }
 
-function updateTaskNumbers() {
-    const taskList = document.getElementById("taskList").children;
-    taskCount = 1; // รีเซ็ตตัวนับ
-    for (let i = 0; i < taskList.length; i++) {
-        const taskItem = taskList[i];
-        taskItem.id = `task-item-${taskCount}`;
-        const button = taskItem.querySelector(".accordion-button");
-        button.innerText = `งานย่อย ${taskCount}`;
-        button.setAttribute("data-bs-target", `#task${taskCount}`);
+        function updateTaskNumbers() {
+            const taskList = document.getElementById("taskList").children;
+            taskCount = 1; // รีเซ็ตตัวนับ
+            for (let i = 0; i < taskList.length; i++) {
+                const taskItem = taskList[i];
+                taskItem.id = `task-item-${taskCount}`;
+                const button = taskItem.querySelector(".accordion-button");
+                button.innerText = `งานย่อย ${taskCount}`;
+                button.setAttribute("data-bs-target", `#task${taskCount}`);
 
-        const collapseDiv = taskItem.querySelector(".accordion-collapse");
-        collapseDiv.id = `task${taskCount}`;
+                const collapseDiv = taskItem.querySelector(".accordion-collapse");
+                collapseDiv.id = `task${taskCount}`;
 
-        const deleteButton = taskItem.querySelector(".btn-danger");
-        deleteButton.setAttribute("onclick", `removeTask(${taskCount})`);
+                const deleteButton = taskItem.querySelector(".btn-danger");
+                deleteButton.setAttribute("onclick", `removeTask(${taskCount})`);
 
-        taskCount++;
-    }
-}
+                taskCount++;
+            }
+        }
     </script>
 @endsection
