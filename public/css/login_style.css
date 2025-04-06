@@ -73,3 +73,17 @@ button {
 button:hover {
     background-color: #5a4bbd;
 }
+
+
+    .error-input {
+        border: 1px solid red;
+    }
+
+    .error-text {
+        color: red;
+        font-family: 'Sarabun', sans-serif;
+        font-size: 10px;
+        text-align: left;
+        margin-top: -5px;
+    }
+
