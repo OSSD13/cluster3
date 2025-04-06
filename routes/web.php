@@ -2,13 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SidebarController;
+use App\Http\Controllers\WrsTaskController;
 
 Route::get('/layoutA', function () {
     return view('layouts.admin_layouts');
-});
-
-Route::get('/feature-home-table', function () {
-    return view('home_table');
 });
 
 Route::get('/layoutE', function () {
@@ -19,7 +16,9 @@ Route::get('/form', function () {
     return view('create_form');
 })->name('create-form');
 
-// ทดลองใส่หน้าแรกเฉยๆ
+
 Route::get('/main', function () {
-    return view('create_form');
+    return view('home_table');
 })->name('main-page');
+
+Route::get('/main', [App\Http\Controllers\WrsTaskController::class, 'index'])->name('main-page');

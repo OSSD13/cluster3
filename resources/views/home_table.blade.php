@@ -12,10 +12,9 @@
 
 <div class="d-flex">
     <div class="content w-100">
-        <h3>รายการงาน</h3>
-        <div class="nav-tabs-container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="m-0">รายการงาน</h3>
             <ul class="nav nav-tabs" id="taskTabs">
-                <!-- แท็บสำหรับเลือกประเภทของงาน -->
                 <li class="nav-item">
                     <a class="nav-link active" data-bs-toggle="tab" href="#myTasks">ใบงานของฉัน</a>
                 </li>
@@ -24,6 +23,7 @@
                 </li>
             </ul>
         </div>
+
         <div class="tab-content">
             <div class="tab-pane fade show active mt-3" id="myTasks">
                 <ul class="nav nav-tabs">
@@ -43,7 +43,7 @@
                         <!-- ตารางแสดงงานที่ได้รับ -->
                         <table class="table">
                             <thead>
-                                <tr class="table-secondary">
+                            <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
                                     <th class="col-3">ชื่องาน</th>
                                     <th class="col-2">ผู้มอบหมาย</th>
@@ -52,21 +52,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- ตัวอย่างข้อมูลใบงาน -->
-                                <tr class="table">
-                                    <td class="col-3" style="padding-left:32px;">งานของเป้ย</td>
-                                    <td class="col-3">ห้องน้ำต้องการตัว</td>
-                                    <td class="col-2">ปาล์ม</td>
-                                    <td class="col-2">ระดับจักรวาล</td>
-                                    <td class="col-2">32/12/2658</td>
-                                </tr>
+                                @if(isset($tasks['received']['my']) && count($tasks['received']['my']) > 0)
+                                    @foreach ($tasks['received']['my'] as $task)
+                                        <tr>
+                                            <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                            <td class="col-3">{{ $task->tsk_description }}</td>
+                                            <td class="col-2">
+                                                {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                            </td>
+                                            <td class="col-2">{{ $task->tsk_priority }}</td>
+                                            <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                     <div class="tab-pane fade" id="inprogress">
                         <table class="table">
                             <thead>
-                                <tr class="table-secondary">
+                            <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
                                     <th class="col-3">ชื่องาน</th>
                                     <th class="col-2">ผู้มอบหมาย</th>
@@ -74,13 +83,31 @@
                                     <th class="col-2">กำหนดส่ง</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @if(isset($myTasksInProgress) && count($myTasksInProgress) > 0)
+                                    @foreach ($myTasksInProgress as $task)
+                                        <tr>
+                                            <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                            <td class="col-3">{{ $task->tsk_description }}</td>
+                                            <td class="col-2">
+                                                {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                            </td>
+                                            <td class="col-2">{{ $task->tsk_priority }}</td>
+                                            <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    </tr>
+                                @endif
+                            </tbody>
                         </table>
                     </div>
                     <div class="tab-pane fade" id="completed">
                         <table class="table">
                             <thead>
-                                <tr class="table-secondary">
+                            <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
                                     <th class="col-3">ชื่องาน</th>
                                     <th class="col-2">ผู้มอบหมาย</th>
@@ -88,7 +115,23 @@
                                     <th class="col-2">กำหนดส่ง</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @foreach ($tasks as $status => $types)
+                                    @foreach ($types as $type => $taskList)
+                                        @foreach ($taskList as $task)
+                                            <tr>
+                                                <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                                <td class="col-3">{{ $task->tsk_description }}</td>
+                                                <td class="col-2">
+                                                    {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                                </td>
+                                                <td class="col-2">{{ $task->tsk_priority }}</td>
+                                                <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endforeach
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -110,7 +153,7 @@
                     <div class="tab-pane fade show active" id="deptReceived">
                         <table class="table">
                             <thead>
-                                <tr class="table-secondary">
+                            <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
                                     <th class="col-3">ชื่องาน</th>
                                     <th class="col-2">ผู้มอบหมาย</th>
@@ -118,13 +161,31 @@
                                     <th class="col-2">กำหนดส่ง</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @if(isset($deptTasksReceived) && count($deptTasksReceived) > 0)
+                                    @foreach ($deptTasksReceived as $task)
+                                        <tr>
+                                            <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                            <td class="col-3">{{ $task->tsk_description }}</td>
+                                            <td class="col-2">
+                                                {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                            </td>
+                                            <td class="col-2">{{ $task->tsk_priority }}</td>
+                                            <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    </tr>
+                                @endif
+                            </tbody>
                         </table>
                     </div>
                     <div class="tab-pane fade" id="deptInprogress">
                         <table class="table">
                             <thead>
-                                <tr class="table-secondary">
+                            <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
                                     <th class="col-3">ชื่องาน</th>
                                     <th class="col-2">ผู้มอบหมาย</th>
@@ -132,13 +193,31 @@
                                     <th class="col-2">กำหนดส่ง</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @if(isset($tasks['inprogress']['dept']) && count($tasks['inprogress']['dept']) > 0)
+                                    @foreach ($tasks['inprogress']['dept'] as $task)
+                                        <tr>
+                                            <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                            <td class="col-3">{{ $task->tsk_description }}</td>
+                                            <td class="col-2">
+                                                {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                            </td>
+                                            <td class="col-2">{{ $task->tsk_priority }}</td>
+                                            <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    </tr>
+                                @endif
+                            </tbody>
                         </table>
                     </div>
                     <div class="tab-pane fade" id="deptCompleted">
                         <table class="table">
                             <thead>
-                                <tr class="table-secondary">
+                            <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
                                     <th class="col-3">ชื่องาน</th>
                                     <th class="col-2">ผู้มอบหมาย</th>
@@ -146,7 +225,23 @@
                                     <th class="col-2">กำหนดส่ง</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                @foreach ($tasks as $status => $types)
+                                    @foreach ($types as $type => $taskList)
+                                        @foreach ($taskList as $task)
+                                            <tr>
+                                                <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                                <td class="col-3">{{ $task->tsk_description }}</td>
+                                                <td class="col-2">
+                                                    {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                                </td>
+                                                <td class="col-2">{{ $task->tsk_priority }}</td>
+                                                <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endforeach
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                 </div>
