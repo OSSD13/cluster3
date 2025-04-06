@@ -84,8 +84,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(isset($myTasksInProgress) && count($myTasksInProgress) > 0)
-                                    @foreach ($myTasksInProgress as $task)
+                            @if(isset($tasks['inprogress']['my']) && count($tasks['inprogress']['my']) > 0)
+                                    @foreach ($tasks['inprogress']['my'] as $task)
                                         <tr>
                                             <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
                                             <td class="col-3">{{ $task->tsk_description }}</td>
@@ -116,21 +116,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($tasks as $status => $types)
-                                    @foreach ($types as $type => $taskList)
-                                        @foreach ($taskList as $task)
-                                            <tr>
-                                                <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
-                                                <td class="col-3">{{ $task->tsk_description }}</td>
-                                                <td class="col-2">
-                                                    {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
-                                                </td>
-                                                <td class="col-2">{{ $task->tsk_priority }}</td>
-                                                <td class="col-2">{{ $task->tsk_due_date }}</td>
-                                            </tr>
-                                        @endforeach
+                            @if(isset($tasks['completed']['my']) && count($tasks['completed']['my']) > 0)
+                                    @foreach ($tasks['completed']['my'] as $task)
+                                        <tr>
+                                            <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                            <td class="col-3">{{ $task->tsk_description }}</td>
+                                            <td class="col-2">
+                                                {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                            </td>
+                                            <td class="col-2">{{ $task->tsk_priority }}</td>
+                                            <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                        </tr>
                                     @endforeach
-                                @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -162,8 +164,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(isset($deptTasksReceived) && count($deptTasksReceived) > 0)
-                                    @foreach ($deptTasksReceived as $task)
+                            @if(isset($tasks['received']['dept']) && count($tasks['received']['dept']) > 0)
+                                    @foreach ($tasks['received']['dept'] as $task)
                                         <tr>
                                             <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
                                             <td class="col-3">{{ $task->tsk_description }}</td>
@@ -226,21 +228,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($tasks as $status => $types)
-                                    @foreach ($types as $type => $taskList)
-                                        @foreach ($taskList as $task)
-                                            <tr>
-                                                <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
-                                                <td class="col-3">{{ $task->tsk_description }}</td>
-                                                <td class="col-2">
-                                                    {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
-                                                </td>
-                                                <td class="col-2">{{ $task->tsk_priority }}</td>
-                                                <td class="col-2">{{ $task->tsk_due_date }}</td>
-                                            </tr>
-                                        @endforeach
+                            @if(isset($tasks['completed']['dept']) && count($tasks['completed']['dept']) > 0)
+                                    @foreach ($tasks['completed']['dept'] as $task)
+                                        <tr>
+                                            <td class="col-3" style="padding-left:32px;">{{ $task->tsk_name }}</td>
+                                            <td class="col-3">{{ $task->tsk_description }}</td>
+                                            <td class="col-2">
+                                                {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }}
+                                            </td>
+                                            <td class="col-2">{{ $task->tsk_priority }}</td>
+                                            <td class="col-2">{{ $task->tsk_due_date }}</td>
+                                        </tr>
                                     @endforeach
-                                @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
