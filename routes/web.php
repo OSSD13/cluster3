@@ -7,6 +7,7 @@ use App\Http\Controllers\WrsTaskController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\WorkRequestController;
 
 
 Route::middleware(['admin'])->group(function () {
@@ -25,6 +26,8 @@ Route::middleware(['admin'])->group(function () {
 
 Route::middleware(['employee'])->group(function () {
 
+    Route::get('/main', [WorkRequestController::class, 'index'])->name('main-page');;
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 });
 
@@ -34,11 +37,9 @@ Route::get(
 );
 
 
-Route::get('/main', function () {
-    return view('home_table');
-})->name('main-page');
 
-Route::get('/main', [App\Http\Controllers\WrsTaskController::class, 'index'])->name('main-page');
+
+Route::get('/main', [App\Http\Controllers\WorkRequestController::class, 'index'])->name('main-page');
 Route::get('/login', function () {
     return view('login');
 });

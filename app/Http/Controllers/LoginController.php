@@ -41,7 +41,7 @@ class LoginController extends Controller
             // ดึงข้อมูลพนักงานทั้งหมดจากฐานข้อมูล
             if ($user->emp_role == 'E') {
                 Session::put('employees', Employee::where('emp_role', 'E')->get());
-                return redirect()->to('/empDashboard'); //<--เดี่๋ยวเอา path Home ของพนักงานมาใส่
+                return redirect()->to('/main'); //<--เดี่๋ยวเอา path Home ของพนักงานมาใส่
             } elseif ($user->emp_role == 'A') {
                 Session::put('employees', Employee::where('emp_role', 'A')->get());
                 return redirect()->to('/department');
