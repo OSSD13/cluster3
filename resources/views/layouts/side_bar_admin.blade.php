@@ -1,8 +1,8 @@
-{{-- 
+{{--
 * side_bar_admin.blade.php
 * sidebar_for_admin
 * @input : -
-* @output : 
+* @output :
 * @author : Sarocha Dokyeesun
 * @Create Date : 2025-03-17
 --}}
@@ -20,16 +20,16 @@
 <body>
     <div class="d-flex vh-100">
         <!-- Sidebar -->
-    <aside class="sidebar bg-white shadow p-3 position-fixed vh-100" style="width: 250px;">
-        <br><br><br><br>
+        <aside class="sidebar bg-white shadow p-3 position-fixed vh-100" style="width: 250px;">
+            <br><br><br><br>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link active" href="#" onclick="setActive(this)">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'manage_employee.showEmployees' ? 'active' : ''}}" href="{{ url('/manage_employee') }}">
                         <i class="fa-solid fa-user-tie me-2"></i> จัดการพนักงาน
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link" href="#" onclick="setActive(this)">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'manage-department' ? 'active' : ''}}" href="{{ url('/department') }}">
                         <i class="fa-solid fa-building me-2"></i> จัดการแผนก
                     </a>
                 </li>
@@ -41,13 +41,5 @@
 
 
 <script>
-    function setActive(element) {
-        // ลบ 'active' ออกจากทุกลิงก์
-        document.querySelectorAll('.sidebar-link').forEach((link) => {
-            link.classList.remove('active');
-        });
 
-        // เพิ่ม 'active' ลิงก์ที่คลิก
-        element.classList.add('active');
-    }
 </script>

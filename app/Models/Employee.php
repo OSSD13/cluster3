@@ -15,8 +15,8 @@ class Employee extends Model
     use HasFactory;
 
     protected $table = 'wrs_employees';
-
     protected $primaryKey = 'emp_id';
+    public $timestamps = false;
 
     protected $fillable = [
         'emp_dept_id',
