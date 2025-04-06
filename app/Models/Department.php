@@ -1,5 +1,11 @@
 <?php
 
+/*
+* Department
+* Manage department
+* @author : Natthanan Sirisurayut 66160352
+* @Create Date : 2025-03-30
+*/
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
