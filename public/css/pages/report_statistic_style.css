@@ -3,7 +3,6 @@ th {
 }
 
 h3 {
-    font-family: 'TH Sarabun New', sans-serif !important;
     font-weight: bold;
     font-size: 36px;
     color: #4B49AC;
@@ -106,32 +105,12 @@ h3 {
     color: #666;
 }
 
-.chart-container {
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    background-color: white;
-}
+.pie-container {
 
-.nav-pills .nav-link.active {
-    background-color: #5549bd;
-}
-
-.nav-pills .nav-link {
-    color: #333;
-}
-
-#workChart,
-#orgPieChart {
-    width: 500px !important;
-    height: 500px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
-/*
- canvas {
-        width: 100% !important;
-        max-width: 300px;
-        height: auto !important;
-    }
-*/
+
