@@ -1,0 +1,36 @@
+body {
+    font-family: 'Sarabun', sans-serif;
+    background-color: #ffffff;
+}
+
+.text-primary {
+    color: #4B49AC !important;
+}
+
+.custom-active-color {
+    color: #4B49AC;
+    border-color: none;
+}
+
+.custom-active-color:hover {
+    background-color: #4B49AC;
+    color: #ffffff;
+}
+
+.btn-check:checked + .custom-active-color {
+    background-color: #4B49AC;
+    color: #ffffff;
+    width: 200px;
+}
+
+.table-secondary {
+    background-color: #F7F7F7;
+}
+
+.dropdown-icon {
+    cursor: pointer;
+}
+
+.collapse {
+    transition: height 0.35s ease; /* Optional: Smooth transition */
+}
