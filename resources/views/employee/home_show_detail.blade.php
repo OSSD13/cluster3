@@ -13,7 +13,6 @@ Display form create subtask by employee
  <div class="content">
 
      <div class="col">
-
          <div class="d-flex justify-content-between align-items-center">
              <h3 class="mb-3">รายการงาน</h3>
              <ul class="nav nav-tabs">
@@ -40,10 +39,11 @@ Display form create subtask by employee
                      <th class="col-9 text-secondary"></th>
                  </tr>
              </thead>
-             <form action="{{url ('/show')}}" method="post" onsubmit="comfirm_save(event)">
+             <form  id="taskForm" action="{{ route('update-task', ['id' => $taskWith->tsk_id]) }}" method="post" onsubmit="comfirm_save(event)">
                  @csrf
                  @method('put')
                  <input type="hidden" name="tsk_id" value="{{$task->first()->tsk_id}}">
+                 <input type="hidden" name="tsk_comment_reject" id="tsk_comment_reject" value="{{$task->first()->tsk_comment_reject}}">
                  <tbody>
                      <tr>
                          <th scope=" row">ชื่อใบงาน</th>
@@ -69,21 +69,10 @@ Display form create subtask by employee
                          <td>
                              <div class="d-flex gap-2">
                                  <ion-icon name="person-circle-outline" size="large"></ion-icon>
-                                 <!-- @foreach($emp as $employee)
-                                 @if($employee->emp_id == $task->first()->tsk_req_id  )
-                                 {{ $employee->emp_name }}
-                                 @endif
-                                 @endforeach
-                                 @foreach($dept as $department)
-                                 @if($department->emp_id == $task->first()->tsk_emp_id && $workRequest[$task->first()-tsk_req_id]->req_create_type == 'dept' )
-                                 {{ $department->dept_name }}
-                                 @endif
-                                 @endforeach -->
                                  @php
                                  $workRequest = $taskWith->workRequest;
                                  @endphp
                                  <p>
-
                                      @if($workRequest->req_create_type == 'ind')
                                      {{ $workRequest->employee->emp_name ?? '-' }}
                                      @elseif($workRequest->req_create_type == 'dept')
@@ -128,7 +117,9 @@ Display form create subtask by employee
 
                                      <!-- <span id="statusIndicator" class="status-dot bg-secondary"></span> {{ $task->first()->tsk_status }} -->
                                  </button>
+                                 
                                  <!-- ปุ่ม Dropdown -->
+                                 @if ($task->first()->tsk_status == 'Pending' || $task->first()->tsk_status == 'In Progress')
                                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="border: none; background: none;">
                                      <span class="visually-hidden">Toggle Dropend</span>
                                  </button>
@@ -138,6 +129,7 @@ Display form create subtask by employee
                                      <li><a class="dropdown-item" href="#" onclick="changeStatus('กำลังดำเนินการ', 'bg-warning', 'In Progress')">กำลังดำเนินการ</a></li>
                                      <li><a class="dropdown-item" href="#" onclick="changeStatus('เสร็จสิ้น', 'bg-success', 'Completed')">เสร็จสิ้น</a></li>
                                  </ul>
+                                 @endif
                              </div>
                          </td>
                      </tr>
@@ -197,6 +189,7 @@ Display form create subtask by employee
                          ดูรายละเอียดเพิ่มเติม
                      </a>
                  </div>
+                 @if ($task->first()->tsk_status == 'Pending' || $task->first()->tsk_status == 'In Progress')
                  <div class="col d-flex justify-content-end">
                      <!-- ปุ่มปฏิเสธ -->
                      <button type="button" class="btn me-2" style="background-color:#E70000; color: white;" onclick="comfirm_reject(event)">ปฏิเสธ</button>
@@ -204,6 +197,8 @@ Display form create subtask by employee
                      <!-- ปุ่มบันทึก -->
                      <button type="submit" class="btn" style="background-color:#4B49AC; color: white;">บันทึก</button>
                  </div>
+                 @endif
+                 
              </div>
          </div>
      </div>
@@ -252,38 +247,32 @@ Display form create subtask by employee
          //  $(document).ready(function() {})
      </script>
      <script>
-         async function comfirm_reject(event) {
-             event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
+async function comfirm_reject(event) {
+    event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
 
-             const {
-                 value: reason
-             } = await Swal.fire({
-                 title: "กรุณากรอกเหตุผลการปฏิเสธ",
-                 input: "text",
-                 inputLabel: " ",
-                 showCancelButton: true,
-                 cancelButtonText: 'ยกเลิก', // กำหนดข้อความปุ่มยกเลิก
-                 confirmButtonText: 'ยืนยัน', // กำหนดข้อความปุ่มยืนยัน
-                 inputValidator: (value) => {
-                     if (!value) {
-                         return "กรุณากรอกเหตุผล!";
-                     }
-                 }
-             });
+    const { value: reason } = await Swal.fire({
+        title: "กรุณากรอกเหตุผลการปฏิเสธ",
+        input: "text",
+        inputLabel: " ",
+        showCancelButton: true,
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonText: 'ยืนยัน',
+        inputValidator: (value) => {
+            if (!value) {
+                return "กรุณากรอกเหตุผล!";
+            }
+        }
+    });
 
-             if (reason) {
-                 // ดำเนินการกับเหตุผลที่กรอก เช่น ส่งข้อมูลไปยังเซิร์ฟเวอร์
-                 // ตัวอย่างการแสดงข้อความยืนยันการปฏิเสธ
-                 Swal.fire(`เหตุผลการปฏิเสธ: ${reason}`);
-             }
-         }
+    if (reason) {
+        // เซ็ตค่าที่ต้องการส่ง
+        document.getElementById("tsk_status").value = "Rejected";
+        document.getElementById("tsk_comment_reject").value = reason;
 
-         $(document).ready(function() {
-             // เพิ่มการเชื่อมต่อ event ที่ต้องการเรียกใช้งานฟังก์ชัน comfirm_reject
-             // เช่นถ้าคลิกปุ่ม ก็สามารถใส่โค้ดนี้
-             $('#yourButtonID').click(function(event) {
-                 comfirm_reject(event);
-             });
-         });
+        // ส่งฟอร์ม
+        document.getElementById("taskForm").submit();
+    }
+}
+
      </script>
      @endsection

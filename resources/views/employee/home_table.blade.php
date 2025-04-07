@@ -51,7 +51,7 @@
                                     <th class="col-2">กำหนดส่ง</th>
                                 </tr>
                             </thead>
-                            <tbody >
+                            <tbody>
                                 @if(isset($tasks['received']['my']) && count($tasks['received']['my']) > 0)
                                 @foreach ($tasks['received']['my'] as $task)
                                 <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
@@ -85,7 +85,7 @@
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> <!-- ปรับ colspan เป็น 6 -->
                                 </tr>
                                 @endif
                             </tbody>
@@ -103,7 +103,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+
                                 @if(isset($tasks['inprogress']['my']) && count($tasks['inprogress']['my']) > 0)
                                 @foreach ($tasks['inprogress']['my'] as $task)
                                 <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
@@ -136,7 +136,7 @@
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> <!-- ปรับ colspan เป็น 6 -->
                                 </tr>
                                 @endif
                             </tbody>
@@ -154,39 +154,42 @@
                                 </tr>
                             </thead>
                             <tbody>
+
                                 @if(isset($tasks['completed']['my']) && count($tasks['completed']['my']) > 0)
                                 @foreach ($tasks['completed']['my'] as $task)
-                                <tr>
-                                    <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
-                                    <td class="col-3">{{ $task->tsk_name }}</td>
-                                    <td class="col-2">
-                                        @if ($task->workRequest->req_create_type == 'ind')
-                                        {{ $task->workRequest->employee->emp_name }}
-                                        @endif
-                                        @if ($task->workRequest->req_create_type == 'dept')
-                                        {{ $task->workRequest->department->dept_name }}
-                                        @endif
+                                    @if ( $workRequests[$task->tsk_req_id]->req_status != 'Completed' )
+                                    <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
+                                        <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
+                                        <td class="col-3">{{ $task->tsk_name }}</td>
+                                        <td class="col-2">
+                                            @if ($task->workRequest->req_create_type == 'ind')
+                                            {{ $task->workRequest->employee->emp_name }}
+                                            @endif
+                                            @if ($task->workRequest->req_create_type == 'dept')
+                                            {{ $task->workRequest->department->dept_name }}
+                                            @endif
 
-                                        <!-- {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }} -->
-                                    </td>
-                                    <td>
-                                        @if($task->tsk_priority == 'H' )
-                                        <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
-                                        @endif
-                                        @if($task->tsk_priority == 'M' )
-                                        <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
-                                        @endif
-                                        @if($task->tsk_priority == 'L' )
-                                        <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-                                    <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
-                                </tr>
+                                           
+                                        </td>
+                                        <td>
+                                            @if($task->tsk_priority == 'H' )
+                                            <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
+                                            @endif
+                                            @if($task->tsk_priority == 'M' )
+                                            <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
+                                            @endif
+                                            @if($task->tsk_priority == 'L' )
+                                            <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
+                                        <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
+                                    </tr>
+                                    @endif
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> <!-- ปรับ colspan เป็น 6 -->
                                 </tr>
                                 @endif
                             </tbody>
@@ -222,7 +225,7 @@
                             <tbody>
                                 @if(isset($tasks['received']['dept']) && count($tasks['received']['dept']) > 0)
                                 @foreach ($tasks['received']['dept'] as $task)
-                                <tr>
+                                <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
                                     <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
                                     <td class="col-3">{{ $task->tsk_name }}</td>
                                     <td class="col-2">
@@ -272,7 +275,7 @@
                             <tbody>
                                 @if(isset($tasks['inprogress']['dept']) && count($tasks['inprogress']['dept']) > 0)
                                 @foreach ($tasks['inprogress']['dept'] as $task)
-                                <tr>
+                                <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
                                     <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
                                     <td class="col-3">{{ $task->tsk_name }}</td>
                                     <td class="col-2">
@@ -322,33 +325,35 @@
                             <tbody>
                                 @if(isset($tasks['completed']['dept']) && count($tasks['completed']['dept']) > 0)
                                 @foreach ($tasks['completed']['dept'] as $task)
-                                <tr>
-                                    <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
-                                    <td class="col-3">{{ $task->tsk_name }}</td>
-                                    <td class="col-2">
-                                        @if ($task->workRequest->req_create_type == 'ind')
-                                        {{ $task->workRequest->employee->emp_name }}
-                                        @endif
-                                        @if ($task->workRequest->req_create_type == 'dept')
-                                        {{ $task->workRequest->department->dept_name }}
-                                        @endif
+                                    @if ( $workRequests[$task->tsk_req_id]->req_status != 'Completed' )
+                                        <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
+                                            <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
+                                            <td class="col-3">{{ $task->tsk_name }}</td>
+                                            <td class="col-2">
+                                                @if ($task->workRequest->req_create_type == 'ind')
+                                                {{ $task->workRequest->employee->emp_name }}
+                                                @endif
+                                                @if ($task->workRequest->req_create_type == 'dept')
+                                                {{ $task->workRequest->department->dept_name }}
+                                                @endif
 
-                                        <!-- {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }} -->
-                                    </td>
-                                    <td>
-                                        @if($task->tsk_priority == 'H' )
-                                        <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
+                                            
+                                            </td>
+                                            <td>
+                                                @if($task->tsk_priority == 'H' )
+                                                <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
+                                                @endif
+                                                @if($task->tsk_priority == 'M' )
+                                                <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
+                                                @endif
+                                                @if($task->tsk_priority == 'L' )
+                                                <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
+                                            <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
+                                        </tr>
                                         @endif
-                                        @if($task->tsk_priority == 'M' )
-                                        <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
-                                        @endif
-                                        @if($task->tsk_priority == 'L' )
-                                        <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-                                    <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
-                                </tr>
                                 @endforeach
                                 @else
                                 <tr>
@@ -365,10 +370,10 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const rows = document.querySelectorAll(".clickable-row");
         rows.forEach(row => {
-            row.addEventListener("click", function () {
+            row.addEventListener("click", function() {
                 const url = this.getAttribute("data-href");
                 if (url) {
                     window.location.href = url;

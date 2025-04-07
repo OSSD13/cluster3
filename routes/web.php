@@ -27,9 +27,12 @@ Route::middleware(['admin'])->group(function () {
 Route::middleware(['employee'])->group(function () {
     Route::get('/main', [WorkRequestController::class, 'index'])->name('main-page');;
     Route::get('/achrive',   [WorkRequestController::class, 'achrive'])->name('achrive');
+    // Route::get('/show/{id}', [WorkRequestController::class, 'showDetail'])->name('show');
     Route::get('/show/{id}', [WorkRequestController::class, 'showDetail'])->name('show');
-    Route::put('/show', [WorkRequestController::class, 'updateTask'])->name('main-page');
-    Route::get('/sent',   [WorkRequestController::class, 'sent'])->name('sent');
+    // Route::put('/show', [WorkRequestController::class, 'updateTask'])->name('main-page');
+    Route::put('/show/{id}', [WorkRequestController::class, 'updateTask'])->name('update-task');
+
+    Route::get('/sent',   [WorkRequestController::class, 'sent'])->name('send');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 

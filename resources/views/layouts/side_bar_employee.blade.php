@@ -25,7 +25,7 @@
             <br><br><br><br>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'main-page' ? 'active' : ''}}" href="{{ url('/main') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ in_array(Route::currentRouteName() ,['main-page' , 'show' , 'update-task' ] ) ? 'active' : ''}}" href="{{ url('/main') }}">
                         <i class="fa-solid fa-house me-2"></i> หน้าหลัก
                     </a>
                 </li>
@@ -40,7 +40,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'send' ? 'active' : ''}}" href="#" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'send' ? 'active' : ''}}" href="{{ url('/sent') }}" >
                         <i class="fa-solid fa-upload me-2"></i> ส่งแล้ว
                     </a>
                 </li>
