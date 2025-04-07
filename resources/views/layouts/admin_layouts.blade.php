@@ -64,12 +64,12 @@
             {{-- Sidebar --}}
             @include('layouts.side_bar_admin')
             {{-- Header --}}
-            @include('layouts.header')
 
             {{-- Content Area --}}
             <main class="container-fluid" style="margin-left: 250px">
                 @yield('content')
             </main>
+            @include('layouts.header')
         </div>
     </div>
     {{-- Custom JS --}}
