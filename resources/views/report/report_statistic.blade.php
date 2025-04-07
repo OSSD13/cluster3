@@ -33,25 +33,25 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $myStatistics['total'] }}</div>
+                                    <div class="stats-number total">{{ $statistics->total }}</div>
                                     <div class="stats-label">งานที่ได้รับทั้งหมด</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $myStatistics['completed'] }}</div>
+                                    <div class="stats-number completed">{{ $statistics->completed }}</div>
                                     <div class="stats-label">งานที่ทำเสร็จสิ้น</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $myStatistics['delayed'] }}</div>
+                                    <div class="stats-number delayed">{{ $statistics->delayed }}</div>
                                     <div class="stats-label">งานที่ส่งล่าช้า</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $myStatistics['rejected'] }}</div>
+                                    <div class="stats-number rejected">{{ $statistics->rejected }}</div>
                                     <div class="stats-label">งานที่ปฏิเสธ</div>
                                 </div>
                             </div>
@@ -86,27 +86,26 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $coStatistics['total'] }}</div>
-                                    <div class="stats-label">งานทั้งหมด</div>
-                                    <!--all ทำการมอบหมายงาน และ งานที่ถูกมอบหมาย-->
+                                    <div class="stats-number total">{{ $statistics->total }}</div>
+                                    <div class="stats-label">งานที่ได้รับทั้งหมด</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $coStatistics['completed'] }}</div>
-                                    <div class="stats-label">งานที่เสร็จสิ้นทั้งหมด</div>
+                                    <div class="stats-number completed">{{ $statistics->completed }}</div>
+                                    <div class="stats-label">งานที่ทำเสร็จสิ้น</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $coStatistics['delayed'] }}</div>
-                                    <div class="stats-label">งานล่าช้า</div>
+                                    <div class="stats-number delayed">{{ $statistics->delayed }}</div>
+                                    <div class="stats-label">งานที่ส่งล่าช้า</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $coStatistics['rejected'] }}</div>
-                                    <div class="stats-label">งานถูกปฏิเสธ</div>
+                                    <div class="stats-number rejected">{{ $statistics->rejected }}</div>
+                                    <div class="stats-label">งานที่ปฏิเสธ</div>
                                 </div>
                             </div>
                         </div>
@@ -139,6 +138,7 @@
         </div>
     </div>
 @endsection
+
 @section('script')
     <!-- 🔽 Script เติมปีและเดือน -->
     <script>
@@ -170,7 +170,7 @@
         function populateMonthDropdown(selectId) {
             const select = document.getElementById(selectId);
             const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.",
-                "ธ.ค.", "ทั้งปี"
+                "ธ.ค."
             ];
             months.forEach((month, index) => {
                 const option = document.createElement("option");
@@ -178,43 +178,114 @@
                 option.textContent = month;
                 select.appendChild(option);
             });
+            const allOption = document.createElement("option");
+            allOption.value = "all";
+            allOption.textContent = "ทั้งปี";
+            select.appendChild(allOption);
         }
 
-        populateYearDropdown("yearDropdown");
-        populateMonthDropdown("monthDropdown");
-        populateYearDropdown("orgYearDropdown");
-        populateMonthDropdown("orgMonthDropdown");
+        function fetchStatistics(year, month) {
+    const url = "{{ route('report.statistics') }}";
+    const params = new URLSearchParams({ year, month });
+
+    fetch(`${url}?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            // อัปเดตการ์ดสถิติ
+            document.querySelector('.stats-number.total').textContent = data.total;
+            document.querySelector('.stats-number.completed').textContent = data.completed;
+            document.querySelector('.stats-number.delayed').textContent = data.delayed;
+            document.querySelector('.stats-number.rejected').textContent = data.rejected;
+
+            // 🔁 อัปเดตกราฟด้วย drawPieChart
+            const labels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
+            const values = [data.completed, data.delayed, data.rejected];
+            const colors = [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 192, 201, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ];
+            drawPieChart('workChart', labels, values, colors);
+        });
+}
 
 
-
-        // ✅ ฟังก์ชันสร้างกราฟวงกลม
-        function drawPieChart(canvasId, labels, values, colors) {
+        function updatePieChart(canvasId, values) {
             const ctx = document.getElementById(canvasId).getContext('2d');
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: labels,
+                    labels: ['งานที่ทำเสร็จสิ้น ', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'],
                     datasets: [{
                         data: values,
-                        backgroundColor: colors,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 192, 201, 0.8)',
+                            'rgba(255, 159, 64, 0.8)'
+                        ],
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // ปิดการรักษาอัตราส่วน
-                    plugins: {
-                        legend: {
-                            position: 'right', // แสดง legend ทางด้านขวา
-                            labels: {
-                                usePointStyle: true, // ใช้จุดแทนสี่เหลี่ยม
-                                pointStyle: 'circle' // รูปแบบจุดเป็นวงกลม
-                            }
-                        }
-                    }
+                    maintainAspectRatio: false
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateYearDropdown("yearDropdown");
+            populateMonthDropdown("monthDropdown");
+
+            const yearDropdown = document.getElementById("yearDropdown");
+            const monthDropdown = document.getElementById("monthDropdown");
+
+            yearDropdown.addEventListener('change', () => {
+                fetchStatistics(yearDropdown.value, monthDropdown.value);
+            });
+
+            monthDropdown.addEventListener('change', () => {
+                fetchStatistics(yearDropdown.value, monthDropdown.value);
+            });
+
+            // โหลดข้อมูลเริ่มต้น
+            fetchStatistics(yearDropdown.value, monthDropdown.value);
+        });
+
+        function drawPieChart(canvasId, labels, values, colors) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+
+    // 🔄 ลบกราฟเก่าก่อนวาดใหม่ (ป้องกันซ้อน)
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+
+    window.myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                }
+            }
+        }
+    });
+}
+
 
         // ✅ กราฟวงกลมฝั่ง "รายงานของฉัน"
         const myLabels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
