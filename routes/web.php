@@ -8,10 +8,6 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\AdminMiddleware;
 
-
-Route::get('/report-stat', [ReportController::class, 'showReportStat'])->name('report-stat');
-Route::get('/report-table', [ReportController::class, 'showReportTable'])->name('report-data');
-
 Route::middleware(['admin'])->group(function () {
     Route::get('/', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showEmployees');
     Route::get('/manage_employee', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showEmployees');
@@ -27,8 +23,8 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['employee'])->group(function () {
-
-
+    Route::get('/report-table', [ReportController::class, 'showReportTable'])->name('report-data');
+    Route::get('/report-stat', [ReportController::class, 'getTaskStatistics'])->name('report.statistics');
 });
 
 Route::get(

@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">10</div>
+                                    <div class="stats-number">{{ $statistics['completed'] }}</div>
                                     <div class="stats-label">งานที่ได้รับทั้งหมด</div>
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
                             <div class="col-md-3">
                                 <div class="stats-card">
                                     <div class="stats-number">88</div>
-                                    <div class="stats-label">งานที่มอบหมาย</div>
+                                    <div class="stats-label">งานทั้งหมด</div>
                                     <!--all ทำการมอบหมายงาน และ งานที่ถูกมอบหมาย-->
                                 </div>
                             </div>
