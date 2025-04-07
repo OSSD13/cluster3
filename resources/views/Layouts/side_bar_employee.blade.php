@@ -45,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : ''}}" href="#" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'archive' ? 'active' : ''}}" href="" >
                         <i class="fa-solid fa-box-archive me-2"></i> จัดเก็บ
                     </a>
                 </li>

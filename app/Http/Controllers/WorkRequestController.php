@@ -26,4 +26,26 @@ class WorkRequestController extends Controller
         // ส่งเข้าไปยัง view
         return view('archive_detail', compact('reqName', 'reqDescription', 'tasks', 'reqEmployeeName'));
     }
+
+    public function indexSelf()
+    {
+        $req_id = 4; // req_id ไอดีใบงานส่งมาจากหน้ารายการ
+        $emp_id = 3; // emp_id ไอดีพนักงานส่งมาจากหน้ารายการ
+
+        $workRequest = WorkRequest::with(['tasks' => function($query) use ($emp_id) {
+            $query->where('tsk_emp_id', $emp_id);
+        }, 'tasks.employee'])->where('req_id', $req_id)->first();
+
+        // หาใบงานไม่เจอ
+        if (!$workRequest) {
+            abort(404, 'Work request not found.');
+        }
+
+        $reqName = $workRequest->req_name ?? 'ไม่มีชื่อ';
+        $reqDescription = $workRequest->req_description ?? 'ไม่มีคำอธิบาย';
+        $tasks = $workRequest->tasks; // Now contains only tasks for this employee
+        $reqEmployeeName = $workRequest->employee->emp_name ?? 'ไม่มีข้อมูล';
+
+        return view('archive_detail_self', compact('reqName', 'reqDescription', 'tasks', 'reqEmployeeName'));
+    }
 }
