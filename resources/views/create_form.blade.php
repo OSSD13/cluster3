@@ -1,4 +1,4 @@
-{{-- 
+{{--
 * employee_layouts.blade.php
 * Layout for employee dashboard
 *
@@ -79,13 +79,13 @@
         let taskCount = 1;
 
         /*
-        * document.addEventListener('DOMContentLoaded', ...)
-        * โหลด event listener เพื่อให้ JS เริ่มทำงานเมื่อ DOM โหลดเสร็จ
-        * @input : -
-        * @output : set event change ให้กับ select[name="dept[]"] เพื่อโหลด employee ตามแผนก
-        * @author : Sarocha Dokyeesun 66160097
-        * @Create Date : 2025-04-04
-        */
+         * document.addEventListener('DOMContentLoaded', ...)
+         * โหลด event listener เพื่อให้ JS เริ่มทำงานเมื่อ DOM โหลดเสร็จ
+         * @input : -
+         * @output : set event change ให้กับ select[name="dept[]"] เพื่อโหลด employee ตามแผนก
+         * @author : Sarocha Dokyeesun 66160097
+         * @Create Date : 2025-04-04
+         */
         document.addEventListener('DOMContentLoaded', function() {
             document.body.addEventListener('change', function(e) {
                 if (e.target && e.target.name === 'dept[]') {
@@ -97,7 +97,11 @@
                         'select[name="emp[]"]');
                     empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
 
-                    fetch(`/form/employee/${deptId}`)
+                    const baseUrl = "{{ config('app.url') }}";
+                    const url = `${baseUrl}/cluster3/form/employee/${deptId}`;
+                    console.log(url);
+
+                    fetch(url)
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(emp => {
@@ -113,13 +117,13 @@
         });
 
         /*
-        * addTask()
-        * เพิ่ม task ย่อยใหม่ลงใน accordion
-        * @input : -
-        * @output : แสดง task ย่อยใหม่ใน DOM
-        * @author : Sarocha Dokyeesun 66160097
-        * @Create Date : 2025-03-17
-        */
+         * addTask()
+         * เพิ่ม task ย่อยใหม่ลงใน accordion
+         * @input : -
+         * @output : แสดง task ย่อยใหม่ใน DOM
+         * @author : Sarocha Dokyeesun 66160097
+         * @Create Date : 2025-03-17
+         */
         function addTask() {
             const departments = @json($dept);
             const taskList = document.getElementById("taskList");
@@ -192,13 +196,13 @@
         }
 
         /*
-        * removeTask(id)
-        * ลบ task ย่อยออกจากหน้า และอัปเดตหมายเลข
-        * @input : id ของ task ย่อย
-        * @output : ลบ DOM element ของ task ย่อยออกไป พร้อมอัปเดตหมายเลข task ใหม่ทั้งหมดในหน้าเพจ
-        * @author : Sarocha Dokyeesun 66160097
-        * @Create Date : 2025-03-17
-        */
+         * removeTask(id)
+         * ลบ task ย่อยออกจากหน้า และอัปเดตหมายเลข
+         * @input : id ของ task ย่อย
+         * @output : ลบ DOM element ของ task ย่อยออกไป พร้อมอัปเดตหมายเลข task ใหม่ทั้งหมดในหน้าเพจ
+         * @author : Sarocha Dokyeesun 66160097
+         * @Create Date : 2025-03-17
+         */
         function removeTask(id) {
             Swal.fire({
                 title: 'ยืนยันการลบ?',
@@ -255,13 +259,13 @@
         }
 
         /*
-        * updateTaskNumbers()
-        * อัปเดตหมายเลขงานย่อยเมื่อมีการลบ
-        * @input : -
-        * @output : ปรับหมายเลข, ID, target ของ task ใหม่ทั้งหมดให้เรียงลำดับถูกต้องใน DOM
-        * @author : Sarocha Dokyeesun 66160097
-        * @Create Date : 2025-03-18
-        */
+         * updateTaskNumbers()
+         * อัปเดตหมายเลขงานย่อยเมื่อมีการลบ
+         * @input : -
+         * @output : ปรับหมายเลข, ID, target ของ task ใหม่ทั้งหมดให้เรียงลำดับถูกต้องใน DOM
+         * @author : Sarocha Dokyeesun 66160097
+         * @Create Date : 2025-03-18
+         */
         function updateTaskNumbers() {
             const taskItems = document.querySelectorAll("#taskList .accordion-item");
             taskCount = 1;
@@ -280,13 +284,13 @@
         }
 
         /*
-        * validateFormFields(form)
-        * ตรวจสอบความถูกต้องของฟอร์ม ก่อนส่ง submit
-        * @input : form DOM object
-        * @output : boolean ผลการตรวจสอบ (true = valid, false = invalid) และแสดงข้อความ error หากไม่ผ่าน
-        * @author : Sarocha Dokyeesun 66160097
-        * @Create Date : 2025-03-05
-        */
+         * validateFormFields(form)
+         * ตรวจสอบความถูกต้องของฟอร์ม ก่อนส่ง submit
+         * @input : form DOM object
+         * @output : boolean ผลการตรวจสอบ (true = valid, false = invalid) และแสดงข้อความ error หากไม่ผ่าน
+         * @author : Sarocha Dokyeesun 66160097
+         * @Create Date : 2025-03-05
+         */
         function validateFormFields(form) {
             const inputs = form.querySelectorAll("input[required], select[required], textarea[required]");
             let isValid = true;
