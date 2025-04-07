@@ -31,23 +31,69 @@ class ReportController extends Controller
     public function getTaskStatistics()
     {
         $user = session('user'); // ดึงข้อมูลผู้ใช้จาก session
+        $userId = $user->emp_id; // ใช้ emp_id ของผู้ใช้
 
-        $userId = $user->id;
+        // ดึงข้อมูลงานของผู้ใช้
+        $tasks = Task::where('tsk_emp_id', $userId)->get();
 
-        // ใช้ Task Model แทน DB::table()
-        $taskStatistics = Task::select('tsk_status', DB::raw('COUNT(*) as count'))
-        ->where('tsk_emp_id', $userId)
-        ->groupBy('tsk_status')
-        ->get();
+        // แยกประเภทงาน
+        $completedTasks = $tasks->filter(function ($task) {
+            return $task->tsk_status === 'Completed' &&
+            $task->tsk_completed_date !== null;
+        });
 
-        // แปลงข้อมูลให้อยู่ในรูปแบบที่ง่ายต่อการใช้งานใน View
-        $statistics = [
-            'total' => $taskStatistics->sum('count'),
-            'completed' => $taskStatistics->where('tsk_status', 'Completed')->first()->count ?? 0,
-            'delayed' => $taskStatistics->where('tsk_status', 'delayed')->first()->count ?? 0,
-            'rejected' => $taskStatistics->where('tsk_status', 'Rejected')->first()->count ?? 0,
+        $delayedTasks = $tasks->filter(function ($task) {
+            return $task->tsk_status === 'Completed' &&
+                $task->tsk_completed_date !== null &&
+                $task->tsk_completed_date > $task->tsk_due_date; // เปรียบเทียบวันที่
+        });
+
+        $rejectedTasks = $tasks->filter(function ($task) {
+            return $task->tsk_status === 'Rejected';
+        });
+
+        // สร้างสถิติ
+        $myStatistics = [
+            'total' => $tasks->count(),
+            'completed' => $completedTasks->count(),
+            'delayed' => $delayedTasks->count(),
+            'rejected' => $rejectedTasks->count(),
         ];
 
-        return view('report.report_statistic', compact('statistics'));
+        return view('report.report_statistic', compact('myStatistics'));
     }
+
+    public function getTaskStatisticsCompany()
+    {
+
+        // ดึงข้อมูลงานของผู้ใช้
+        $tasks = Task::all();
+
+        // แยกประเภทงาน
+        $completedTasks = $tasks->filter(function ($task) {
+            return $task->tsk_status === 'Completed' &&
+            $task->tsk_completed_date !== null;
+        });
+
+        $delayedTasks = $tasks->filter(function ($task) {
+            return $task->tsk_status === 'Completed' &&
+                $task->tsk_completed_date !== null &&
+                $task->tsk_completed_date > $task->tsk_due_date; // เปรียบเทียบวันที่
+        });
+
+        $rejectedTasks = $tasks->filter(function ($task) {
+            return $task->tsk_status === 'Rejected';
+        });
+
+        // สร้างสถิติ
+        $coStatistics = [
+            'total' => $tasks->count(),
+            'completed' => $completedTasks->count(),
+            'delayed' => $delayedTasks->count(),
+            'rejected' => $rejectedTasks->count(),
+        ];
+
+        return view('report.report_statistic', compact('coStatistics'));
+    }
+
 }

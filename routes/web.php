@@ -24,7 +24,8 @@ Route::middleware(['admin'])->group(function () {
 
 Route::middleware(['employee'])->group(function () {
     Route::get('/report-table', [ReportController::class, 'showReportTable'])->name('report-data');
-    Route::get('/report-stat', [ReportController::class, 'getTaskStatistics'])->name('report.statistics');
+    Route::get('/report-stat', [ReportController::class, 'getTaskStatistics'])->name('report-stat.myReport');
+    Route::get('/report-stat-company', [ReportController::class, 'getTaskStatisticsCompany'])->name('report-stat.coReport');
 });
 
 Route::get(

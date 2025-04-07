@@ -7,10 +7,10 @@
                 <h3 class="m-0">สถิติงาน</h3>
                 <ul class="nav nav-tabs" id="taskTabs">
                     <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#myReport">รายงานของฉัน</a>
+                        <a class="nav-link active" href="{{ route('report-stat.myReport', ['tab' => 'myReport']) }}">รายงานของฉัน</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#departmentTasks">รายงานขององค์กร</a>
+                        <a class="nav-link" href="{{ route('report-stat.coReport', ['tab' => 'coReport']) }}">รายงานขององค์กร</a>
                     </li>
                 </ul>
             </div>
@@ -33,25 +33,25 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">{{ $statistics['completed'] }}</div>
+                                    <div class="stats-number">{{ $myStatistics['total'] }}</div>
                                     <div class="stats-label">งานที่ได้รับทั้งหมด</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">6</div>
+                                    <div class="stats-number">{{ $myStatistics['completed'] }}</div>
                                     <div class="stats-label">งานที่ทำเสร็จสิ้น</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">3</div>
+                                    <div class="stats-number">{{ $myStatistics['delayed'] }}</div>
                                     <div class="stats-label">งานที่ส่งล่าช้า</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">1</div>
+                                    <div class="stats-number">{{ $myStatistics['rejected'] }}</div>
                                     <div class="stats-label">งานที่ปฏิเสธ</div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- 🔽 รายงานขององค์กร -->
-                <div class="tab-pane fade mt-3" id="departmentTasks">
+                <div class="tab-pane fade mt-3" id="coReport">
                     <div class="container py-4">
                         <!-- 🔽 Dropdown ปีและเดือน -->
                         <div class="d-flex justify-content-end align-items-center mb-4">
@@ -86,26 +86,26 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">88</div>
+                                    <div class="stats-number">{{ $coStatistics['total'] }}</div>
                                     <div class="stats-label">งานทั้งหมด</div>
                                     <!--all ทำการมอบหมายงาน และ งานที่ถูกมอบหมาย-->
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">76</div>
+                                    <div class="stats-number">{{ $coStatistics['completed'] }}</div>
                                     <div class="stats-label">งานที่เสร็จสิ้นทั้งหมด</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">7</div>
+                                    <div class="stats-number">{{ $coStatistics['delayed'] }}</div>
                                     <div class="stats-label">งานล่าช้า</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number">5</div>
+                                    <div class="stats-number">{{ $coStatistics['rejected'] }}</div>
                                     <div class="stats-label">งานถูกปฏิเสธ</div>
                                 </div>
                             </div>
@@ -142,6 +142,19 @@
 @section('script')
     <!-- 🔽 Script เติมปีและเดือน -->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+
+            if (tab) {
+                const targetTab = document.querySelector(`[href="#${tab}"]`);
+                if (targetTab) {
+                    const tabInstance = new bootstrap.Tab(targetTab);
+                    tabInstance.show();
+                }
+            }
+        });
+
         function populateYearDropdown(selectId) {
             const select = document.getElementById(selectId);
             const currentYear = new Date().getFullYear();
