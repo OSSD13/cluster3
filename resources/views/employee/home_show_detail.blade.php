@@ -142,7 +142,11 @@ Display form create subtask by employee
                      </tr>
                      <tr>
                          <th scope="row">วันที่เสร็จสิ้น</th>
-                         <td>-</td>
+                            @if ($task->first()->tsk_completed_date == null)
+                            <td class="text-danger">ยังไม่เสร็จสิ้น</td>
+                            @else
+                            <td class="text-success">{{ \Carbon\Carbon::parse($task->first()->tsk_completed_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
+                            @endif
                      </tr>
                      <tr>
                          <th scope="row mt-3">ความคิดเห็น</th>
@@ -164,14 +168,6 @@ Display form create subtask by employee
 
                                          @endif
 
-                                         <!-- @if ($task->first()->tsk_comment == '')
-                                         <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" style="height: 100px" ></textarea>
-                                         <label for="floatingTextarea2" name="tsk_comment" value ="{{ $task->first()->tsk_comment }}" >เพิ่มความคิดเห็น...</label>
-                                         @endif
-                                         @if ($task->first()->tsk_comment != null)
-                                         <textarea class="form-control" placeholder="{{ $task->first()->tsk_comment }}" id="floatingTextarea2" style="height: 100px" ></textarea>
-                                         <label for="floatingTextarea2" name="tsk_comment" value ="{{ $task->first()->tsk_comment }}" >{{ $task->first()->tsk_comment }}</label>
-                                         @endif -->
 
                                      </div>
                                  </div>
