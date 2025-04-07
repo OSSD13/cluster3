@@ -6,7 +6,6 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="main-header">สรุปรายการ Work Request ประจำวันที่ 1 มี.ค. 68</h2>
-
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
@@ -14,20 +13,44 @@
                                 <h5 style="color: #4B49AC;">จำนวนทั้งสิ้น {{ count($workRequests) }} รายการ</h5>
                             </div>
                             <div class="d-flex">
-                                <div class="dropdown me-2">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                        id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                        กรุณาเลือก
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-                                        <li><a class="dropdown-item" href="#">วัน</a></li>
-                                        <li><a class="dropdown-item" href="#">เดือน</a></li>
-                                        <li><a class="dropdown-item" href="#">ปี</a></li>
-                                    </ul>
+                                <div class="d-flex justify-content-end align-items-center mb-4">
+                                    <div class="me-2">
+                                        <select id="yearDropdown" class="form-select">
+                                            @php
+                                                $years = range(2020, date('Y')); // ตั้งค่าปีจาก 2020 ถึงปีปัจจุบัน
+                                            @endphp
+
+                                            @foreach ($years as $year)
+                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select id="monthDropdown" class="form-select">
+                                            @php
+                                                $months = [
+                                                    '01' => 'ม.ค.',
+                                                    '02' => 'ก.พ.',
+                                                    '03' => 'มี.ค.',
+                                                    '04' => 'เม.ย.',
+                                                    '05' => 'พ.ค.',
+                                                    '06' => 'มิ.ย.',
+                                                    '07' => 'ก.ค.',
+                                                    '08' => 'ส.ค.',
+                                                    '09' => 'ก.ย.',
+                                                    '10' => 'ต.ค.',
+                                                    '11' => 'พ.ย.',
+                                                    '12' => 'ธ.ค.',
+                                                ];
+                                            @endphp
+
+                                            @foreach ($months as $key => $month)
+                                                <option value="{{ $month }}">{{ $month }}</option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
                                 </div>
-                                <button class="btn btn-outline-secondary">
-                                    <i class="fas fa-calendar"></i>
-                                </button>
                             </div>
                         </div>
 
@@ -49,7 +72,7 @@
                                 <tbody>
 
                                     @foreach ($workRequests as $index => $workRequest)
-                                        <tr>
+                                        <tr class="main-row">
                                             <td rowspan="{{ count($workRequest->tasks) + 1 }}">{{ $index + 1 }}</td>
                                             <td rowspan="{{ count($workRequest->tasks) + 1 }}">{{ $workRequest->req_code }}
                                             </td>
@@ -76,24 +99,60 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $task->thai_task_due_date }}</td>
-                                                    @if ($task->tsk_status === 'Pending')
-                                                        <td><span class="status-dot-1"></span>รอดำเนินการ</td>
-                                                    @elseif ($task->tsk_status === 'In Progress')
-                                                        <td><span class="status-dot-2"></span>กำลังดำเนินการ</td>
-                                                    @elseif ($task->tsk_status === 'Completed')
-                                                        <td><span class="status-dot-3"></span>เสร็จสิ้น</td>
-                                                    @elseif ($task->tsk_status === 'Rejected')
-                                                        <td><span class="status-dot-4"></span>ปฏิเสธ</td>
-                                                    @endif
+                                                @if ($task->tsk_status === 'Pending')
+                                                    <td><span class="status-dot-1"></span>รอดำเนินการ</td>
+                                                @elseif ($task->tsk_status === 'In Progress')
+                                                    <td><span class="status-dot-2"></span>กำลังดำเนินการ</td>
+                                                @elseif ($task->tsk_status === 'Completed')
+                                                    <td><span class="status-dot-3"></span>เสร็จสิ้น</td>
+                                                @elseif ($task->tsk_status === 'Rejected')
+                                                    <td><span class="status-dot-4"></span>ปฏิเสธ</td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        document.getElementById('yearDropdown').addEventListener('change', filterWorkRequests);
+        document.getElementById('monthDropdown').addEventListener('change', filterWorkRequests);
+
+        function filterWorkRequests() {
+            const year = document.getElementById('yearDropdown').value;
+            const month = document.getElementById('monthDropdown').value;
+
+            // ดึงแถวทั้งหมดในตาราง
+            const tableRows = document.querySelectorAll('tbody tr');
+
+            tableRows.forEach(row => {
+                const createdDateCell = row.querySelector('td:nth-child(3)'); // เลือกคอลัมน์ "วันที่สร้าง"
+                const createdDateText = createdDateCell ? createdDateCell.textContent.trim() : '';
+
+                // เช็คว่าแถวตรงกับปีและเดือนที่เลือกหรือไม่
+                const isYearMatch = year ? createdDateText.includes(year) : true;
+                const isMonthMatch = month ? createdDateText.includes(month) : true;
+
+                const shouldShowRow = isYearMatch && isMonthMatch;
+
+                // แสดง/ซ่อนแถวตามเงื่อนไข
+                row.style.display = shouldShowRow ? '' : 'none';
+
+                // ซ่อนแถวที่เป็น task ถ้าแถวหลักซ่อนไปแล้ว
+                let next = row.nextElementSibling;
+                while (next && !next.classList.contains('main-row')) {
+                    next.style.display = shouldShowRow ? '' : 'none';
+                    next = next.nextElementSibling;
+                }
+            });
+        }
+    </script>
 @endsection
