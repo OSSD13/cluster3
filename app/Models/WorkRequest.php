@@ -32,6 +32,18 @@ class WorkRequest extends Model
         'req_code',
     ];
 
+    // protected $fillable = [
+    //     'req_create_type',
+    //     'req_emp_id',
+    //     'req_dept_id',
+    //     'req_status',
+    //     'req_name',
+    //     'req_description',
+    //     'req_draft_status',
+    //     'req_created_date',
+    //     'req_code',
+    // ];
+
     public $timestamps = false;
 
     /**

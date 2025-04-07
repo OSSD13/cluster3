@@ -9,9 +9,9 @@
 --}}
 @extends('layouts.employee_layouts')
 @section('content')
-    <form form action="{{ route('form.create') }}" method="POST" id="work-form" novalidate>
+    <form action="{{ route('form.create') }}" method="POST" id="work-form" novalidate>
+        <input type="hidden" name="submit_type" id="submit_type" value="create">
         @csrf
-
         <div class="container-fluid">
             <div style="color: #4B49AC">
                 <h3>สร้างใบสั่งงาน</h3>
@@ -43,9 +43,9 @@
 
                 {{-- คำอธิบายงาน --}}
                 <div class="mb-3">
-                    <label class="form-label">คำอธิบายงาน</label>
-                    <textarea class="form-control" rows="3" name="task_description" placeholder="รายละเอียดเพิ่มเติม"
-                        style="vertical-align: top;"></textarea>
+                    <label class="form-label">คำอธิบายงาน <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="task_description" name="task_description" rows="3"
+                        placeholder="หากไม่มีคำอธิบาย กรุณากรอก -" required></textarea>
                 </div>
             </div>
 
@@ -78,6 +78,48 @@
     <script>
         let taskCount = 1;
 
+        /*
+        * document.addEventListener('DOMContentLoaded', ...)
+        * โหลด event listener เพื่อให้ JS เริ่มทำงานเมื่อ DOM โหลดเสร็จ
+        * @input : -
+        * @output : set event change ให้กับ select[name="dept[]"] เพื่อโหลด employee ตามแผนก
+        * @author : Sarocha Dokyeesun 66160097
+        * @Create Date : 2025-04-04
+        */
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('change', function(e) {
+                if (e.target && e.target.name === 'dept[]') {
+                    const deptSelect = e.target;
+                    const deptId = deptSelect.value;
+
+                    // หา select ของ emp ที่อยู่ใน task เดียวกัน
+                    const empSelect = deptSelect.closest('.accordion-body').querySelector(
+                        'select[name="emp[]"]');
+                    empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
+
+                    fetch(`/form/employee/${deptId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(emp => {
+                                const option = document.createElement('option');
+                                option.value = emp.emp_id;
+                                option.text = emp.emp_name;
+                                empSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('เกิดข้อผิดพลาดในการโหลดพนักงาน:', error));
+                }
+            });
+        });
+
+        /*
+        * addTask()
+        * เพิ่ม task ย่อยใหม่ลงใน accordion
+        * @input : -
+        * @output : แสดง task ย่อยใหม่ใน DOM
+        * @author : Sarocha Dokyeesun 66160097
+        * @Create Date : 2025-03-17
+        */
         function addTask() {
             const departments = @json($dept);
             const taskList = document.getElementById("taskList");
@@ -102,17 +144,17 @@
                 <input type="text" class="form-control" name="subtask_name[]" required>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-6">
                     <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
                     <select class="form-select" name="dept[]" required>
-                        <option selected value="0">กรุณาเลือก</option>
+                        <option selected disabled value="">กรุณาเลือก</option>
                         ${deptOptions}
                     </select>
                 </div>
-                <div class="col">
-                    <label class="form-label">ผู้รับมอบหมาย</label>
+                <div class="col-6">
+                    <label class="form-label">ผู้รับมอบหมาย </label>
                     <select class="form-select" name="emp[]">
-                        <option selected value="0">กรุณาเลือก</option>
+                        <option selected disabled value="">กรุณาเลือก</option>
                     </select>
                 </div>
                 <div class="mb">
@@ -122,7 +164,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col mb-3 mt-2">
+                <div class="col-6 mb-3 mt-2">
                     <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
                     <select class="form-select" name="priority[]" required>
                         <option selected disabled value="">กรุณาเลือก</option>
@@ -131,14 +173,14 @@
                         <option value="H">สูง</option>
                     </select>
                 </div>
-                <div class="col mb-3 mt-2">
+                <div class="col-6 mb-3 mt-2">
                     <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
                     <input type="date" class="form-control" name="end_date[]" required>
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">คำอธิบาย</label>
-                <textarea class="form-control" rows="3" name="description[]"></textarea>
+                <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                <textarea class="form-control" name="description[]" placeholder="หากไม่มีคำอธิบาย กรุณากรอก -" required></textarea>
             </div>
             <div class="d-flex justify-content-end">
                 <button type="button"  class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
@@ -149,6 +191,14 @@
             taskCount++;
         }
 
+        /*
+        * removeTask(id)
+        * ลบ task ย่อยออกจากหน้า และอัปเดตหมายเลข
+        * @input : id ของ task ย่อย
+        * @output : ลบ DOM element ของ task ย่อยออกไป พร้อมอัปเดตหมายเลข task ใหม่ทั้งหมดในหน้าเพจ
+        * @author : Sarocha Dokyeesun 66160097
+        * @Create Date : 2025-03-17
+        */
         function removeTask(id) {
             Swal.fire({
                 title: 'ยืนยันการลบ?',
@@ -204,6 +254,14 @@
             });
         }
 
+        /*
+        * updateTaskNumbers()
+        * อัปเดตหมายเลขงานย่อยเมื่อมีการลบ
+        * @input : -
+        * @output : ปรับหมายเลข, ID, target ของ task ใหม่ทั้งหมดให้เรียงลำดับถูกต้องใน DOM
+        * @author : Sarocha Dokyeesun 66160097
+        * @Create Date : 2025-03-18
+        */
         function updateTaskNumbers() {
             const taskItems = document.querySelectorAll("#taskList .accordion-item");
             taskCount = 1;
@@ -221,8 +279,16 @@
             });
         }
 
+        /*
+        * validateFormFields(form)
+        * ตรวจสอบความถูกต้องของฟอร์ม ก่อนส่ง submit
+        * @input : form DOM object
+        * @output : boolean ผลการตรวจสอบ (true = valid, false = invalid) และแสดงข้อความ error หากไม่ผ่าน
+        * @author : Sarocha Dokyeesun 66160097
+        * @Create Date : 2025-03-05
+        */
         function validateFormFields(form) {
-            const inputs = form.querySelectorAll("input[required], select[required]");
+            const inputs = form.querySelectorAll("input[required], select[required], textarea[required]");
             let isValid = true;
 
             const taskList = document.querySelectorAll("#taskList .accordion-item");
@@ -253,8 +319,33 @@
             }
 
             inputs.forEach(input => {
+                const parent = input.closest('.form-group, .mb-3, .col, .col-6') || input.parentElement;
+                const fieldName = input.name;
+
+                // ลบข้อความ error เก่าก่อน
+                const oldError = parent.querySelector('.invalid-feedback');
+                if (oldError) oldError.remove();
+
                 if (!input.value || input.value === "0") {
                     input.classList.add("is-invalid");
+
+                    const error = document.createElement("div");
+                    error.className = "invalid-feedback";
+
+                    //ตั้งข้อความ error เฉพาะเจาะจงตาม name
+                    let message = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                    if (fieldName === "task_name") message = "กรุณากรอกชื่อใบสั่งงาน";
+                    if (fieldName === "creator_status") message = "กรุณาเลือกสถานะผู้สร้าง";
+                    if (fieldName === "task_description") message = "กรุณากรอกคำอธิบายงาน";
+
+                    if (fieldName === "subtask_name[]") message = "กรุณากรอกชื่อใบงานย่อย";
+                    if (fieldName === "dept[]") message = "กรุณาเลือกแผนกรับมอบหมาย";
+                    if (fieldName === "priority[]") message = "กรุณาเลือกความสำคัญ";
+                    if (fieldName === "end_date[]") message = "กรุณาระบุวันสิ้นสุด";
+                    if (fieldName === "description[]") message = "กรุณากรอกคำอธิบาย";
+
+                    error.textContent = message;
+                    parent.appendChild(error);
                     isValid = false;
                 } else {
                     input.classList.remove("is-invalid");
@@ -288,7 +379,7 @@
                     const cancelBtn = Swal.getCancelButton();
 
                     Object.assign(confirmBtn.style, {
-                        backgroundColor: '#4B49AC', 
+                        backgroundColor: '#4B49AC',
                         color: '#fff',
                         borderRadius: '12px',
                         fontWeight: '400',
@@ -299,7 +390,7 @@
                     });
 
                     Object.assign(cancelBtn.style, {
-                        backgroundColor: '#DC3545', 
+                        backgroundColor: '#DC3545',
                         color: '#fff',
                         borderRadius: '12px',
                         fontWeight: '400',
@@ -311,6 +402,7 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    document.getElementById('submit_type').value = 'create'; // set ค่านี้ก่อน submit
                     form.submit();
                 }
             });
@@ -351,7 +443,7 @@
                     });
 
                     Object.assign(cancelBtn.style, {
-                        backgroundColor: '#DC3545', 
+                        backgroundColor: '#DC3545',
                         color: '#fff',
                         borderRadius: '12px',
                         fontWeight: '400',
@@ -363,6 +455,7 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    document.getElementById('submit_type').value = 'draft'; //set เป็น draft
                     form.submit();
                 }
             });
