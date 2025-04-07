@@ -138,6 +138,7 @@
         </div>
     </div>
 @endsection
+
 @section('script')
     <!-- 🔽 Script เติมปีและเดือน -->
     <script>
@@ -156,7 +157,7 @@
         function populateMonthDropdown(selectId) {
             const select = document.getElementById(selectId);
             const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.",
-                "ธ.ค.", "ทั้งปี"
+                "ธ.ค."
             ];
             months.forEach((month, index) => {
                 const option = document.createElement("option");
@@ -171,29 +172,37 @@
         }
 
         function fetchStatistics(year, month) {
-            const url = "{{ route('report.statistics') }}";
-            const params = new URLSearchParams({ year, month });
+    const url = "{{ route('report.statistics') }}";
+    const params = new URLSearchParams({ year, month });
 
-            fetch(`${url}?${params}`)
-                .then(response => response.json())
-                .then(data => {
-                    // อัปเดตการ์ดสถิติ
-                    document.querySelector('.stats-number.total').textContent = data.total;
-                    document.querySelector('.stats-number.completed').textContent = data.completed;
-                    document.querySelector('.stats-number.delayed').textContent = data.delayed;
-                    document.querySelector('.stats-number.rejected').textContent = data.rejected;
+    fetch(`${url}?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            // อัปเดตการ์ดสถิติ
+            document.querySelector('.stats-number.total').textContent = data.total;
+            document.querySelector('.stats-number.completed').textContent = data.completed;
+            document.querySelector('.stats-number.delayed').textContent = data.delayed;
+            document.querySelector('.stats-number.rejected').textContent = data.rejected;
 
-                    // อัปเดตกราฟวงกลม
-                    updatePieChart('workChart', [data.completed, data.delayed, data.rejected]);
-                });
-        }
+            // 🔁 อัปเดตกราฟด้วย drawPieChart
+            const labels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
+            const values = [data.completed, data.delayed, data.rejected];
+            const colors = [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 192, 201, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ];
+            drawPieChart('workChart', labels, values, colors);
+        });
+}
+
 
         function updatePieChart(canvasId, values) {
             const ctx = document.getElementById(canvasId).getContext('2d');
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'],
+                    labels: ['งานที่ทำเสร็จสิ้น ', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'],
                     datasets: [{
                         data: values,
                         backgroundColor: [
@@ -230,34 +239,40 @@
             fetchStatistics(yearDropdown.value, monthDropdown.value);
         });
 
-        // ✅ ฟังก์ชันสร้างกราฟวงกลม
         function drawPieChart(canvasId, labels, values, colors) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: colors,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // ปิดการรักษาอัตราส่วน
-                    plugins: {
-                        legend: {
-                            position: 'right', // แสดง legend ทางด้านขวา
-                            labels: {
-                                usePointStyle: true, // ใช้จุดแทนสี่เหลี่ยม
-                                pointStyle: 'circle' // รูปแบบจุดเป็นวงกลม
-                            }
-                        }
+    const ctx = document.getElementById(canvasId).getContext('2d');
+
+    // 🔄 ลบกราฟเก่าก่อนวาดใหม่ (ป้องกันซ้อน)
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+
+    window.myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle'
                     }
                 }
-            });
+            }
         }
+    });
+}
+
 
         // ✅ กราฟวงกลมฝั่ง "รายงานของฉัน"
         const myLabels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
