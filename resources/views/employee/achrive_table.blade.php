@@ -2,9 +2,7 @@
 
 @section('content')
 
-<head>
-  <link rel="stylesheet" href="{{ asset('public\css\pages\archive_table.css') }}">
-</head>
+
 <div class="content">
   <h3 class="mb-3" style="color: #4B49AC;">รายการงานที่จัดเก็บ</h3>
   <div class="custom-box">

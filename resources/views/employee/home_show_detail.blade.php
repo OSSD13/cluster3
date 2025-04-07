@@ -9,8 +9,7 @@ Display form create subtask by employee
  @extends('layouts.employee_layouts')
  @section('content')
 
- <link rel="stylesheet" href="{{ asset('public\css\pages\home_show_detail.css') }}">
- <link rel="stylesheet" href="{{ asset('public\css\pages\home_show_detail.css') }}">
+
  <div class="content">
 
      <div class="col">
@@ -43,13 +42,20 @@ Display form create subtask by employee
              </thead>
              <form action="{{url ('/show')}}" method="post" onsubmit="comfirm_save(event)">
                  @csrf
+                 @method('put')
+                 <input type="hidden" name="tsk_id" value="{{$task->first()->tsk_id}}">
                  <tbody>
                      <tr>
                          <th scope=" row">ชื่อใบงาน</th>
-                         <td> {{ $workRequest->first()->req_name }}</td>
+                         @foreach ( $workRequest as $work )
+                         @if($work->req_id == $task->first()->tsk_req_id)
+                         <td>{{ $work->req_name }}</td>
+                         @endif
+                         @endforeach
                      </tr>
                      <tr>
                          <th scope="row">ชื่องาน</th>
+
                          <td>{{ $task->first()->tsk_name }}</td>
                      </tr>
                      <tr>
@@ -63,16 +69,29 @@ Display form create subtask by employee
                          <td>
                              <div class="d-flex gap-2">
                                  <ion-icon name="person-circle-outline" size="large"></ion-icon>
-                                 @foreach($emp as $employee)
-                                 @if($employee->emp_id == $workRequest->first()->req_emp_id && $workRequest->first()->req_create_type == 'ind' )
+                                 <!-- @foreach($emp as $employee)
+                                 @if($employee->emp_id == $task->first()->tsk_req_id  )
                                  {{ $employee->emp_name }}
                                  @endif
                                  @endforeach
                                  @foreach($dept as $department)
-                                 @if($department->emp_id == $workRequest->first()->req_dept_id && $workRequest->first()->req_create_type == 'dept' )
+                                 @if($department->emp_id == $task->first()->tsk_emp_id && $workRequest[$task->first()-tsk_req_id]->req_create_type == 'dept' )
                                  {{ $department->dept_name }}
                                  @endif
-                                 @endforeach
+                                 @endforeach -->
+                                 @php
+                                 $workRequest = $taskWith->workRequest;
+                                 @endphp
+                                 <p>
+
+                                     @if($workRequest->req_create_type == 'ind')
+                                     {{ $workRequest->employee->emp_name ?? '-' }}
+                                     @elseif($workRequest->req_create_type == 'dept')
+                                     {{ $workRequest->department->dept_name ?? '-' }}
+                                     @else
+                                     ไม่ทราบผู้สร้าง
+                                     @endif
+                                 </p>
                              </div>
                          </td>
                      </tr>
@@ -92,11 +111,22 @@ Display form create subtask by employee
                      </tr>
                      <tr>
                          <th scope="row">สถานะ</th>
+                         <!-- Input hidden ที่จะเก็บสถานะ -->
+                         <input type="hidden" name="tsk_status" id="tsk_status" value="{{ $task->first()->tsk_status }}">
                          <td>
                              <div class="btn-group dropend">
-                                 <!-- ปุ่มแสดงสถานะ (พื้นหลังสีขาว) -->
+                                 <!-- ปุ่มแสดงสถานะ -->
                                  <button id="statusButton" type="button" class="status-btn">
+                                     @if ($task->first()->tsk_status == 'Pending')
                                      <span id="statusIndicator" class="status-dot bg-secondary"></span> รอดำเนินการ
+                                     @elseif($task->first()->tsk_status == 'In Progress')
+                                     <span id="statusIndicator" class="status-dot bg-warning"></span> กำลังดำเนินการ
+                                     @elseif($task->first()->tsk_status == 'Completed')
+                                     <span id="statusIndicator" class="status-dot bg-success"></span> เสร็จสิ้น
+                                     @endif
+
+
+                                     <!-- <span id="statusIndicator" class="status-dot bg-secondary"></span> {{ $task->first()->tsk_status }} -->
                                  </button>
                                  <!-- ปุ่ม Dropdown -->
                                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="border: none; background: none;">
@@ -104,14 +134,14 @@ Display form create subtask by employee
                                  </button>
                                  <!-- รายการสถานะที่เลือกได้ -->
                                  <ul class="dropdown-menu">
-                                     <li><a class="dropdown-item" href="#" onclick="changeStatus('รอดำเนินการ', 'bg-secondary')">รอดำเนินการ</a></li>
-                                     <li><a class="dropdown-item" href="#" onclick="changeStatus('กำลังดำเนินการ', 'bg-warning')">กำลังดำเนินการ</a></li>
-                                     <li><a class="dropdown-item" href="#" onclick="changeStatus('เสร็จสิ้น', 'bg-success')">เสร็จสิ้น</a></li>
-
+                                     <li><a class="dropdown-item" href="#" onclick="changeStatus('รอดำเนินการ', 'bg-secondary', 'Pending')">รอดำเนินการ</a></li>
+                                     <li><a class="dropdown-item" href="#" onclick="changeStatus('กำลังดำเนินการ', 'bg-warning', 'In Progress')">กำลังดำเนินการ</a></li>
+                                     <li><a class="dropdown-item" href="#" onclick="changeStatus('เสร็จสิ้น', 'bg-success', 'Completed')">เสร็จสิ้น</a></li>
                                  </ul>
                              </div>
                          </td>
                      </tr>
+
                      <tr>
                          <th scope="row">กำหนดส่ง</th>
                          <!-- <td class="text-danger">{{ \Carbon\Carbon::parse($task->first()->tsk_due_date)->format('d F Y H:i') }}</td> -->
@@ -129,8 +159,28 @@ Display form create subtask by employee
                                  <ion-icon name="person-circle-outline" size="large"></ion-icon>
                                  <div class="input-group my-2">
                                      <div class="form-floating">
-                                         <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" style="height: 100px"></textarea>
-                                         <label for="floatingTextarea2">เพิ่มความคิดเห็น...</label>
+                                         @if (($task->first()->tsk_comment) == null)
+                                         <div class="form-floating">
+                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value ="{{$task->first()->tsk_comment}}" style="height: 100px"></textarea>
+                                             <label for="floatingTextarea2">เพิ่มความคิดเห็น...</label>
+                                         </div>
+                                         @else
+                                         <div class="form-floating">
+                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value ="{{$task->first()->tsk_comment}}" style="height: 100px">{{ $task->first()->tsk_comment }}</textarea>
+                                             <label for="floatingTextarea2">ความคิดเห็นเดิม</label>
+                                         </div>
+
+                                         @endif
+
+                                         <!-- @if ($task->first()->tsk_comment == '')
+                                         <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" style="height: 100px" ></textarea>
+                                         <label for="floatingTextarea2" name="tsk_comment" value ="{{ $task->first()->tsk_comment }}" >เพิ่มความคิดเห็น...</label>
+                                         @endif
+                                         @if ($task->first()->tsk_comment != null)
+                                         <textarea class="form-control" placeholder="{{ $task->first()->tsk_comment }}" id="floatingTextarea2" style="height: 100px" ></textarea>
+                                         <label for="floatingTextarea2" name="tsk_comment" value ="{{ $task->first()->tsk_comment }}" >{{ $task->first()->tsk_comment }}</label>
+                                         @endif -->
+
                                      </div>
                                  </div>
                              </div>
@@ -161,18 +211,17 @@ Display form create subtask by employee
 
 
 
-     <!-- </html> -->
      <script>
-         function changeStatus(statusText, statusColor) {
-             document.getElementById("statusButton").innerHTML =
-                 `<span id="statusIndicator" class="status-dot ${statusColor}"></span> ${statusText}`;
-         }
-         function changeStatus(statusText, statusColor) {
-             // เปลี่ยนข้อความปุ่มหลัก
-             document.getElementById("statusButton").innerHTML =
-                 `<span id="statusIndicator" class="status-dot ${statusColor}"></span> ${statusText}`;
+         function changeStatus(statusText, statusColor, statusValue) {
+             // เปลี่ยนข้อความในปุ่ม
+             const statusButton = document.getElementById("statusButton");
+             statusButton.innerHTML = `<span id="statusIndicator" class="status-dot ${statusColor}"></span> ${statusText}`;
+
+             // เปลี่ยนค่าของฟอร์มที่ต้องการส่ง (ค่า value ของ input hidden)
+             document.getElementById("tsk_status").value = statusValue; // กำหนดค่า value ของ input hidden
          }
      </script>
+
      <script>
          function comfirm_save(event) {
              event.preventDefault();
@@ -200,7 +249,7 @@ Display form create subtask by employee
                  }
              });
          }
-         $(document).ready(function(){})
+         //  $(document).ready(function() {})
      </script>
      <script>
          async function comfirm_reject(event) {
@@ -237,8 +286,4 @@ Display form create subtask by employee
              });
          });
      </script>
-
-
-
-
      @endsection

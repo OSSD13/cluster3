@@ -41,7 +41,7 @@
                 <div class="tab-content mt-3" style="border:none;">
                     <div class="tab-pane fade show active" id="received">
                         <!-- ตารางแสดงงานที่ได้รับ -->
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
@@ -51,11 +51,10 @@
                                     <th class="col-2">กำหนดส่ง</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody >
                                 @if(isset($tasks['received']['my']) && count($tasks['received']['my']) > 0)
                                 @foreach ($tasks['received']['my'] as $task)
-                                <tr>
-
+                                <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
                                     <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
                                     <td class="col-3">{{ $task->tsk_name }}</td>
                                     <td class="col-2">
@@ -93,7 +92,7 @@
                         </table>
                     </div>
                     <div class="tab-pane fade" id="inprogress">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
@@ -107,7 +106,7 @@
                                 
                                 @if(isset($tasks['inprogress']['my']) && count($tasks['inprogress']['my']) > 0)
                                 @foreach ($tasks['inprogress']['my'] as $task)
-                                <tr>
+                                <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
                                     <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
                                     <td class="col-3">{{ $task->tsk_name }}</td>
                                     <td class="col-2">
@@ -144,7 +143,7 @@
                         </table>
                     </div>
                     <div class="tab-pane fade" id="completed">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
@@ -210,7 +209,7 @@
                 </ul>
                 <div class="tab-content mt-3" style="border:none;">
                     <div class="tab-pane fade show active" id="deptReceived">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
@@ -310,7 +309,7 @@
                         </table>
                     </div>
                     <div class="tab-pane fade" id="deptCompleted">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr class="table-secondary">
                                     <th class="col-3" style="padding-left:32px;">ชื่อใบงาน</th>
@@ -364,4 +363,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(row => {
+            row.addEventListener("click", function () {
+                const url = this.getAttribute("data-href");
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+</script>
+
 @endsection

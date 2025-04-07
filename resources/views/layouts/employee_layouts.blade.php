@@ -30,7 +30,10 @@
 
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('public\css\components\home_table_style.css') }}">
+    {{-- Custom CSS --}}
+    <link rel="stylesheet" href="{{ asset('public\css\pages\home_table_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\achrive_table.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\home_show_detail.css') }}">
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -68,3 +71,4 @@
     </div>
 </body>
 </html>
+

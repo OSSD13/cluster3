@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="public/css/components/side_bar.css">
+    <link rel="stylesheet" href="{{ asset('public/css/components/side_bar.css') }}">
     <title>Document</title>
 </head>
 
@@ -45,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : ''}}" href="#" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : ''}}" href="{{ url('/achrive') }}" >
                         <i class="fa-solid fa-box-archive me-2"></i> จัดเก็บ
                     </a>
                 </li>

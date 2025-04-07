@@ -11,27 +11,39 @@ use Illuminate\Support\Facades\Session;
 
 class WorkRequestController extends Controller
 {
-    // public function showDetail()
-    // {
-    //     $emp = Employee::all();
-    //     $workRequest = WorkRequest::all();
-    //     $task = Task::all();
-    //     $dept = Department::all();
-    //     return view('home_show_detail', compact('emp', 'workRequest', 'task', 'dept'));
-    // }
+    public function showDetail($id)
+    {
+        $taskWith = Task::with(['workRequest.employee', 'workRequest.department'])->findOrFail($id);
+        $emp = Employee::all();
+        $workRequest = WorkRequest::all();
+        $task = Task::all()->where('tsk_id', $id);
+        $dept = Department::all();
+        return view('employee.home_show_detail', compact('emp', 'workRequest', 'task', 'dept','taskWith'));
+    }
+    public function updateTask(Request $req)
+    {
+        // ดึงข้อมูลจาก request
+        $task = Task::find($req->tsk_id);
+        $task->tsk_status = $req->tsk_status;
+        $task->tsk_comment = $req->tsk_comment;
+        $task->save();
 
-    // public function archive()
-    // {
-    //     // ดึงข้อมูลงานที่เสร็จแล้วและถูกปฏิเสธ
-    //     $completedRequests = WorkRequest::where('req_status', 'Completed')->get();
-    //     $rejectedRequests = WorkRequest::where('req_status', 'Rejected')->get();
-    //     $completedTasks = Task::where('tsk_status', 'Completed')->get();
-    //     $rejectedTasks = Task::where('tsk_status', 'Rejected')->get();
-    //     $tasks = Task::with('workRequest.tasks')->get();
-    //     $workRequests = WorkRequest::with(['employee', 'department', 'tasks'])->get();
-    //     // ส่งข้อมูลไปยัง view
-    //     return view('archive_table', compact('completedRequests', 'rejectedRequests','completedTasks', 'rejectedTasks','tasks','workRequests'));
-    // }
+        // ส่งกลับไปยังหน้าเดิม
+        return redirect('/main');
+    }
+
+    public function achrive()
+    {
+        // ดึงข้อมูลงานที่เสร็จแล้วและถูกปฏิเสธ
+        $completedRequests = WorkRequest::where('req_status', 'Completed')->get();
+        $rejectedRequests = WorkRequest::where('req_status', 'Rejected')->get();
+        $completedTasks = Task::where('tsk_status', 'Completed')->get();
+        $rejectedTasks = Task::where('tsk_status', 'Rejected')->get();
+        $tasks = Task::with('workRequest.tasks')->get();
+        $workRequests = WorkRequest::with(['employee', 'department', 'tasks'])->get();
+        // ส่งข้อมูลไปยัง view
+        return view('employee.achrive_table', compact('completedRequests', 'rejectedRequests','completedTasks', 'rejectedTasks','tasks','workRequests'));
+    }
 
     // public function sent()
     // {
@@ -168,7 +180,7 @@ class WorkRequestController extends Controller
 
 
         // ส่งข้อมูลไปยัง view
-        return view('home_table', [
+        return view('employee.home_table', [
             'tasks' => $tasks,
             'workRequests' => $workRequests,
             'employees' => $employees,
