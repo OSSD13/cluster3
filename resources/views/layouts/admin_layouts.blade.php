@@ -51,6 +51,12 @@
         }
     </style>
 </head>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+    </style>
+</head>
 
 <body>
     <div class="d-flex">
