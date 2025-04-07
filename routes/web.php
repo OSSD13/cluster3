@@ -59,3 +59,12 @@ Route::get('/manage_employee', [ManageEmployeeControler::class, 'showEmployee'])
 Route::put('/edit/{id}', [ManageEmployeeControler::class, 'editEmployee'])->name('manage_employee_edit');
 Route::get('/search_employee', [ManageEmployeeControler::class, 'searchEmployee'])->name('manage_employee_search');
 */
+Route::get('/main', function () {
+    return view('test1');
+});
+
+Route::get('/archrive',   [WorkRequestController::class,'archrive'])->name('archrive');
+
+Route::get('/show', [WorkRequestController::class, 'showDetail'])->name('main-page');
+
+Route::get('/sent',   [WorkRequestController::class,'sent'])->name('sent');
