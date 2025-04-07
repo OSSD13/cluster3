@@ -1,11 +1,15 @@
 <?php
 
-use App\Http\Controllers\ManageEmployeeControler;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SidebarController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\{
+    ManageEmployeeControler,
+    FormController,
+    SidebarController,
+    DepartmentController,
+    LoginController
+};
 use App\Http\Middleware\AdminMiddleware;
+
 
 
 Route::middleware(['admin'])->group(function () {
@@ -24,7 +28,14 @@ Route::middleware(['admin'])->group(function () {
 
 Route::middleware(['employee'])->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    // หน้าแบบฟอร์มสร้างใบสั่งงาน (GET ต้องอยู่ก่อน)
+    Route::get('/form', [FormController::class, 'index'])->name('form.index');
 
+    // POST สำหรับบันทึกฟอร์ม
+    Route::post('/form/create', [FormController::class, 'createWorkRequest'])->name('form.create');
+
+    // AJAX: ดึงรายชื่อพนักงานตามแผนก
+    Route::get('/form/employee/{id}', [FormController::class, 'empData'])->name('form.empData');
 });
 
 Route::get(

@@ -25,11 +25,38 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
+    {{-- CDN SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     {{-- Google Material Icons  --}}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+
+    {{-- CSS --}}
+    <link rel="stylesheet" href="{{ asset('public\css\pages\report_table_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\report_statistic_style.css') }}">
+
+    {{-- jQuery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- ภาษาไทย -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
+    <!-- Month Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+
+
+
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
@@ -41,9 +68,8 @@
             padding-top: 90px;
             /* เผื่อให้ตัวหนังสือไม่โดน Header บัง */
         }
+        
     </style>
-
-
 </head>
 
 <body>
@@ -51,14 +77,14 @@
         <div class="flex-grow-1">
             {{-- Sidebar --}}
             @include('layouts.side_bar_employee')
-            {{-- Header --}}
-            @include('layouts.header')
-
             {{-- Content Area --}}
             <main class="container-fluid" style="margin-left: 250px">
                 @yield('content')
             </main>
+            {{-- Header --}}
+            @include('layouts.header')
         </div>
     </div>
 </body>
+
 </html>
