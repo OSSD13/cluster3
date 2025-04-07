@@ -27,10 +27,6 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['employee'])->group(function () {
-    Route::get('/layoutE', function () {
-        return view('layouts.employee_layouts');
-    });
-
     // หน้าแบบฟอร์มสร้างใบสั่งงาน (GET ต้องอยู่ก่อน)
     Route::get('/form', [FormController::class, 'index'])->name('form.index');
 
@@ -59,9 +55,4 @@ Route::post(
     '/logout',
     [LoginController::class, 'logout']
 )->name('logout');
-/*
-Route::get('/', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showEmployees');
-Route::get('/manage_employee', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showEmployees');
-Route::put('/edit/{id}', [ManageEmployeeControler::class, 'editEmployee'])->name('manage_employee_edit');
-Route::get('/search_employee', [ManageEmployeeControler::class, 'searchEmployee'])->name('manage_employee_search');
-*/
+
