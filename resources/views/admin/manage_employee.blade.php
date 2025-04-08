@@ -11,9 +11,7 @@ Display form show table manage employee
 @section('content')
     <div class="col-md-12 content">
         <div class="header d-flex justify-content-between align-items-center">
-
                 <div class="h3 text-header">จัดการพนักงาน</div>
-
             <div class="position-relative" style="max-width: 386px;">
                 <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
                 <input type="text" name="search" id="search" class="form-control ps-5 rounded-4 shadow-sm"

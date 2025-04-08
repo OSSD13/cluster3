@@ -44,7 +44,7 @@ class LoginController extends Controller
                 return redirect()->to('/empDashboard'); //<--เดี่๋ยวเอา path Home ของพนักงานมาใส่
             } elseif ($user->emp_role == 'A') {
                 Session::put('employees', Employee::where('emp_role', 'A')->get());
-                return redirect()->to('/department');
+                return redirect()->to('/manage_employee');
             }
 
 
