@@ -40,6 +40,9 @@ Route::middleware(['employee'])->group(function () {
     Route::get('/report-statistics', [ReportController::class, 'getTaskStatistics'])->name('report.statistics'); // สำหรับส่งข้อมูล JSON
     Route::get('/report-co-statistics', [ReportController::class, 'getTaskStatisticsCompany'])->name('report.coStatistics'); // สำหรับส่งข้อมูล JSON
     Route::get('/department-task-statistics', [ReportController::class, 'getDepartmentTaskStatistics'])->name('department.taskStatistics');
+    Route::get('/drafts', [FormController::class, 'showDrafts'])->name('drafts.index');
+    Route::delete('/drafts/{id}', [FormController::class, 'destroyDraft'])->name('drafts.destroy');
+    Route::get('/draft/{id}/edit', [FormController::class, 'editDraft'])->name('drafts.edit');
 });
 
 Route::get(

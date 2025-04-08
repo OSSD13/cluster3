@@ -21,7 +21,7 @@
                 {{-- ชื่อใบสั่งงาน --}}
                 <div class="mb-3">
                     <label class="form-label">ชื่อใบสั่งงาน <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="task_name" required>
+                    <input type="text" class="form-control" name="task_name" value="{{ $draft->req_name ?? '' }}" required>
                 </div>
 
                 {{-- สถานะผู้สร้างใบสั่งงาน --}}
@@ -30,12 +30,12 @@
                     <div class="d-inline-flex">
                         <div class="form-check me-3">
                             <input class="form-check-input" type="radio" name="creator_status" id="individual"
-                                value="ind" required>
+                                value="ind" {{ isset($draft) && $draft->req_create_type === 'ind' ? 'checked' : '' }} required>
                             <label class="form-check-label" for="individual">นามบุคคล</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="creator_status" id="department"
-                                value="dept" required>
+                                value="dept" {{ isset($draft) && $draft->req_create_type === 'dept' ? 'checked' : '' }} required>
                             <label class="form-check-label" for="department">นามแผนก</label>
                         </div>
                     </div>
@@ -45,14 +45,36 @@
                 <div class="mb-3">
                     <label class="form-label">คำอธิบายงาน <span class="text-danger">*</span></label>
                     <textarea class="form-control" id="task_description" name="task_description" rows="3"
-                        placeholder="หากไม่มีคำอธิบาย กรุณากรอก -" required></textarea>
+                        placeholder="หากไม่มีคำอธิบาย กรุณากรอก -" required>{{ $draft->req_description ?? '' }}</textarea>
                 </div>
             </div>
 
             {{-- Accordion สำหรับงานย่อย --}}
             <div class="shadow-sm accordion mt-4" id="taskAccordion">
                 <div class="accordion" id="taskAccordion">
-                    <div id="taskList"></div>
+                    <div id="taskList">
+                        @if (isset($draft))
+                            @foreach ($draft->tasks as $index => $task)
+                                <div class="accordion-item" id="task-item-{{ $index + 1 }}">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#task{{ $index + 1 }}">
+                                            งานย่อย {{ $index + 1 }}
+                                        </button>
+                                    </h2>
+                                    <div id="task{{ $index + 1 }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">ชื่อใบงานย่อย</label>
+                                                <input type="text" class="form-control" name="subtask_name[]" value="{{ $task->tsk_name }}" required>
+                                            </div>
+                                            {{-- เพิ่มฟิลด์อื่น ๆ ตามที่ต้องการ --}}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -124,7 +146,7 @@
          * @Create Date : 2025-03-17
          */
         function addTask() {
-            const departments = @json($dept);
+            const departments = @json($departments);
             const taskList = document.getElementById("taskList");
             const taskId = `task${taskCount}`;
 
@@ -465,3 +487,5 @@
         });
     </script>
 @endsection
+
+

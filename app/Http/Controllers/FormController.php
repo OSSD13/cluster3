@@ -23,8 +23,8 @@ class FormController extends Controller
      */
     public function index()
     {
-        $dept = Department::with('employees')->get();
-        return view('create_form', compact('dept'));
+        $departments = Department::with('employees')->get();
+        return view('create_form', compact('departments'));
     }
 
     /**
@@ -40,7 +40,7 @@ class FormController extends Controller
         $emp = Employee::where('emp_dept_id', $id)
             ->where('emp_role', 'E') // แสดงเฉพาะที่ role = 'E'
             ->get(['emp_id', 'emp_name']); // ดึงเฉพาะฟิลด์ที่จำเป็น
-        
+
         return response()->json($emp);
     }
 
@@ -71,13 +71,13 @@ class FormController extends Controller
             'description'      => 'required|array|min:1',
             'description.*'    => 'required|string|max:1000',
         ]);
+
         DB::beginTransaction();
 
         try {
             $isDraft = $request->input('submit_type') === 'draft';
             $user = session('user');
             $employeeId = $user->emp_id ?? null;
-            $employeeDept = $user->emp_dept_id ?? null;
 
             if (!$employeeId) {
                 return back()->withErrors(['error' => 'Session timeout กรุณา login ใหม่']);
@@ -91,8 +91,7 @@ class FormController extends Controller
             $workRequest = WorkRequest::create([
                 'req_create_type'   => $request->input('creator_status'), // ind / dept
                 'req_emp_id'        => $employeeId,
-                'req_dept_id'       => $request->creator_status === 'dept' ? $employeeDept : null,
-                'req_status'        => 'Pending',
+                'req_status'        => $isDraft ? 'Draft' : 'Pending',
                 'req_name'          => $request->input('task_name'),
                 'req_description'   => $request->input('task_description'),
                 'req_draft_status'  => $isDraft ? 'D' : 'S',
@@ -119,6 +118,11 @@ class FormController extends Controller
             }
 
             DB::commit();
+
+            if ($isDraft) {
+                return redirect()->route('drafts.index')->with('success', 'บันทึกแบบร่างเรียบร้อยแล้ว');
+            }
+
             return redirect()->route('form.index')->with('success', 'สร้างใบสั่งงานเรียบร้อยแล้ว');
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -126,5 +130,40 @@ class FormController extends Controller
                 'error' => 'เกิดข้อผิดพลาด: ' . $e->getMessage()
             ]);
         }
+    }
+
+    public function showDrafts()
+    {
+        // ดึงข้อมูลใบสั่งงานที่เป็นแบบร่าง พร้อมจำนวนงานย่อย
+        $draftRequests = WorkRequest::withCount('tasks')
+            ->where('req_draft_status', 'D') // เฉพาะแบบร่าง
+            ->get();
+
+        // ส่งข้อมูลไปยัง View
+        return view('draft_list', compact('draftRequests'));
+    }
+
+    public function destroyDraft($id)
+    {
+        $draft = WorkRequest::findOrFail($id);
+
+        if ($draft->req_draft_status === 'D') {
+            $draft->delete();
+            return redirect()->route('drafts.index')->with('success', 'ลบแบบร่างเรียบร้อยแล้ว');
+        }
+
+        return redirect()->route('drafts.index')->withErrors(['error' => 'ไม่สามารถลบแบบร่างนี้ได้']);
+    }
+
+    public function editDraft($id)
+    {
+        // ดึงข้อมูลแบบร่างจากฐานข้อมูล
+        $draft = WorkRequest::with('tasks')->findOrFail($id);
+
+        // ดึงข้อมูลแผนกพร้อมพนักงานในแต่ละแผนก
+        $departments = Department::with('employees')->get();
+
+        // ส่งข้อมูลไปยัง View
+        return view('create_form', compact('draft', 'departments'));
     }
 }
