@@ -18,4 +18,9 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    <FilesMatch "^(\.env|\.git|\.htaccess|composer\.json|composer\.lock|package\.json|yarn\.lock)$">
+    Require all denied
+    </FilesMatch>
+
 </IfModule>
