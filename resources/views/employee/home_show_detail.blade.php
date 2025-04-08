@@ -185,7 +185,7 @@ Display form create subtask by employee
          <div class="container text-center">
              <div class="row align-items-start">
                  <div class="col d-flex justify-content-start">
-                     <a class="link-underline-dark icon-link-hover " href="{{ route('more_detail', ['id' => $task->first()->tsk_req_id]) }}" style="color:black">
+                     <a class="link-underline-dark icon-link-hover mb-3" href="{{ route('more_detail', ['id' => $task->first()->tsk_req_id]) }}" style="color:black">
                          ดูรายละเอียดเพิ่มเติม
                      </a>
                  </div>

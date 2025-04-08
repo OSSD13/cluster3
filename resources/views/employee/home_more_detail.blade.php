@@ -13,23 +13,23 @@
 @section('content')
 
 <body>
-<div class="content">
-         <div class="d-flex justify-content-between align-items-center">
-             <h3 >รายการงาน</h3>
-             <ul class="nav nav-tabs">
-                 <li class="nav-item">
-                     <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#myTasks">ใบงานของฉัน</button>
-                 </li>
-                 <li class="nav-item">
-                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#teamTasks">ใบงานของแผนก</button>
-                 </li>
-             </ul>
-         </div>
+    <div class="content">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>รายการงาน</h3>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#myTasks">ใบงานของฉัน</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#teamTasks">ใบงานของแผนก</button>
+                </li>
+            </ul>
+        </div>
 
         <!-- Tab Content -->
         <div class="tab-content margin-top: 0 !important">
             <!-- My Tasks Tab -->
-            <div class="tab-pane fade show active"  style="margin-top: 0; padding-top: 0;">
+            <div class="tab-pane fade show active" style="margin-top: 0; padding-top: 0;">
                 <!-- Task Table Card -->
                 <div class="card shadow-sm mb-4 border-top-left-radius: 0; border-top-right-radius: 0;">
                     <div class="row mb-4">
@@ -39,7 +39,7 @@
                                     <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
                                 </svg>
                                 <span class="ms-5 fs-5">รายละเอียดใบงานทั้งหมด</span>
-                            </a>    
+                            </a>
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -98,37 +98,36 @@
                 </div>
             </div>
 
-            <!-- Team Tasks Tab -->
 
+            @endsection
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Make task rows clickable to toggle details
+                    const taskRows = document.querySelectorAll('.task-row');
+                    taskRows.forEach(row => {
+                        row.addEventListener('click', function() {
+                            const targetId = this.getAttribute('data-target');
+                            const detailsRow = document.querySelector(targetId);
+                            const indicator = this.querySelector('.dropdown-indicator');
 
+                            // Toggle the active class on the row
+                            this.classList.toggle('active');
 
+                            // Toggle the rotation of the dropdown indicator
+                            indicator.classList.toggle('open');
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Make task rows clickable to toggle details
-                const taskRows = document.querySelectorAll('.task-row');
-                taskRows.forEach(row => {
-                    row.addEventListener('click', function() {
-                        const targetId = this.getAttribute('data-target');
-                        const detailsRow = document.querySelector(targetId);
-                        const indicator = this.querySelector('.dropdown-indicator');
-
-                        // Toggle the active class on the row
-                        this.classList.toggle('active');
-
-                        // Toggle the rotation of the dropdown indicator
-                        indicator.classList.toggle('open');
-
-                        // Toggle the visibility of the details row
-                        if (detailsRow.classList.contains('no-display')) {
-                            detailsRow.classList.remove('no-display');
-                        } else {
-                            detailsRow.classList.add('no-display');
-                        }
+                            // Toggle the visibility of the details row
+                            if (detailsRow.classList.contains('no-display')) {
+                                detailsRow.classList.remove('no-display');
+                            } else {
+                                detailsRow.classList.add('no-display');
+                            }
+                        });
                     });
                 });
-            });
-        </script>
+            </script>
 </body>
+@section('script')
+
+
 @endsection

@@ -368,7 +368,8 @@
         </div>
     </div>
 </div>
-
+@endsection
+@section('script')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const rows = document.querySelectorAll(".clickable-row");
