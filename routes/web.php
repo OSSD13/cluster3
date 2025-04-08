@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SidebarController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\{
+    ManageEmployeeControler,
+    FormController,
+    SidebarController,
+    DepartmentController,
+    LoginController,
+    ReportController
+};
 use App\Http\Middleware\AdminMiddleware;
 
 Route::middleware(['admin'])->group(function () {

@@ -99,7 +99,6 @@
 
                     const baseUrl = "{{ config('app.url') }}";
                     const url = `${baseUrl}/cluster3/form/employee/${deptId}`;
-                    console.log(url);
 
                     fetch(url)
                         .then(response => response.json())
