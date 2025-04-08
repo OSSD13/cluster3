@@ -10,10 +10,10 @@
       <div class="container-fluid">
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <a class="nav-link active custom-tab " href="#sent" data-bs-toggle="tab" style="border: none;">งานที่มอบหมาย</a>
+            <a class="nav-link active custom-tabArc " href="#sent" data-bs-toggle="tab" style="border: none;">งานที่มอบหมาย</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link custom-tab " href="#assign" data-bs-toggle="tab" style="border: none;">งานที่ได้รับมอบหมาย</a>
+            <a class="nav-link custom-tabArc " href="#assign" data-bs-toggle="tab" style="border: none;">งานที่ได้รับมอบหมาย</a>
           </li>
         </ul>
         <div class="position-relative" style="width: 300px;">

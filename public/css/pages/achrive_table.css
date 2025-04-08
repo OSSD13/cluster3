@@ -11,12 +11,12 @@
       padding: 20px;
     }
 
-    .custom-tab {
-      color: #AFB2BA; /* สีเทาปกติ */
+    .custom-tabArc {
+      color: #AFB2BA !important; /* สีเทาปกติ */
       border: none;
     }
     
-    .custom-tab.active {
+    .custom-tabArc.active {
       color: #4B49AC !important; /* ตัวหนังสือสีน้ำเงิน */
       font-weight: normal; /* ไม่ทำให้ตัวหนา */
       border-bottom: 3px solid #4B49AC !important; /* เส้นขีดน้ำเงินด้านล่าง */
