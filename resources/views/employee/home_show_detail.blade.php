@@ -14,7 +14,7 @@ Display form create subtask by employee
 
      <div class="col">
          <div class="d-flex justify-content-between align-items-center">
-             <h3 class="mb-3">รายการงาน</h3>
+             <h3 >รายการงาน</h3>
              <ul class="nav nav-tabs">
                  <li class="nav-item">
                      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#myTasks">ใบงานของฉัน</button>
@@ -26,20 +26,24 @@ Display form create subtask by employee
          </div>
 
      </div>
-     <div class=" shadow-sm p-4 rounded">
+     <div class=" tab-content">
          <table class="table">
              <thead>
                  <tr>
                      <th class="col-3">
                          <div class="d-flex gap-2">
-                             <ion-icon name="arrow-back-outline" size="large"></ion-icon>
-                             <h5 style="color: #AFB2BA; margin: 0;">รายละเอียดใบงาน</h5>
+                         <a href="javascript:history.back()" class="back-button d-flex align-items-center text-decoration-none ">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left ms-4 mt-1" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                                </svg>
+                                <span class="ms-5 fs-5">รายละเอียดใบงานทั้งหมด</span>
+                            </a> 
                          </div>
 
                      <th class="col-9 text-secondary"></th>
                  </tr>
              </thead>
-             <form  id="taskForm" action="{{ route('update-task', ['id' => $taskWith->tsk_id]) }}" method="post" onsubmit="comfirm_save(event)">
+             <form id="taskForm" action="{{ route('update-task', ['id' => $taskWith->tsk_id]) }}" method="post" onsubmit="comfirm_save(event)">
                  @csrf
                  @method('put')
                  <input type="hidden" name="tsk_id" value="{{$task->first()->tsk_id}}">
@@ -117,7 +121,7 @@ Display form create subtask by employee
 
                                      <!-- <span id="statusIndicator" class="status-dot bg-secondary"></span> {{ $task->first()->tsk_status }} -->
                                  </button>
-                                 
+
                                  <!-- ปุ่ม Dropdown -->
                                  @if ($task->first()->tsk_status == 'Pending' || $task->first()->tsk_status == 'In Progress')
                                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="border: none; background: none;">
@@ -142,11 +146,11 @@ Display form create subtask by employee
                      </tr>
                      <tr>
                          <th scope="row">วันที่เสร็จสิ้น</th>
-                            @if ($task->first()->tsk_completed_date == null)
-                            <td class="text-danger">ยังไม่เสร็จสิ้น</td>
-                            @else
-                            <td class="text-success">{{ \Carbon\Carbon::parse($task->first()->tsk_completed_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-                            @endif
+                         @if ($task->first()->tsk_completed_date == null)
+                         <td class="text-danger">ยังไม่เสร็จสิ้น</td>
+                         @else
+                         <td class="text-success">{{ \Carbon\Carbon::parse($task->first()->tsk_completed_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
+                         @endif
                      </tr>
                      <tr>
                          <th scope="row mt-3">ความคิดเห็น</th>
@@ -157,12 +161,12 @@ Display form create subtask by employee
                                      <div class="form-floating">
                                          @if (($task->first()->tsk_comment) == null)
                                          <div class="form-floating">
-                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value ="{{$task->first()->tsk_comment}}" style="height: 100px"></textarea>
+                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" style="height: 100px"></textarea>
                                              <label for="floatingTextarea2">เพิ่มความคิดเห็น...</label>
                                          </div>
                                          @else
                                          <div class="form-floating">
-                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value ="{{$task->first()->tsk_comment}}" style="height: 100px">{{ $task->first()->tsk_comment }}</textarea>
+                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" style="height: 100px">{{ $task->first()->tsk_comment }}</textarea>
                                              <label for="floatingTextarea2">ความคิดเห็นเดิม</label>
                                          </div>
 
@@ -181,12 +185,12 @@ Display form create subtask by employee
          <div class="container text-center">
              <div class="row align-items-start">
                  <div class="col d-flex justify-content-start">
-                     <a class="link-underline-dark icon-link-hover " href="#" style="color:black">
+                     <a class="link-underline-dark icon-link-hover " href="{{ route('more_detail', ['id' => $task->first()->tsk_req_id]) }}" style="color:black">
                          ดูรายละเอียดเพิ่มเติม
                      </a>
                  </div>
                  @if ($task->first()->tsk_status == 'Pending' || $task->first()->tsk_status == 'In Progress')
-                 <div class="col d-flex justify-content-end">
+                 <div class="col d-flex justify-content-end mb-3">
                      <!-- ปุ่มปฏิเสธ -->
                      <button type="button" class="btn me-2" style="background-color:#E70000; color: white;" onclick="comfirm_reject(event)">ปฏิเสธ</button>
 
@@ -194,7 +198,7 @@ Display form create subtask by employee
                      <button type="submit" class="btn" style="background-color:#4B49AC; color: white;">บันทึก</button>
                  </div>
                  @endif
-                 
+
              </div>
          </div>
      </div>
@@ -243,32 +247,33 @@ Display form create subtask by employee
          //  $(document).ready(function() {})
      </script>
      <script>
-async function comfirm_reject(event) {
-    event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
+         async function comfirm_reject(event) {
+             event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
 
-    const { value: reason } = await Swal.fire({
-        title: "กรุณากรอกเหตุผลการปฏิเสธ",
-        input: "text",
-        inputLabel: " ",
-        showCancelButton: true,
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonText: 'ยืนยัน',
-        inputValidator: (value) => {
-            if (!value) {
-                return "กรุณากรอกเหตุผล!";
-            }
-        }
-    });
+             const {
+                 value: reason
+             } = await Swal.fire({
+                 title: "กรุณากรอกเหตุผลการปฏิเสธ",
+                 input: "text",
+                 inputLabel: " ",
+                 showCancelButton: true,
+                 cancelButtonText: 'ยกเลิก',
+                 confirmButtonText: 'ยืนยัน',
+                 inputValidator: (value) => {
+                     if (!value) {
+                         return "กรุณากรอกเหตุผล!";
+                     }
+                 }
+             });
 
-    if (reason) {
-        // เซ็ตค่าที่ต้องการส่ง
-        document.getElementById("tsk_status").value = "Rejected";
-        document.getElementById("tsk_comment_reject").value = reason;
+             if (reason) {
+                 // เซ็ตค่าที่ต้องการส่ง
+                 document.getElementById("tsk_status").value = "Rejected";
+                 document.getElementById("tsk_comment_reject").value = reason;
 
-        // ส่งฟอร์ม
-        document.getElementById("taskForm").submit();
-    }
-}
-
+                 // ส่งฟอร์ม
+                 document.getElementById("taskForm").submit();
+             }
+         }
      </script>
      @endsection

@@ -34,6 +34,8 @@
     <link rel="stylesheet" href="{{ asset('public\css\pages\home_table_style.css') }}">
     <link rel="stylesheet" href="{{ asset('public\css\pages\achrive_table.css') }}">
     <link rel="stylesheet" href="{{ asset('public\css\pages\home_show_detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\detail_style.css') }}">
+
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

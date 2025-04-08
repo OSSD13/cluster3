@@ -5,8 +5,16 @@
 .custom-title-size {
   font-size: 24px; /* Adjust the size as needed */
 }
+
 h3 {
     color: #4B49AC !important; 
+}
+.tab-content {
+  border: 0px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  padding: 0px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.5) !important;
+  background: white;
 }
 .content {
   flex-grow: 1;
