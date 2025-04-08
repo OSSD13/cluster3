@@ -1,3 +1,16 @@
+{{--
+* report_table.blade.php
+* Display form show table report work request
+* @input : workRequest, task
+* @output : form show table report work request
+* @input : dept_name
+* @output : new department
+* @author : Natthanan Sirisurayut 66160352
+* @Create Date : 2025-04-06
+* @Update Date : 2025-04-07
+* @Update By : Naphat Maneechansuk 66160099
+*
+--}}
 @extends('layouts.employee_layouts')
 
 @section('content')
@@ -5,8 +18,9 @@
         <!-- Main Content Only -->
         <div class="row">
             <div class="col-12">
-                <h2 class="main-header">สรุปรายการ Work Request ประจำเดือน <span id="selectedMonth"></span>
-                    <span id="selectedYear"></span></h2>
+                <h2 class="main-header">
+                    สรุปรายการ Work Request <span id="selectedMonth"></span> <span id="selectedYear"></span>
+                </h2>
 
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
@@ -29,7 +43,8 @@
                                             @endphp
 
                                             @foreach ($years as $year)
-                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option> <!-- แปลงปีเป็น พ.ศ. -->
+                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option>
+                                                <!-- แปลงปีเป็น พ.ศ. -->
                                             @endforeach
                                         </select>
                                     </div>
@@ -132,6 +147,15 @@
 @endsection
 @section('script')
     <script>
+         /*
+         * filterWorkRequests()
+         * Filter work requests based on selected year and month
+         * @input : year, month
+         * @output : Filtered work requests in table
+         * @author : Naphat Maneechansuk 66160099
+         * @Create Date : 2025-04-06
+         * @Update Date : 2025-04-07
+         */
         const monthMap = {
             'ม.ค.': 'มกราคม',
             'ก.พ.': 'กุมภาพันธ์',
@@ -152,6 +176,8 @@
             // Set default header to "ทั้งหมด"
             document.getElementById('selectedMonth').textContent = 'ทั้งหมด';
             document.getElementById('selectedYear').textContent = '';
+
+            updateHeader(); // Update header on page load
         });
 
         document.getElementById('yearDropdown').addEventListener('change', updateHeader);
@@ -230,5 +256,31 @@
             // อัปเดตจำนวนงานที่กรองแล้ว
             document.getElementById('totalWorkRequests').textContent = filteredCount; // แสดงจำนวนแถวที่แสดง
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default header to "ทั้งหมด"
+            document.getElementById('selectedMonth').textContent = 'ทั้งหมด';
+            document.getElementById('selectedYear').textContent = '';
+
+            lockTableHeaderWidths(); // ล็อกหัวตารางไว้ตั้งแต่โหลด
+        });
+
+        function lockTableHeaderWidths() {
+            const table = document.querySelector('table');
+            const headerCells = table.querySelectorAll('thead th');
+
+            headerCells.forEach((th) => {
+                const width = th.offsetWidth;
+                th.style.width = width + 'px'; // ล็อกความกว้างไว้
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('selectedMonth').textContent = 'ทั้งหมด';
+            document.getElementById('selectedYear').textContent = '';
+
+            setTimeout(() => {
+                lockTableHeaderWidths();
+            }, 0); // รอให้ DOM render ก่อนนิดนึง
+        });
     </script>
 @endsection
