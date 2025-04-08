@@ -9,6 +9,14 @@ use App\Models\Task; // Import Task model
 
 class ReportController extends Controller
 {
+    /*
+    * showReportStat()
+    * show the report statistics page
+    * @input : -
+    * @output : show report statistics page
+    * @author : Natthanan Sirisurayut 66160352
+    * @Create Date : 2025-04-05
+    */
     public function showReportStat()
     {
         // ดึงข้อมูลเริ่มต้นสำหรับปีและเดือนปัจจุบัน
@@ -26,7 +34,14 @@ class ReportController extends Controller
         // ส่งข้อมูลไปยัง View
         return view('report.report_statistic', compact('statistics', 'coStatistics'));
     }
-
+    /*
+    * showReportTable()
+    * show the report table page
+    * @input : -
+    * @output : show report table page
+    * @author : Natthanan Sirisurayut 66160352
+    * @Create Date : 2025-04-05
+    */
     public function showReportTable()
     {
         $workRequests = WorkRequest::with(['employee', 'department', 'tasks.employee', 'tasks.department'])
@@ -40,7 +55,14 @@ class ReportController extends Controller
         return view('report.report_table', compact('workRequests'));
     }
 
-
+    /*
+    * getTaskStatistics(Request $request)
+    * get work request statistics for the employee
+    * @input : year, month
+    * @output : Filtered work requests in statistics and create bar chart
+    * @author : Supasit Meedecha 66160098
+    * @Create Date : 2025-04-07
+    */
     public function getTaskStatistics(Request $request)
     {
         $user = session('user'); // ดึงข้อมูลผู้ใช้จาก session
@@ -88,7 +110,14 @@ class ReportController extends Controller
 
         return response()->json($statistics); // ส่งข้อมูลกลับในรูปแบบ JSON
     }
-
+    /*
+    * getTaskStatisticsCompany(Request $request)
+    * get work request statistics for the company
+    * @input : year, month
+    * @output : Filtered work requests in statistics and create bar chart
+    * @author : Natthanan Sirisurayut 66160352
+    * @Create Date : 2025-04-07
+    */
     public function getTaskStatisticsCompany(Request $request)
     {
         $tasks = Task::query();
