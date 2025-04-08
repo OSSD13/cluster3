@@ -10,11 +10,16 @@
 
 @extends('layouts.employee_layouts')
 @section('content')
+<!-- ต้องมี script sweetalert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <form action="{{ route('draft.update', $draft->draft_id) }}" method="POST" id="draft-form" novalidate>
         @method('PUT')
-        <input type="hidden" name="submit_type" id="submit_type" value="create">
         @csrf
+        <input type="hidden" name="submit_type" id="submit_type" value="create">
+        <input type="hidden" id="deleted-tasks" name="deleted_tasks" value="">
+
         <div class="container-fluid">
             <div style="color: #4B49AC">
                 <h3>แก้ไขแบบร่าง</h3>
@@ -72,8 +77,7 @@
 
             {{-- ปุ่มบันทึกและสร้าง --}}
             <div class="d-flex justify-content-end my-4">
-                <button type="submit" class="btn btn-secondary" name="submit_type" value="draft"
-                    id="save-draft-btn">แบบร่าง</button>
+                <button type="submit" class="btn btn-secondary" name="submit_type" value="draft" id="save-draft-btn">แบบร่าง</button>
                 &nbsp;&nbsp;
                 <button type="submit" class="btn btn-outline-light" name="submit_type" value="create" id="create-task-btn"
                     style="border: 1px solid #2B467E; color: #ffffff; background-color: #4B49AC">
@@ -118,6 +122,79 @@
                         .catch(error => console.error('เกิดข้อผิดพลาดในการโหลดพนักงาน:', error));
                 }
             });
+
+            const subtasks = @json($draft->tasks); // ดึงข้อมูลงานย่อยจาก PHP
+            const taskList = document.getElementById("taskList"); // อ้างอิง taskList
+
+            // วนลูปข้อมูลงานย่อยและเพิ่มลงใน DOM
+            subtasks.forEach((subtask, index) => {
+                const taskId = `task${index + 1}`;
+                const newTask = document.createElement("div");
+                newTask.classList.add("accordion-item");
+                newTask.id = `task-item-${index + 1}`;
+                newTask.setAttribute('data-task-id', subtask.tsk_id); // เพิ่ม data-task-id
+                newTask.innerHTML = `
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                            งานย่อย ${index + 1}
+                        </button>
+                    </h2>
+                    <div id="${taskId}" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="mb-3">
+                                <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="dept[]" required>
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        ${@json($dept).map(d => `
+                                            <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
+                                                ${d.dept_name}
+                                            </option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">ผู้รับมอบหมาย</label>
+                                    <select class="form-select" name="emp[]">
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        <option value="${subtask.tsk_emp_id}" selected>${subtask.employee?.emp_name || ''}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="priority[]" required>
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        <option value="L" ${subtask.tsk_priority == 'L' ? 'selected' : ''}>ต่ำ</option>
+                                        <option value="M" ${subtask.tsk_priority == 'M' ? 'selected' : ''}>ปานกลาง</option>
+                                        <option value="H" ${subtask.tsk_priority == 'H' ? 'selected' : ''}>สูง</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                                <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                taskList.appendChild(newTask);
+            });
+
+            // อัปเดตตัวนับ task
+            taskCount = subtasks.length + 1;
         });
 
         /*
@@ -208,7 +285,42 @@
                 showCancelButton: true,
                 confirmButtonText: 'ลบเลย',
                 cancelButtonText: 'ยกเลิก',
-                reverseButtons: true
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'swal2-confirm',
+                    cancelButton: 'swal2-cancel'
+                },
+                buttonsStyling: false,
+                didOpen: () => {
+                    const confirmBtn = Swal.getConfirmButton();
+                    const cancelBtn = Swal.getCancelButton();
+
+                    // ปุ่มแดง: "ลบเลย"
+                    Object.assign(confirmBtn.style, {
+                        backgroundColor: '#DC3545',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '12px',
+                        padding: '8px 24px',
+                        fontSize: '1.1rem',
+                        fontWeight: '400',
+                        marginLeft: '10px',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                    });
+
+                    // ปุ่มม่วง: "ยกเลิก"
+                    Object.assign(cancelBtn.style, {
+                        backgroundColor: '#4D47C3',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '12px',
+                        padding: '8px 24px',
+                        fontSize: '1.1rem',
+                        fontWeight: '400',
+                        marginRight: '10px',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                    });
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const taskToRemove = document.getElementById(`task-item-${id}`);
@@ -221,11 +333,13 @@
         }
 
         /*
-        * updateTaskNumbers()
-        * อัปเดตหมายเลขงานย่อยเมื่อมีการลบ
-        * @input : -
-        * @output : ปรับหมายเลข, ID, target ของ task ใหม่ทั้งหมดให้เรียงลำดับถูกต้องใน DOM
-        */
+         * updateTaskNumbers()
+         * อัปเดตหมายเลขงานย่อยเมื่อมีการลบ
+         * @input : -
+         * @output : ปรับหมายเลข, ID, target ของ task ใหม่ทั้งหมดให้เรียงลำดับถูกต้องใน DOM
+         * @author : Sarocha Dokyeesun 66160097
+         * @Create Date : 2025-03-18
+         */
         function updateTaskNumbers() {
             const taskItems = document.querySelectorAll("#taskList .accordion-item");
             taskCount = 1;
@@ -242,5 +356,187 @@
                 taskCount++;
             });
         }
+
+        /*
+         * validateFormFields(form)
+         * ตรวจสอบความถูกต้องของฟอร์ม ก่อนส่ง submit
+         * @input : form DOM object
+         * @output : boolean ผลการตรวจสอบ (true = valid, false = invalid) และแสดงข้อความ error หากไม่ผ่าน
+         * @author : Sarocha Dokyeesun 66160097
+         * @Create Date : 2025-03-05
+         */
+        function validateFormFields(form) {
+            const inputs = form.querySelectorAll("input[required], select[required], textarea[required]");
+            let isValid = true;
+
+            const taskList = document.querySelectorAll("#taskList .accordion-item");
+            if (taskList.length === 0) {
+                Swal.fire({
+                    title: 'ไม่สามารถส่งฟอร์มได้',
+                    text: 'กรุณาเพิ่มอย่างน้อย 1 งานย่อยก่อนส่งใบสั่งงาน',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง',
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'swal2-confirm'
+                    },
+                    didOpen: () => {
+                        const confirmBtn = Swal.getConfirmButton();
+                        Object.assign(confirmBtn.style, {
+                            backgroundColor: '#4B49AC',
+                            color: '#fff',
+                            borderRadius: '12px',
+                            fontWeight: '400',
+                            fontSize: '1rem',
+                            padding: '8px 24px',
+                            border: 'none'
+                        });
+                    }
+                });
+                return false;
+            }
+
+            inputs.forEach(input => {
+                const parent = input.closest('.form-group, .mb-3, .col, .col-6') || input.parentElement;
+                const fieldName = input.name;
+
+                // ลบข้อความ error เก่าก่อน
+                const oldError = parent.querySelector('.invalid-feedback');
+                if (oldError) oldError.remove();
+
+                if (!input.value || input.value === "0") {
+                    input.classList.add("is-invalid");
+
+                    const error = document.createElement("div");
+                    error.className = "invalid-feedback";
+
+                    // ตั้งข้อความ error เฉพาะเจาะจงตาม name
+                    let message = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                    if (fieldName === "task_name") message = "กรุณากรอกชื่อใบสั่งงาน";
+                    if (fieldName === "creator_status") message = "กรุณาเลือกสถานะผู้สร้าง";
+                    if (fieldName === "task_description") message = "กรุณากรอกคำอธิบายงาน";
+
+                    if (fieldName === "subtask_name[]") message = "กรุณากรอกชื่อใบงานย่อย";
+                    if (fieldName === "dept[]") message = "กรุณาเลือกแผนกรับมอบหมาย";
+                    if (fieldName === "priority[]") message = "กรุณาเลือกความสำคัญ";
+                    if (fieldName === "end_date[]") message = "กรุณาระบุวันสิ้นสุด";
+                    if (fieldName === "description[]") message = "กรุณากรอกคำอธิบาย";
+
+                    error.textContent = message;
+                    parent.appendChild(error);
+                    isValid = false;
+                } else {
+                    input.classList.remove("is-invalid");
+                }
+            });
+
+            return isValid;
+        }
+
+        document.getElementById("create-task-btn").addEventListener("click", function(e) {
+            e.preventDefault();
+            const form = document.getElementById('draft-form');
+
+            if (!validateFormFields(form)) return;
+
+            Swal.fire({
+                title: 'ยืนยันการสร้างใบสั่งงาน?',
+                text: 'โปรดยืนยันว่าคุณต้องการสร้างใบสั่งงานนี้',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'สร้างเลย',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'swal2-confirm',
+                    cancelButton: 'swal2-cancel'
+                },
+                didOpen: () => {
+                    const confirmBtn = Swal.getConfirmButton();
+                    const cancelBtn = Swal.getCancelButton();
+
+                    Object.assign(confirmBtn.style, {
+                        backgroundColor: '#4B49AC',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        fontWeight: '400',
+                        fontSize: '1rem',
+                        padding: '8px 24px',
+                        marginLeft: '10px',
+                        border: 'none'
+                    });
+
+                    Object.assign(cancelBtn.style, {
+                        backgroundColor: '#DC3545',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        fontWeight: '400',
+                        fontSize: '1rem',
+                        padding: '8px 24px',
+                        marginRight: '10px',
+                        border: 'none'
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('submit_type').value = 'create'; // set ค่านี้ก่อน submit
+                    form.submit();
+                }
+            });
+        });
+
+        document.getElementById("save-draft-btn").addEventListener("click", function(e) {
+            e.preventDefault();
+            const form = document.getElementById('draft-form');
+
+            if (!validateFormFields(form)) return;
+
+            Swal.fire({
+                title: 'บันทึกแบบร่าง?',
+                text: 'คุณต้องการบันทึกงานนี้เป็นแบบร่างใช่ไหม?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'swal2-confirm',
+                    cancelButton: 'swal2-cancel'
+                },
+                didOpen: () => {
+                    const confirmBtn = Swal.getConfirmButton();
+                    const cancelBtn = Swal.getCancelButton();
+
+                    Object.assign(confirmBtn.style, {
+                        backgroundColor: '#4B49AC',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        fontWeight: '400',
+                        fontSize: '1rem',
+                        padding: '8px 24px',
+                        marginLeft: '10px',
+                        border: 'none'
+                    });
+
+                    Object.assign(cancelBtn.style, {
+                        backgroundColor: '#DC3545',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        fontWeight: '400',
+                        fontSize: '1rem',
+                        padding: '8px 24px',
+                        marginRight: '10px',
+                        border: 'none'
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('submit_type').value = 'draft'; // set เป็น draft
+                    form.submit();
+                }
+            });
+        });
     </script>
 @endsection

@@ -37,25 +37,22 @@ class EditDraftController extends Controller
 
     public function update(Request $request, $id)
     {
-        $draft = WorkRequest::findOrFail($id);  // ค้นหาข้อมูลแบบร่างที่ต้องการอัปเดต
+        $draft = WorkRequest::findOrFail($id);
 
-        // อัปเดตข้อมูลของใบสั่งงาน
+        // อัปเดตข้อมูลใบสั่งงาน
         $draft->task_name = $request->input('task_name');
         $draft->task_description = $request->input('task_description');
         $draft->creator_status = $request->input('creator_status');
+        $draft->req_status = $request->input('submit_type') === 'create' ? 'submitted' : 'draft';
+        $draft->save();
 
-        // ตรวจสอบค่าจาก submit_type เพื่อกำหนดสถานะ
-        $submitType = $request->input('submit_type');
-
-        if ($submitType === 'create') {
-            $draft->req_status = 'submitted';  // เปลี่ยนสถานะเป็น "ส่ง" (หรือค่าที่คุณต้องการ)
-        } else {
-            $draft->req_status = 'draft';  // ถ้ากดบันทึกแบบร่าง ค่าจะเป็น "แบบร่าง"
+        // ลบงานย่อยที่ถูกลบ
+        $deletedTasks = explode(',', rtrim($request->input('deleted_tasks'), ','));
+        if (!empty($deletedTasks)) {
+            Task::whereIn('tsk_id', $deletedTasks)->delete();
         }
 
-        $draft->save();  // บันทึกการเปลี่ยนแปลงในใบสั่งงาน
-
-        // อัปเดตข้อมูลงานย่อย (subtasks)
+        // อัปเดตหรือเพิ่มงานย่อยใหม่
         $subtaskNames = $request->input('subtask_name');
         $deptIds = $request->input('dept');
         $empIds = $request->input('emp');
@@ -63,23 +60,19 @@ class EditDraftController extends Controller
         $endDates = $request->input('end_date');
         $descriptions = $request->input('description');
 
-        // ลบงานย่อยที่เก่าออก (ถ้ามี) ก่อนที่จะเพิ่มงานใหม่
-        Task::where('tsk_req_id', $draft->req_id)->delete();
-
         foreach ($subtaskNames as $index => $subtaskName) {
-            $task = new Task();
-            $task->tsk_req_id = $draft->req_id;  // เชื่อมโยงกับใบสั่งงาน
-            $task->tsk_name = $subtaskName;
-            $task->tsk_dept_id = $deptIds[$index];
-            $task->tsk_emp_id = $empIds[$index];
-            $task->tsk_priority = $priorities[$index];
-            $task->tsk_due_date = $endDates[$index];
-            $task->tsk_description = $descriptions[$index];
-            $task->save();  // บันทึกงานย่อย
+            Task::updateOrCreate(
+                ['tsk_req_id' => $draft->req_id, 'tsk_name' => $subtaskName],
+                [
+                    'tsk_dept_id' => $deptIds[$index],
+                    'tsk_emp_id' => $empIds[$index],
+                    'tsk_priority' => $priorities[$index],
+                    'tsk_due_date' => $endDates[$index],
+                    'tsk_description' => $descriptions[$index],
+                ]
+            );
         }
 
-        // แจ้งข้อความสำเร็จ
-        $message = $submitType === 'create' ? 'ใบสั่งงานถูกส่งเรียบร้อยแล้ว' : 'แบบร่างถูกอัปเดตเรียบร้อย';
-        return redirect()->route('draft.list')->with('success', $message);
+        return redirect()->route('draft.list')->with('success', 'แบบร่างถูกอัปเดตเรียบร้อย');
     }
 }
