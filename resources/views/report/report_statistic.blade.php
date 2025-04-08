@@ -1,3 +1,17 @@
+{{--
+* report_statistic.blade.php
+* Display form show statistic report work request
+* @input : workRequest, task
+* @output : form show statistic report work request
+* @input : wrs_tasks, wrs_departments, wrs_employees
+* @output : statistic report work request(employee's pie chart ,organization's pie chart ,organization's bar chart)
+* @author : Natthanan Sirisurayut 66160352
+* @Create Date : 2025-04-06
+* @Update Date : 2025-04-08
+* @Update By : Supasit Meedecha 66160098
+*
+--}}
+
 @extends('layouts.employee_layouts')
 
 @section('content')
@@ -139,8 +153,19 @@
     </div>
 @endsection
 
+
+
 @section('script')
     <script>
+         /*
+         * populateYearDropdown(selectId) , populateMonthDropdown(selectId)
+         * Filter work requests based on selected year and month
+         * @input : year, month
+         * @output : Filtered work requests in statistics
+         * @author : Supasit Meedecha 66160098
+         * @Create Date : 2025-04-06
+         * @Update Date : 2025-04-07
+         */
         let cachedStatistics = null;
         let cachedCoStatistics = null;
 
@@ -163,7 +188,9 @@
         // 🔽 เติม Dropdown เดือน
         function populateMonthDropdown(selectId) {
             const select = document.getElementById(selectId);
-            const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+            const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.",
+                "ธ.ค."
+            ];
             const currentMonth = new Date().getMonth(); // เดือนปัจจุบัน (0-based index)
             months.forEach((month, index) => {
                 const option = document.createElement("option");
@@ -179,11 +206,14 @@
             allOption.textContent = "ทั้งปี";
             select.appendChild(allOption);
         }
-
+        
         // 🔽 ดึงข้อมูลสถิติจากเซิร์ฟเวอร์ (รวม "รายงานของฉัน" และ "รายงานขององค์กร")
         async function fetchStatisticsData(year, month) {
             const url = "{{ route('report.statistics') }}";
-            const params = new URLSearchParams({ year, month });
+            const params = new URLSearchParams({
+                year,
+                month
+            });
 
             if (cachedStatistics && cachedStatistics.year === year && cachedStatistics.month === month) {
                 return cachedStatistics.data;
@@ -191,14 +221,21 @@
 
             const response = await fetch(`${url}?${params}`);
             const data = await response.json();
-            cachedStatistics = { year, month, data };
+            cachedStatistics = {
+                year,
+                month,
+                data
+            };
             return data;
         }
 
         // 🔽 ดึงข้อมูลสถิติขององค์กรจากเซิร์ฟเวอร์
         async function fetchCoStatisticsData(year, month) {
             const url = "{{ route('report.coStatistics') }}";
-            const params = new URLSearchParams({ year, month });
+            const params = new URLSearchParams({
+                year,
+                month
+            });
 
             if (cachedCoStatistics && cachedCoStatistics.year === year && cachedCoStatistics.month === month) {
                 return cachedCoStatistics.data;
@@ -206,23 +243,30 @@
 
             const response = await fetch(`${url}?${params}`);
             const data = await response.json();
-            cachedCoStatistics = { year, month, data };
+            cachedCoStatistics = {
+                year,
+                month,
+                data
+            };
             return data;
         }
         async function fetchDepartmentTaskStatistics(year, month) {
-    const url = "{{ route('department.taskStatistics') }}";
-    const params = new URLSearchParams({ year, month });
+            const url = "{{ route('department.taskStatistics') }}";
+            const params = new URLSearchParams({
+                year,
+                month
+            });
 
-    const response = await fetch(`${url}?${params}`);
-    const data = await response.json();
+            const response = await fetch(`${url}?${params}`);
+            const data = await response.json();
 
-    // เตรียมข้อมูลสำหรับกราฟแท่ง
-    const labels = data.labels; // ชื่อแผนก
-    const datasets = data.datasets; // ข้อมูลของแต่ละแผนก
+            // เตรียมข้อมูลสำหรับกราฟแท่ง
+            const labels = data.labels; // ชื่อแผนก
+            const datasets = data.datasets; // ข้อมูลของแต่ละแผนก
 
-    // อัปเดตกราฟแท่ง
-    drawGroupedBarChart('orgGroupedBarChart', labels, datasets);
-}
+            // อัปเดตกราฟแท่ง
+            drawGroupedBarChart('orgGroupedBarChart', labels, datasets);
+        }
 
         // 🔽 อัปเดตการ์ดสถิติ
         function updateStatisticsCards(data) {
@@ -273,40 +317,40 @@
         }
 
         function drawGroupedBarChart(canvasId, labels, datasets) {
-    const canvas = document.getElementById(canvasId);
-    const ctx = canvas.getContext("2d");
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext("2d");
 
-    // ลบกราฟเก่าออกก่อน
-    if (canvas.chartInstance) {
-        canvas.chartInstance.destroy();
-    }
+            // ลบกราฟเก่าออกก่อน
+            if (canvas.chartInstance) {
+                canvas.chartInstance.destroy();
+            }
 
-    // สร้างกราฟใหม่
-    canvas.chartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: datasets,
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: "bottom",
+            // สร้างกราฟใหม่
+            canvas.chartInstance = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: datasets,
                 },
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                        },
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                        },
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
                 },
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
-}
+            });
+        }
 
 
         // 🔽 โหลดข้อมูลเมื่อเปลี่ยนแท็บ
@@ -351,8 +395,10 @@
             document.querySelectorAll('.nav-link').forEach(tab => {
                 tab.addEventListener('click', (event) => {
                     const targetTab = event.target.getAttribute('href');
-                    const year = targetTab === '#myReport' ? yearDropdown.value : orgYearDropdown.value;
-                    const month = targetTab === '#myReport' ? monthDropdown.value : orgMonthDropdown.value;
+                    const year = targetTab === '#myReport' ? yearDropdown.value : orgYearDropdown
+                        .value;
+                    const month = targetTab === '#myReport' ? monthDropdown.value : orgMonthDropdown
+                        .value;
                     handleTabChange(targetTab, year, month);
                 });
             });
