@@ -34,6 +34,13 @@
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
 
+    {{-- Custom CSS --}}
+    <link rel="stylesheet" href="{{ asset('public\css\pages\manage_department_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\manage_employee.css') }}">
+
+    {{-- Bosstrap Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
     {{-- CSS --}}
     <link rel="stylesheet" href="{{ asset('public\css\pages\report_table_style.css') }}">
     <link rel="stylesheet" href="{{ asset('public\css\pages\report_statistic_style.css') }}">
