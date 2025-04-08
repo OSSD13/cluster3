@@ -27,6 +27,7 @@ Route::middleware(['employee'])->group(function () {
     Route::get('/report-stat', [ReportController::class, 'showReportStat'])->name('report-stat'); // สำหรับแสดงหน้า Dashboard
     Route::get('/report-statistics', [ReportController::class, 'getTaskStatistics'])->name('report.statistics'); // สำหรับส่งข้อมูล JSON
     Route::get('/report-co-statistics', [ReportController::class, 'getTaskStatisticsCompany'])->name('report.coStatistics'); // สำหรับส่งข้อมูล JSON
+    Route::get('/department-task-statistics', [ReportController::class, 'getDepartmentTaskStatistics'])->name('department.taskStatistics');
 });
 
 Route::get(

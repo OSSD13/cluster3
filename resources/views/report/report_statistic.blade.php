@@ -209,6 +209,20 @@
             cachedCoStatistics = { year, month, data };
             return data;
         }
+        async function fetchDepartmentTaskStatistics(year, month) {
+    const url = "{{ route('department.taskStatistics') }}";
+    const params = new URLSearchParams({ year, month });
+
+    const response = await fetch(`${url}?${params}`);
+    const data = await response.json();
+
+    // เตรียมข้อมูลสำหรับกราฟแท่ง
+    const labels = data.labels; // ชื่อแผนก
+    const datasets = data.datasets; // ข้อมูลของแต่ละแผนก
+
+    // อัปเดตกราฟแท่ง
+    drawGroupedBarChart('orgGroupedBarChart', labels, datasets);
+}
 
         // 🔽 อัปเดตการ์ดสถิติ
         function updateStatisticsCards(data) {
@@ -258,59 +272,42 @@
             });
         }
 
-        // 🔽 สร้างกราฟแท่งแบบกลุ่ม
         function drawGroupedBarChart(canvasId, labels, datasets) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: datasets
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext("2d");
+
+    // ลบกราฟเก่าออกก่อน
+    if (canvas.chartInstance) {
+        canvas.chartInstance.destroy();
+    }
+
+    // สร้างกราฟใหม่
+    canvas.chartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: datasets,
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "bottom",
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom', // ย้ายตำแหน่ง label ไปด้านล่าง
-                            labels: {
-                                usePointStyle: true, // ใช้สัญลักษณ์
-                                pointStyle: 'rect' // กำหนดสัญลักษณ์เป็นสี่เหลี่ยมจตุรัส
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true
-                        },
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        const departmentLabels = ['ไอจี', 'ไอที', 'ไอวี']; // ชื่อแผนก
-        const departmentDatasets = [{
-                label: 'งานที่เสร็จสิ้นทั้งหมด',
-                data: [20, 40, 30], // ข้อมูลของแต่ละแผนก
-                backgroundColor: 'rgba(75, 192, 192, 0.8)' // สีของงานที่เสร็จสิ้นทั้งหมด
             },
-            {
-                label: 'งานล่าช้า',
-                data: [10, 15, 5], // ข้อมูลของแต่ละแผนก
-                backgroundColor: 'rgba(255, 206, 86, 0.8)' // สีของงานล่าช้า
+            scales: {
+                x: {
+                    beginAtZero: true,
+                },
+                y: {
+                    beginAtZero: true,
+                },
             },
-            {
-                label: 'งานถูกปฏิเสธ',
-                data: [5, 8, 2], // ข้อมูลของแต่ละแผนก
-                backgroundColor: 'rgba(153, 102, 255, 0.8)' // สีของงานถูกปฏิเสธ
-            }
-        ];
+        },
+    });
+}
 
-        // ✅ เรียกใช้ฟังก์ชันสร้าง Bar Chart
-        drawGroupedBarChart('orgGroupedBarChart', departmentLabels, departmentDatasets);
 
         // 🔽 โหลดข้อมูลเมื่อเปลี่ยนแท็บ
         async function handleTabChange(targetTab, year, month) {
@@ -376,6 +373,22 @@
             orgMonthDropdown.addEventListener('change', () => {
                 handleTabChange('#orgReport', orgYearDropdown.value, orgMonthDropdown.value);
             });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const orgYearDropdown = document.getElementById("orgYearDropdown");
+            const orgMonthDropdown = document.getElementById("orgMonthDropdown");
+
+            orgYearDropdown.addEventListener('change', () => {
+                fetchDepartmentTaskStatistics(orgYearDropdown.value, orgMonthDropdown.value);
+            });
+
+            orgMonthDropdown.addEventListener('change', () => {
+                fetchDepartmentTaskStatistics(orgYearDropdown.value, orgMonthDropdown.value);
+            });
+
+            // โหลดข้อมูลเริ่มต้น
+            fetchDepartmentTaskStatistics(orgYearDropdown.value, orgMonthDropdown.value);
         });
     </script>
 @endsection
