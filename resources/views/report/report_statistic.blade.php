@@ -157,13 +157,14 @@
 
 @section('script')
     <script>
-         /*
-         * populateYearDropdown(selectId) , populateMonthDropdown(selectId)
+        /*
+         * populateYearDropdown(selectId)
          * Filter work requests based on selected year and month
          * @input : year, month
          * @output : Filtered work requests in statistics
          * @author : Supasit Meedecha 66160098
          * @Create Date : 2025-04-06
+         * @Update By : Natthanan Sirisurayut 66160352
          * @Update Date : 2025-04-07
          */
         let cachedStatistics = null;
@@ -184,7 +185,16 @@
                 select.appendChild(option);
             }
         }
-
+        /*
+         * populateMonthDropdown(selectId)
+         * Filter work requests based on selected year and month
+         * @input : year, month
+         * @output : Filtered work requests in statistics
+         * @author : Supasit Meedecha 66160098
+         * @Create Date : 2025-04-06
+         * @Update By : Natthanan Sirisurayut 66160352
+         * @Update Date : 2025-04-07
+         */
         // 🔽 เติม Dropdown เดือน
         function populateMonthDropdown(selectId) {
             const select = document.getElementById(selectId);
@@ -206,7 +216,16 @@
             allOption.textContent = "ทั้งปี";
             select.appendChild(allOption);
         }
-
+        /*
+         * fetchStatisticsData(year, month)
+         * fetch work request statistics data from database (my report)
+         * @input : year, month
+         * @output : work request statistics data
+         * @author : Supasit Meedecha 66160098
+         * @Create Date : 2025-04-06
+         * @Update By : Natthanan Sirisurayut 66160352
+         * @Update Date : 2025-04-07
+         */
         // 🔽 ดึงข้อมูลสถิติจากเซิร์ฟเวอร์ (รวม "รายงานของฉัน" และ "รายงานขององค์กร")
         async function fetchStatisticsData(year, month) {
             const url = "{{ route('report.statistics') }}";
@@ -228,7 +247,16 @@
             };
             return data;
         }
-
+        /*
+         * fetchCoStatisticsData(year, month)
+         * fetch work request statistics data from database (org report)
+         * @input : year, month
+         * @output : work request statistics data
+         * @author : Supasit Meedecha 66160098
+         * @Create Date : 2025-04-06
+         * @Update By : Natthanan Sirisurayut 66160352
+         * @Update Date : 2025-04-07
+         */
         // 🔽 ดึงข้อมูลสถิติขององค์กรจากเซิร์ฟเวอร์
         async function fetchCoStatisticsData(year, month) {
             const url = "{{ route('report.coStatistics') }}";
@@ -250,6 +278,14 @@
             };
             return data;
         }
+        /*
+         * fetchDepartmentTaskStatistics(year, month)
+         * fetch work request statistics data from database (for bar graph)
+         * @input : year, month
+         * @output : work request statistics data
+         * @author : Natthanan Sirisurayut 66160352
+         * @Create Date : 2025-04-07
+         */
         async function fetchDepartmentTaskStatistics(year, month) {
             const url = "{{ route('department.taskStatistics') }}";
             const params = new URLSearchParams({
@@ -267,7 +303,14 @@
             // อัปเดตกราฟแท่ง
             drawGroupedBarChart('orgGroupedBarChart', labels, datasets);
         }
-
+        /*
+         * updateStatisticsCards(data)
+         * update work request statistics data
+         * @input : data
+         * @output : update work request statistics data
+         * @author : Natthanan Sirisurayut 66160352
+         * @Create Date : 2025-04-07
+         */
         // 🔽 อัปเดตการ์ดสถิติ
         function updateStatisticsCards(data) {
             document.querySelector('.stats-number.total').textContent = data.total;
@@ -275,7 +318,14 @@
             document.querySelector('.stats-number.delayed').textContent = data.delayed;
             document.querySelector('.stats-number.rejected').textContent = data.rejected;
         }
-
+        /*
+         * updateCoStatisticsCards(data)
+         * update work request statistics data
+         * @input : data
+         * @output : update work request statistics data
+         * @author : Natthanan Sirisurayut 66160352
+         * @Create Date : 2025-04-07
+         */
         // 🔽 อัปเดตการ์ดสถิติขององค์กร
         function updateCoStatisticsCards(data) {
             document.querySelector('.stats-number.coTotal').textContent = data.total;
@@ -283,7 +333,16 @@
             document.querySelector('.stats-number.coDelayed').textContent = data.delayed;
             document.querySelector('.stats-number.coRejected').textContent = data.rejected;
         }
-
+        /*
+         * drawPieChart(canvasId, labels, values, colors)
+         * draw pie chart
+         * @input : canvasId, labels, values, colors
+         * @output : draw pie chart
+         * @author : Supasit Meedecha 66160098
+         * @Create Date : 2025-04-06
+         * @Update By : Natthanan Sirisurayut 66160352
+         * @Update Date : 2025-04-07
+         */
         // 🔽 สร้างกราฟวงกลม
         function drawPieChart(canvasId, labels, values, colors) {
             const ctx = document.getElementById(canvasId).getContext('2d');
@@ -318,7 +377,14 @@
                 }
             });
         }
-
+        /*
+         * drawGroupedBarChart(canvasId, labels, datasets)
+         * draw pie chart
+         * @input : canvasId, labels, values, colors
+         * @output : draw pie chart
+         * @author : Supasit Meedecha 66160098
+         * @Create Date : 2025-04-08
+         */
         function drawGroupedBarChart(canvasId, labels, datasets) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext("2d");
@@ -328,34 +394,41 @@
                 canvas.chartInstance.destroy();
             }
 
-    // สร้างกราฟใหม่
-    canvas.chartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: datasets,
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: "bottom",
+            // สร้างกราฟใหม่
+            canvas.chartInstance = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: datasets,
                 },
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                        },
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                        },
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
                 },
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
-}
+            });
+        }
 
-
+        /*
+         * handleTabChange(targetTab, year, month)
+         * handle tab change event
+         * @input : data
+         * @output : update work request statistics data
+         * @author : Natthanan Sirisurayut 66160352
+         * @Create Date : 2025-04-07
+         */
         // 🔽 โหลดข้อมูลเมื่อเปลี่ยนแท็บ
         async function handleTabChange(targetTab, year, month) {
             if (targetTab === '#myReport') {
