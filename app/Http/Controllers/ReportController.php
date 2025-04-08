@@ -19,12 +19,12 @@ class ReportController extends Controller
         $request = new Request(['year' => $currentYear, 'month' => $currentMonth]);
         $statistics = $this->getTaskStatistics($request)->getData();
 
-    // สร้าง Request object สำหรับ getTaskStatisticsCompany
+        // สร้าง Request object สำหรับ getTaskStatisticsCompany
         $companyRequest = new Request(['year' => $currentYear, 'month' => $currentMonth]);
         $coStatistics = $this->getTaskStatisticsCompany($companyRequest)->getData();
 
         // ส่งข้อมูลไปยัง View
-        return view('report.report_statistic', compact('statistics','coStatistics'));
+        return view('report.report_statistic', compact('statistics', 'coStatistics'));
     }
 
     public function showReportTable()
@@ -70,8 +70,8 @@ class ReportController extends Controller
 
         $delayedTasks = $tasks->filter(function ($task) {
             return $task->tsk_status === 'Completed' &&
-                   $task->tsk_completed_date !== null &&
-                   $task->tsk_completed_date > $task->tsk_due_date; // เปรียบเทียบวันที่
+                $task->tsk_completed_date !== null &&
+                $task->tsk_completed_date > $task->tsk_due_date; // เปรียบเทียบวันที่
         });
 
         $rejectedTasks = $tasks->filter(function ($task) {
@@ -109,7 +109,7 @@ class ReportController extends Controller
         // แยกประเภทงาน
         $completedTasks = $tasks->filter(function ($task) {
             return $task->tsk_status === 'Completed' &&
-            $task->tsk_completed_date !== null;
+                $task->tsk_completed_date !== null;
         });
 
         $delayedTasks = $tasks->filter(function ($task) {
@@ -132,76 +132,85 @@ class ReportController extends Controller
 
         return response()->json($coStatistics);
     }
+    /*
+     * getDepartmentTaskStatistics(Request $request)
+     * Filter work requests based on selected year and month
+     * @input : year, month
+     * @output : Filtered work requests in statistics and create bar chart
+     * @author : Supasit Meedecha 66160098
+     * @Create Date : 2025-04-06
+     * @Update Date : 2025-04-08
+     */
 
     public function getDepartmentTaskStatistics(Request $request)
-{
-    $year = $request->input('year');
-    $month = $request->input('month');
+    {
+        $year = $request->input('year');
+        $month = $request->input('month');
 
-    // ดึงข้อมูลงานทั้งหมดพร้อมข้อมูลแผนก
-    $tasks = Task::with('department');
+        // ดึงข้อมูลงานทั้งหมดพร้อมข้อมูลแผนก
+        $tasks = Task::with('department');
 
-    // กรองข้อมูลตามปีและเดือน
-    if ($year) {
-        $tasks->whereYear('tsk_due_date', $year);
-    }
-    if ($month && $month != 'all') {
-        $tasks->whereMonth('tsk_due_date', $month);
-    }
+        // กรองข้อมูลตามปีและเดือน
+        if ($year) {
+            $tasks->whereYear('tsk_due_date', $year);
+        }
+        if ($month && $month != 'all') {
+            $tasks->whereMonth('tsk_due_date', $month);
+        }
 
-    $tasks = $tasks->get();
+        $tasks = $tasks->get();
 
-    // จัดกลุ่มข้อมูลตามแผนก
-    $groupedByDepartment = $tasks->groupBy('tsk_dept_id');
+        // จัดกลุ่มข้อมูลตามแผนก
+        $groupedByDepartment = $tasks->groupBy('tsk_dept_id');
 
-    $labels = [];
-    $completedData = [];
-    $delayedData = [];
-    $rejectedData = [];
+        $labels = [];
+        $completedData = [];
+        $delayedData = [];
+        $rejectedData = [];
 
-    foreach ($groupedByDepartment as $deptId => $tasksGroup) {
-        $departmentName = $tasksGroup->first()->department->dept_name ?? 'ไม่ทราบชื่อแผนก';
+        foreach ($groupedByDepartment as $deptId => $tasksGroup) {
+            $departmentName = $tasksGroup->first()->department->dept_name ?? 'ไม่ทราบชื่อแผนก';
 
-        $completed = $tasksGroup->filter(function ($task) {
-            return $task->tsk_status === 'Completed' && $task->tsk_completed_date !== null;
-        })->count();
+            $completed = $tasksGroup->filter(function ($task) {
+                return $task->tsk_status === 'Completed' && $task->tsk_completed_date !== null;
+            })->count();
 
-        $delayed = $tasksGroup->filter(function ($task) {
-            return $task->tsk_status === 'Completed' &&
-                   $task->tsk_completed_date !== null &&
-                   $task->tsk_completed_date > $task->tsk_due_date;
-        })->count();
+            $delayed = $tasksGroup->filter(function ($task) {
+                return $task->tsk_status === 'Completed' &&
+                    $task->tsk_completed_date !== null &&
+                    $task->tsk_completed_date > $task->tsk_due_date;
+            })->count();
 
-        $rejected = $tasksGroup->filter(function ($task) {
-            return $task->tsk_status === 'Rejected';
-        })->count();
+            $rejected = $tasksGroup->filter(function ($task) {
+                return $task->tsk_status === 'Rejected';
+            })->count();
 
-        $labels[] = $departmentName;
-        $completedData[] = $completed;
-        $delayedData[] = $delayed;
-        $rejectedData[] = $rejected;
-    }
+            $labels[] = $departmentName;
+            $completedData[] = $completed;
+            $delayedData[] = $delayed;
+            $rejectedData[] = $rejected;
+        }
 
-    return response()->json([
-        'labels' => $labels,
-        'datasets' => [
-            [
-                'label' => 'งานที่ทำเสร็จสิ้น',
-                'data' => $completedData,
-                'backgroundColor' => 'rgba(75, 192, 192, 0.8)',
+        return response()->json([
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'งานที่ทำเสร็จสิ้น',
+                    'data' => $completedData,
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.8)',
+                ],
+                [
+                    'label' => 'งานที่ส่งล่าช้า',
+                    'data' => $delayedData,
+                    'backgroundColor' => 'rgba(255, 206, 86, 0.8)',
+                ],
+                [
+                    'label' => 'งานที่ปฏิเสธ',
+                    'data' => $rejectedData,
+                    'backgroundColor' => 'rgba(153, 102, 255, 0.8)',
+                ],
             ],
-            [
-                'label' => 'งานที่ส่งล่าช้า',
-                'data' => $delayedData,
-                'backgroundColor' => 'rgba(255, 206, 86, 0.8)',
-            ],
-            [
-                'label' => 'งานที่ปฏิเสธ',
-                'data' => $rejectedData,
-                'backgroundColor' => 'rgba(153, 102, 255, 0.8)',
-            ],
-        ],
-    ]);
-}
+        ]);
+    }
 
 }

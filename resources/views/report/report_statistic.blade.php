@@ -1,3 +1,17 @@
+{{--
+* report_statistic.blade.php
+* Display form show statistic report work request
+* @input : workRequest, task
+* @output : form show statistic report work request
+* @input : wrs_tasks, wrs_departments, wrs_employees
+* @output : statistic report work request(employee's pie chart ,organization's pie chart ,organization's bar chart)
+* @author : Natthanan Sirisurayut 66160352
+* @Create Date : 2025-04-06
+* @Update Date : 2025-04-08
+* @Update By : Supasit Meedecha 66160098
+*
+--}}
+
 @extends('layouts.employee_layouts')
 
 @section('content')
@@ -139,8 +153,19 @@
     </div>
 @endsection
 
+
+
 @section('script')
     <script>
+         /*
+         * populateYearDropdown(selectId) , populateMonthDropdown(selectId)
+         * Filter work requests based on selected year and month
+         * @input : year, month
+         * @output : Filtered work requests in statistics
+         * @author : Supasit Meedecha 66160098
+         * @Create Date : 2025-04-06
+         * @Update Date : 2025-04-07
+         */
         let cachedStatistics = null;
         let cachedCoStatistics = null;
 
@@ -303,49 +328,32 @@
                 canvas.chartInstance.destroy();
             }
 
-            // สร้างกราฟใหม่
-            canvas.chartInstance = new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: labels,
-                    datasets: datasets,
+    // สร้างกราฟใหม่
+    canvas.chartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: datasets,
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "bottom",
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: "bottom",
-                            labels: {
-                                usePointStyle: true, // ใช้สัญลักษณ์
-                                pointStyle: 'rect', // กำหนดสัญลักษณ์เป็นสี่เหลี่ยมจตุรัส
-                                font: {
-                                    family: 'Sarabun', // เปลี่ยนฟอนต์เป็น Sarabun
-                                }
-                            }
-                        },
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: {
-                                font: {
-                                    family: 'Sarabun', // เปลี่ยนฟอนต์เป็น Sarabun
-                                }
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                font: {
-                                    family: 'Sarabun', // เปลี่ยนฟอนต์เป็น Sarabun
-                                }
-                            }
-                        },
-                    },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
                 },
-            });
-        }
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+}
 
 
         // 🔽 โหลดข้อมูลเมื่อเปลี่ยนแท็บ
