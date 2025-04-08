@@ -35,7 +35,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="{{ asset('css/archive_detail.css') }}" rel="stylesheet">
+    <link href="{{ asset('public/css/archive_detail.css') }}" rel="stylesheet">
 
 </head>
 
@@ -166,7 +166,7 @@
                             {{-- Actual Date --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>วันที่เสร็จสิ้น</strong></p>
-                                <p style="margin-left: 220px;">{{ $task->tsk_completed_date ?? 'ยังไม่เสร็จ'}}</p>
+                                <p style="margin-left: 220px;">{{ $task->tsk_completed_date ?? 'ไม่มีข้อมูล'}}</p>
                             </div>
                             {{-- Comment --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
