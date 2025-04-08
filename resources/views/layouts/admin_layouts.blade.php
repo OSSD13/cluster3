@@ -51,19 +51,26 @@
         }
     </style>
 </head>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+    </style>
+</head>
 
 <body>
     <div class="d-flex">
         <div class="flex-grow-1">
             {{-- Sidebar --}}
             @include('layouts.side_bar_admin')
-            {{-- Header --}}
-            @include('layouts.header')
+            
 
             {{-- Content Area --}}
             <main class="container-fluid" style="margin-left: 250px">
                 @yield('content')
             </main>
+            {{-- Header --}}
+            @include('layouts.header')
         </div>
     </div>
     {{-- Custom JS --}}
