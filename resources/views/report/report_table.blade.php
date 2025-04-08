@@ -5,32 +5,37 @@
         <!-- Main Content Only -->
         <div class="row">
             <div class="col-12">
-                <h2 class="main-header">สรุปรายการ Work Request ประจำเดือน <span id="selectedMonth">ม.ค.</span> ปี <span
-                        id="selectedYear">2568</span></h2>
+                <h2 class="main-header">สรุปรายการ Work Request ประจำเดือน <span id="selectedMonth"></span>
+                    <span id="selectedYear"></span></h2>
 
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
                             <div>
-                                <h5 style="color: #4B49AC;">จำนวนทั้งสิ้น {{ count($workRequests) }} รายการ</h5>
+                                <h5 style="color: #4B49AC;">
+                                    <!-- แสดงจำนวนงานที่กรองแล้ว -->
+                                    จำนวนทั้งสิ้น <span id="totalWorkRequests">{{ count($workRequests) }}</span> รายการ
+                                    จากทั้งหมด {{ count($workRequests) }} รายการ
+                                </h5>
                             </div>
                             <div class="d-flex">
                                 <div class="d-flex justify-content-end align-items-center mb-4">
                                     <div class="me-2">
                                         <select id="yearDropdown" class="form-select">
+                                            <option value="" selected>-</option> <!-- Default option for year -->
                                             @php
                                                 $currentYear = date('Y');
-                                                $years = range($currentYear - 10, $currentYear); // ตั้งค่าปีย้อนหลัง 10 ปีจนถึงปีปัจจุบัน
+                                                $years = range($currentYear, $currentYear - 10); // ตั้งค่าปีจากล่าสุดไปเก่าสุด
                                             @endphp
 
                                             @foreach ($years as $year)
-                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option>
-                                                <!-- แปลงปีเป็น พ.ศ. -->
+                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option> <!-- แปลงปีเป็น พ.ศ. -->
                                             @endforeach
                                         </select>
                                     </div>
                                     <div>
                                         <select id="monthDropdown" class="form-select">
+                                            <option value="" selected>-</option> <!-- Default option for month -->
                                             @php
                                                 $months = [
                                                     '01' => 'ม.ค.',
@@ -127,34 +132,65 @@
 @endsection
 @section('script')
     <script>
+        const monthMap = {
+            'ม.ค.': 'มกราคม',
+            'ก.พ.': 'กุมภาพันธ์',
+            'มี.ค.': 'มีนาคม',
+            'เม.ย.': 'เมษายน',
+            'พ.ค.': 'พฤษภาคม',
+            'มิ.ย.': 'มิถุนายน',
+            'ก.ค.': 'กรกฎาคม',
+            'ส.ค.': 'สิงหาคม',
+            'ก.ย.': 'กันยายน',
+            'ต.ค.': 'ตุลาคม',
+            'พ.ย.': 'พฤศจิกายน',
+            'ธ.ค.': 'ธันวาคม',
+            'ทั้งหมด': 'ทั้งหมด'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default header to "ทั้งหมด"
+            document.getElementById('selectedMonth').textContent = 'ทั้งหมด';
+            document.getElementById('selectedYear').textContent = '';
+        });
+
         document.getElementById('yearDropdown').addEventListener('change', updateHeader);
         document.getElementById('monthDropdown').addEventListener('change', updateHeader);
 
         function updateHeader() {
-            const selectedYear = document.getElementById('yearDropdown').value;
-            const selectedMonth = document.getElementById('monthDropdown').value;
+            const selectedYear = document.getElementById('yearDropdown').value || 'ทั้งหมด';
+            const selectedMonth = document.getElementById('monthDropdown').value || 'ทั้งหมด';
 
-            document.getElementById('selectedYear').textContent = selectedYear;
-            document.getElementById('selectedMonth').textContent = selectedMonth;
+            if (selectedYear === 'ทั้งหมด' && selectedMonth === 'ทั้งหมด') {
+                document.getElementById('selectedMonth').textContent = 'ทั้งหมด';
+                document.getElementById('selectedYear').textContent = '';
+            } else if (selectedMonth === 'ทั้งหมด') {
+                document.getElementById('selectedMonth').textContent = 'ทั้งหมด';
+                document.getElementById('selectedYear').textContent = `พ.ศ. ${selectedYear}`;
+            } else {
+                document.getElementById('selectedMonth').textContent = monthMap[selectedMonth] || selectedMonth;
+                document.getElementById('selectedYear').textContent = `พ.ศ. ${selectedYear}`;
+            }
         }
 
         document.getElementById('yearDropdown').addEventListener('change', filterWorkRequests);
         document.getElementById('monthDropdown').addEventListener('change', filterWorkRequests);
 
         function filterWorkRequests() {
-            const year = document.getElementById('yearDropdown').value;
-            const month = document.getElementById('monthDropdown').value;
+            const year = document.getElementById('yearDropdown').value || 'ทั้งหมด'; // ดึงค่าปีที่เลือก
+            const month = document.getElementById('monthDropdown').value || 'ทั้งหมด'; // ดึงค่าเดือนที่เลือก
 
             // ดึงแถวทั้งหมดในตาราง
             const mainRows = document.querySelectorAll('tbody tr.main-row');
+            let filteredCount = 0; // ตัวนับจำนวนแถวที่แสดง
 
             mainRows.forEach(mainRow => {
                 const createdDateCell = mainRow.querySelector('td:nth-child(3)'); // เลือกคอลัมน์ "วันที่สร้าง"
                 const createdDateText = createdDateCell ? createdDateCell.textContent.trim() : '';
 
                 // เช็คว่าแถวตรงกับปีและเดือนที่เลือกหรือไม่
-                const isYearMatch = year ? createdDateText.includes(year) : true;
-                const isMonthMatch = month ? createdDateText.includes(month) : true;
+                const isYearMatch = year === 'ทั้งหมด' || createdDateText.includes(year);
+                const isMonthMatch = month === 'ทั้งหมด' || createdDateText.includes(month);
 
                 const shouldShowRow = isYearMatch && isMonthMatch;
 
@@ -166,6 +202,10 @@
                 while (next && !next.classList.contains('main-row')) {
                     next.style.display = shouldShowRow ? '' : 'none';
                     next = next.nextElementSibling;
+                }
+
+                if (shouldShowRow) {
+                    filteredCount++; // เพิ่มตัวนับเมื่อแถวหลักแสดง
                 }
             });
 
@@ -186,6 +226,9 @@
                     }
                 }
             });
+
+            // อัปเดตจำนวนงานที่กรองแล้ว
+            document.getElementById('totalWorkRequests').textContent = filteredCount; // แสดงจำนวนแถวที่แสดง
         }
     </script>
 @endsection
