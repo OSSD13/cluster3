@@ -1,8 +1,8 @@
-{{--
+{{-- 
 * side_bar_employee.blade.php
 * sidebar_for_employee
 * @input : -
-* @output :
+* @output : 
 * @author : Sarocha Dokyeesun
 * @Create Date : 2025-03-18
 --}}
@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/components/side_bar.css">
+    <link rel="stylesheet" href="public/css/components/side_bar.css">
     <title>Document</title>
 </head>
 
@@ -45,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'archive' ? 'active' : ''}}" href="" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : ''}}" href="#" >
                         <i class="fa-solid fa-box-archive me-2"></i> จัดเก็บ
                     </a>
                 </li>
@@ -64,7 +64,7 @@
                                     style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-chart-pie me-2"></i> รายงานสถิติงาน
-                                </a>
+                                </a>        
                             </li>
                             <li class="nav-item">
                                 <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : ''}} " href="#"

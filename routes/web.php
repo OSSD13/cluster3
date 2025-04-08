@@ -3,17 +3,6 @@
 use App\Http\Controllers\ManageEmployeeControler;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkRequestController;
-
-// http://localhost/cluster3/public/archive-detail <-- URL ที่ใช้เรียกดู
-
-// Route for Archive table
-Route::get('/archive-table', [WorkRequestController::class, 'archiveTable'])->name('archive.table');
-
-// Route for archive_detail
-Route::get('/archive-detail', [WorkRequestController::class, 'archiveDetail'])->name('archive_detail');
-
-// Route for archive_detail_self
-Route::get('/archive-detail-self', [WorkRequestController::class, 'archiveDetailSelf'])->name('archive_detail_self');
 use App\Http\Controllers\SidebarController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LoginController;
@@ -35,28 +24,15 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['employee'])->group(function () {
-
-
+Route::get('/archive-table', [WorkRequestController::class, 'archiveTable'])->name('archive.table');
+Route::get('/archive-detail', [WorkRequestController::class, 'archiveDetail'])->name('archive_detail');
+Route::get('/archive-detail-self', [WorkRequestController::class, 'archiveDetailSelf'])->name('archive_detail_self');
 });
 
-Route::get(
-    '/',
-    [LoginController::class, 'index']
-);
-
-Route::get('/login', function () {
-    return view('login');
-});
-
-Route::post(
-    '/login',
-    [LoginController::class, 'login']
-)->name('login');
-
-Route::post(
-    '/logout',
-    [LoginController::class, 'logout']
-)->name('logout');
+Route::get('/',[LoginController::class, 'index']);
+Route::get('/login', function () {return view('login');});
+Route::post('/login',[LoginController::class, 'login'])->name('login');
+Route::post('/logout',[LoginController::class, 'logout'])->name('logout');
 /*
 Route::get('/', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showEmployees');
 Route::get('/manage_employee', [ManageEmployeeControler::class, 'showEmployee'])->name('manage_employee.showEmployees');
