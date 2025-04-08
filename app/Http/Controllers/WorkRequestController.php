@@ -42,47 +42,131 @@ class WorkRequestController extends Controller
         // ดึงข้อมูลผู้ใช้ที่ล็อกอินจาก Session
         $currentUser = Session::get('user');
 
-        // จัดกลุ่มข้อมูลในตัวแปร $tasks โดยกรองเฉพาะของผู้ใช้ที่ล็อกอิน
-        $tasks = [
+        // จัดกลุ่มข้อมูลในตัวแปร $tasks โดยกรองเฉพาะของผู้ใช้ที่ล็อกอิน 
+        $workRequestSubmit = [
+            'submit' => WorkRequest::where('req_draft_status', 'S')
+                ->get(), // ดึงข้อมูลที่มีสถานะ 'S' (ส่ง)
+        ];
+        $task = [
             'received' => [
                 'my' => Task::where('tsk_status', 'Pending')
-                            ->where('tsk_assignee_type', 'ind')
-                            ->where('tsk_emp_id', $currentUser->emp_id) // กรองตาม ID ผู้ใช้
-                            ->get(),
+                    ->where('tsk_assignee_type', 'ind')
+                    ->where('tsk_emp_id', $currentUser->emp_id) // กรองตาม ID ผู้ใช้
+                    ->get(),
+
                 'dept' => Task::where('tsk_status', 'Pending')
-                              ->where('tsk_assignee_type', 'dept')
-                              ->where('tsk_dept_id', $currentUser->emp_dept_id) // กรองตามแผนก
-                              ->get(),
+                    ->where('tsk_assignee_type', 'dept')
+                    ->where('tsk_dept_id', $currentUser->emp_dept_id) // กรองตามแผนก
+                    ->get(),
             ],
             'inprogress' => [
                 'my' => Task::where('tsk_status', 'In Progress')
-                            ->where('tsk_assignee_type', 'ind')
-                            ->where('tsk_emp_id', $currentUser->emp_id)
-                            ->get(),
+                    ->where('tsk_assignee_type', 'ind')
+                    ->where('tsk_emp_id', $currentUser->emp_id)
+                    ->get(),
                 'dept' => Task::where('tsk_status', 'In Progress')
-                              ->where('tsk_assignee_type', 'dept')
-                              ->where('tsk_dept_id', $currentUser->emp_dept_id)
-                              ->get(),
+                    ->where('tsk_assignee_type', 'dept')
+                    ->where('tsk_dept_id', $currentUser->emp_dept_id)
+                    ->get(),
             ],
             'completed' => [
                 'my' => Task::where('tsk_status', 'Completed')
-                            ->where('tsk_assignee_type', 'ind')
-                            ->where('tsk_emp_id', $currentUser->emp_id)
-                            ->get(),
+                    ->where('tsk_assignee_type', 'ind')
+                    ->where('tsk_emp_id', $currentUser->emp_id)
+                    ->get(),
                 'dept' => Task::where('tsk_status', 'Completed')
-                              ->where('tsk_assignee_type', 'dept')
-                              ->where('tsk_dept_id', $currentUser->emp_dept_id)
-                              ->get(),
+                    ->where('tsk_assignee_type', 'dept')
+                    ->where('tsk_dept_id', $currentUser->emp_dept_id)
+                    ->get(),
             ],
         ];
-    
-    
+        $tasks = [
+            'received' => [
+                'my' => collect(),
+                'dept' => collect(),
+            ],
+            'inprogress' => [
+                'my' => collect(),
+                'dept' => collect(),
+            ],
+            'completed' => [
+                'my' => collect(),
+                'dept' => collect(),
+            ],
+        ];
+        $allTask = Task::all();
+        // เรียง Task ตาม tsk_id ภายใต้ work request เดียวกัน
+
+
+
+        foreach ($workRequestSubmit['submit'] as $workRequest) {
+            foreach ($task['received']['my'] as $index => $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasksInReq = $allTask->where('tsk_req_id', $tsk->tsk_req_id)->sortBy('tsk_id')->values();
+
+                    // หาตำแหน่งของ task ปัจจุบัน
+                    $index = $tasksInReq->search(function ($item) use ($tsk) {
+                        return $item->tsk_id == $tsk->tsk_id;
+                    });
+
+                    if ($index === 0) {
+                        // ตัวแรก แสดงได้เสมอ
+                        $tasks['received']['my']->push($tsk);
+                    } else {
+                        $previousTask = $tasksInReq[$index - 1];
+                        if ($previousTask->tsk_status === 'Completed') {
+                            $tasks['received']['my']->push($tsk);
+                        }
+                    }
+                }
+            }
+            foreach ($task['received']['dept'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasksInReq = $allTask->where('tsk_req_id', $tsk->tsk_req_id)->sortBy('tsk_id')->values();
+
+                    // หาตำแหน่งของ task ปัจจุบัน
+                    $index = $tasksInReq->search(function ($item) use ($tsk) {
+                        return $item->tsk_id == $tsk->tsk_id;
+                    });
+
+                    if ($index === 0) {
+                        // ตัวแรก แสดงได้เสมอ
+                        $tasks['received']['dept']->push($tsk);
+                    } else {
+                        $previousTask = $tasksInReq[$index - 1];
+                        if ($previousTask->tsk_status === 'Completed') {
+                            $tasks['received']['dept']->push($tsk);
+                        }
+                    }
+                }
+            }
+            foreach ($task['inprogress']['my'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['inprogress']['my']->push($tsk);
+                }
+            }
+            foreach ($task['inprogress']['dept'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['inprogress']['dept']->push($tsk);
+                }
+            }
+            foreach ($task['completed']['my'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['completed']['my']->push($tsk);
+                }
+            }
+            foreach ($task['completed']['dept'] as $tsk) {
+                if ($workRequest->req_id == $tsk->tsk_req_id) {
+                    $tasks['completed']['dept']->push($tsk);
+                }
+            }
+        }
         // ดึงข้อมูลผู้มอบหมายจาก wrs_work_requests
         $workRequests = WorkRequest::all()->keyBy('req_id');
         $employees = Employee::all()->keyBy('req_emp_id');
         $departments = Employee::all()->keyBy('req_dept_id');
-        $allTask = Task::all()->keyBy('tsk_id');
-    
+
+
         // ส่งข้อมูลไปยัง view
         return view('home_table', [
             'tasks' => $tasks,
@@ -92,5 +176,4 @@ class WorkRequestController extends Controller
             'allTask' => $allTask
         ]);
     }
-    
 }
