@@ -45,7 +45,7 @@
 
         {{-- Back Navigation Section --}}
         <div class="d-flex align-items-center mt-3" style="color: #AFB2BA; font-size: 1.4rem; margin-left: 20px;">
-            <a href="{{ route('archive_detail', ['id' => request()->route('id')]) }}" class="text-decoration-none" style="color: #AFB2BA;">
+            <a href="{{ route('archive.table', ['id' => request()->route('id')]) }}" class="text-decoration-none" style="color: #AFB2BA;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#AFB2BA" class="bi bi-arrow-left" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M15 8a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 7.5H14.5A.5.5 0 0 1 15 8z"/>
                 </svg>
@@ -81,8 +81,9 @@
             <tbody>
                 @foreach ($tasks as $task)
                 {{-- Task Row with Expandable Details --}}
-                <tr style="border-bottom: 1px solid #E9E9E9;"
+                <tr style="border-bottom: 1px solid #E9E9E9; cursor: pointer;"
                     id="header{{ $loop->iteration }}"
+                    onclick="toggleDropdown('collapse{{ $loop->iteration }}', 'header{{ $loop->iteration }}')"
                     @if ($task->tsk_status === 'Rejected')
                         data-rejected="true"
                     @endif>
@@ -90,15 +91,12 @@
                     <td>{{ $task->tsk_name }}</td>
                     <td>
                         <i class="bi bi-person-circle" style="margin-right: 5px;"></i>
-                        {{ $task->employee->emp_name ?? 'ไม่มีผู้มอบหมาย' }} <!-- emp_name -->
+                        {{ $task->employee->emp_name ?? 'ไม่มีผู้มอบหมาย' }}
                     </td>
                     <td class="text-end">
-                        {{-- Dropdown button --}}
-                        <button class="btn btn-link dropdown-icon" onclick="toggleDropdown('collapse{{ $loop->iteration }}', 'header{{ $loop->iteration }}')">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#212529" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                            </svg>
-                        </button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#212529" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
                     </td>
                 </tr>
                 {{-- Expandable Content Section --}}
