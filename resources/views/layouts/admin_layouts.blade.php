@@ -63,12 +63,13 @@
         <div class="flex-grow-1">
             {{-- Sidebar --}}
             @include('layouts.side_bar_admin')
-            {{-- Header --}}
+
 
             {{-- Content Area --}}
             <main class="container-fluid" style="margin-left: 250px">
                 @yield('content')
             </main>
+            {{-- Header --}}
             @include('layouts.header')
         </div>
     </div>

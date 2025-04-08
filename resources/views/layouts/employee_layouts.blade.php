@@ -34,6 +34,13 @@
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
 
+    {{-- Custom CSS --}}
+    <link rel="stylesheet" href="{{ asset('public\css\pages\manage_department_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\manage_employee.css') }}">
+
+    {{-- Bosstrap Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
     {{-- CSS --}}
     <link rel="stylesheet" href="{{ asset('public\css\pages\report_table_style.css') }}">
     <link rel="stylesheet" href="{{ asset('public\css\pages\report_statistic_style.css') }}">
@@ -56,6 +63,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
 
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    {{-- jQuery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
     <style>
         body {
@@ -68,7 +80,7 @@
             padding-top: 90px;
             /* เผื่อให้ตัวหนังสือไม่โดน Header บัง */
         }
-        
+
     </style>
 </head>
 
@@ -85,6 +97,7 @@
             @include('layouts.header')
         </div>
     </div>
+    @yield('script')
 </body>
 
 </html>

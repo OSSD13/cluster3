@@ -59,4 +59,10 @@ class Task extends Model
     {
         return $this->belongsTo(Department::class, 'tsk_dept_id', 'dept_id');
     }
+
+    public function getThaiTaskDueDateAttribute()
+    {
+        $date = \Carbon\Carbon::parse($this->tsk_due_date)->locale('th');
+        return $date->translatedFormat('j M') . ' ' . ($date->year + 543);
+    }
 }

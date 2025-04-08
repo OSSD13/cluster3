@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  */
 
+/**
+ * Employee Model
+ *
+ * @package App\Models
+ */
 class Employee extends Model
 {
     use HasFactory;
@@ -17,7 +22,6 @@ class Employee extends Model
     protected $table = 'wrs_employees';
 
     protected $primaryKey = 'emp_id';
-
 
     protected $fillable = [
         'emp_dept_id',
@@ -29,18 +33,15 @@ class Employee extends Model
         'emp_update_date',
     ];
 
-
     public $timestamps = false;  // เพราะใช้ timestamp ใน Migration แล้ว
 
     /**
      * Get the department that owns the employee.
      */
-
     public function department()
     {
         return $this->belongsTo(Department::class, 'emp_dept_id', 'dept_id');
     }
-
 
     /**
      * Get the work requests for the employee.
@@ -49,5 +50,4 @@ class Employee extends Model
     {
         return $this->hasMany(WorkRequest::class, 'req_emp_id', 'emp_id');
     }
-
 }

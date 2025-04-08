@@ -1,10 +1,10 @@
 {{--
-sent_table.blade.php
-Display form show table manage employee
-@input : emp_id, emp_name, dept_id
-@output : form show table manage employee
-@author : Naphat Maneechansuk 66160099
-@Create Date : 2025-04-05
+* sent_table.blade.php
+* Display form show table manage employee
+* @input : emp_id, emp_name, dept_id
+* @output : form show table manage employee
+* @author : Naphat Maneechansuk 66160099
+* @Create Date : 2025-04-05
 --}}
 @extends('layouts.admin_layouts')
 
