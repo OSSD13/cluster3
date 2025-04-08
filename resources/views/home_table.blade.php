@@ -56,12 +56,12 @@
 
                                 @if(isset($tasks['received']['my']) && count($tasks['received']['my']) > 0)
                                 @foreach ($tasks['received']['my'] as $task)
-                                @foreach ( $allTask as $allTasks) 
+                                <!-- @foreach ( $allTask as $allTasks) 
                                 @if ($allTasks->tsk_req_id == $task->tsk_req_id && $allTasks->tsk_status == 'Complete' && $allTasks->tsk_id < $task->tsk_id)
                                     @if ($task->workRequest->req_draft_status == 'S')
                                     <tr>
                                         <td>{{ $task->tsk_id - 1 }}</td>
-                                    </tr>
+                                    </tr> -->
                                     <tr>
                                         <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
                                         <td class="col-3">{{ $task->tsk_name }}</td>
@@ -91,9 +91,9 @@
                                     </tr>
 
 
+                                    <!-- @endif
                                     @endif
-                                    @endif
-                                    @endforeach
+                                    @endforeach -->
                                     @endforeach
                                     @else
                                     <tr>
