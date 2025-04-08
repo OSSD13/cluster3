@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Employee;
+use App\Models\Task;
 use App\Models\WorkRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class WorkRequestController extends Controller
 {

@@ -1,23 +1,27 @@
 {{--
 * archive_detail.blade.php
-*
-* @input : -
-* @output :
+* Display work request and task details in archive view
+* @input : req_id
+* @output : work request and task details
 * @author : Art-anon Phakhananthanon 66160242
 * @Create Date : 2025-03-24
 --}}
 
 {{--
-* Database : cluster3
-
-* Table : wrs_work_requests
-* Column : req_id, req_create_type, req_emp_id, req_dept_id, req_status, req_name, req_description, req_draft_status, req_created_date, req_update_date, req_completed_date, req_code
-
-* Table : wrs_tasks
-* Column : tsk_id, tsk_req_id, tsk_assignee_type, tsk_emp_id, tsk_dept_id, tsk_status, tsk_name, tsk_description, tsk_due_date, tsk_priority, tsk_update_date, tsk_completed_date, tsk_comment_reject, tsk_comment
-
-* Table : wrs_employees
-* Column : emp_dept_id, emp_username, emp_password, emp_name, emp_role, emp_created_date, emp_update_date
+* Database Tables:
+* wrs_work_requests : Table for storing work request data
+* Columns: req_id, req_create_type, req_emp_id, req_dept_id, req_status, req_name,
+*          req_description, req_draft_status, req_created_date, req_update_date,
+*          req_completed_date, req_code
+*
+* wrs_tasks : Table for storing task data under work requests
+* Columns: tsk_id, tsk_req_id, tsk_assignee_type, tsk_emp_id, tsk_dept_id, tsk_status,
+*          tsk_name, tsk_description, tsk_due_date, tsk_priority, tsk_update_date,
+*          tsk_completed_date, tsk_comment_reject, tsk_comment
+*
+* wrs_employees : Table for storing employee information
+* Columns: emp_dept_id, emp_username, emp_password, emp_name, emp_role,
+*          emp_created_date, emp_update_date
 --}}
 
 @extends('Layouts.employee_layouts')
@@ -36,10 +40,10 @@
 </head>
 
 <body>
-
+        {{-- Header Section --}}
         <h3 class="text-primary">รายการงาน</h3>
 
-        <!-- ส่วนบน -->
+        {{-- Back Navigation Section --}}
         <div class="d-flex align-items-center mt-3" style="color: #AFB2BA; font-size: 1.4rem; margin-left: 20px;">
             <a href="{{ route('archive_detail', ['id' => request()->route('id')]) }}" class="text-decoration-none" style="color: #AFB2BA;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#AFB2BA" class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -49,6 +53,7 @@
             <p class="ms-2 mb-0" style="padding-left: 20px;">รายละเอียดใบงานทั้งหมด</p>
         </div>
 
+        {{-- Work Request Details Section --}}
         <div class="mt-3">
             <div style="border-bottom: 1px solid #E9E9E9; border-top: 1px solid #E9E9E9; padding: 10px 0; margin-left: 20px;" class="d-flex">
                 <p class="me-3"><strong>ชื่อใบงาน</strong></p>
@@ -60,8 +65,9 @@
             </div>
         </div>
 
-        <!-- ส่วนล่าง -->
+        {{-- Tasks Table Section --}}
         <table class="table mt-3" style="border-collapse: separate; border-spacing: 0;">
+            {{-- Table Header --}}
             <thead class="table-secondary">
                 <tr>
                     <th style="color: #989BA4;">ลำดับงาน</th> <!-- แถบหัวข้อ -->
@@ -71,9 +77,10 @@
                 </tr>
             </thead>
 
+            {{-- Table Body with Task List --}}
             <tbody>
                 @foreach ($tasks as $task)
-                <!-- Dropdown -->
+                {{-- Task Row with Expandable Details --}}
                 <tr style="border-bottom: 1px solid #E9E9E9;"
                     id="header{{ $loop->iteration }}"
                     @if ($task->tsk_status === 'Rejected')
@@ -86,7 +93,7 @@
                         {{ $task->employee->emp_name ?? 'ไม่มีผู้มอบหมาย' }} <!-- emp_name -->
                     </td>
                     <td class="text-end">
-                        <!-- Dropdown button -->
+                        {{-- Dropdown button --}}
                         <button class="btn btn-link dropdown-icon" onclick="toggleDropdown('collapse{{ $loop->iteration }}', 'header{{ $loop->iteration }}')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#212529" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -94,79 +101,80 @@
                         </button>
                     </td>
                 </tr>
+                {{-- Expandable Content Section --}}
                 <tr>
                     <td colspan="4" style="padding: 0;">
                         <div id="collapse{{ $loop->iteration }}" class="collapse" style="display: none; overflow: hidden; transition: max-height 0.3s ease;">
-                        <!-- Dropdown contents -->
-                            <!-- Description -->
-                                <div class="d-flex" style="padding: 10px 0; margin-left: 37px;">
-                                    <p class="me-3"><strong>รายละเอียด</strong></p>
-                                    <p style="margin-left: 220px;">{{ $task->tsk_description ?? 'ไม่มีคำอธิบาย' }}</p> <!-- placeholder -->
-                                </div>
-                                <!-- Assigned by -->
-                                <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
-                                    <p class="me-3"><strong>ผู้มอบหมาย</strong></p>
-                                    <p style="margin-left: 220px;">{{ $reqEmployeeName }}</p> <!-- placeholder -->
-                                </div>
-                                <!-- Priority -->
-                                <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
-                                    <p class="me-3"><strong>ความสำคัญ</strong></p>
-                                    <p style="margin-left: 220px;">
-                                        @if ($task->tsk_priority === 'H')
-                                            <span style="display: inline-block; background-color: #E70000; color: white; padding: 5px 10px; border-radius: 20px;">สูง</span>
-                                        @elseif ($task->tsk_priority === 'M')
-                                            <span style="display: inline-block; background-color: #F28D28; color: white; padding: 5px 10px; border-radius: 20px;">ปานกลาง</span>
-                                        @elseif ($task->tsk_priority === 'L')
-                                            <span style="display: inline-block; background-color: #26BC00; color: white; padding: 5px 10px; border-radius: 20px;">ต่ำ</span>
-                                        @else
-                                            <span style="color: #AFB2BA;">ไม่มีระดับความสำคัญ</span>
-                                        @endif
-                                    </p>
-                                </div>
-                                <!-- Status -->
-                                <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
-                                    <p class="me-3"><strong>สถานะ</strong></p>
-                                    <p style="margin-left: 253px;">
-                                        @if ($task->tsk_status === 'Pending')
-                                            <span style="display: inline-flex; align-items: center;">
-                                                <span style="width: 18px; height: 18px; background-color: grey; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                                Pending
-                                            </span>
-                                        @elseif ($task->tsk_status === 'In Progress')
-                                            <span style="display: inline-flex; align-items: center;">
-                                                <span style="width: 18px; height: 18px; background-color: rgb(0, 72, 255); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                                In Progress
-                                            </span>
-                                        @elseif ($task->tsk_status === 'Completed')
-                                            <span style="display: inline-flex; align-items: center;">
-                                                <span style="width: 18px; height: 18px; background-color: rgb(51, 255, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                                Completed
-                                            </span>
-                                        @elseif ($task->tsk_status === 'Rejected')
-                                            <span style="display: inline-flex; align-items: center;">
-                                                <span style="width: 18px; height: 18px; background-color: rgb(255, 0, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                                Rejected
-                                            </span>
-                                        @else
-                                            <span style="color: #AFB2BA;">ไม่มีสถานะ</span>
-                                        @endif
-                                    </p>
-                                </div>
-                                <!-- Due Date -->
-                                <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
-                                    <p class="me-3"><strong>กำหนดส่ง</strong></p>
-                                    <p style="margin-left: 235px; color: #E70000">{{ $task->tsk_due_date ?? 'ไม่มีข้อมูล' }}</p> <!-- placeholder -->
-                                </div>
-                                <!-- Actual Date -->
-                                <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
-                                    <p class="me-3"><strong>วันที่เสร็จสิ้น</strong></p>
-                                    <p style="margin-left: 220px;">{{ $task->tsk_completed_date ?? 'ยังไม่เสร็จ'}}</p> <!-- placeholder -->
-                                </div>
-                                <!-- Comment -->
-                                <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
-                                    <p class="me-3"><strong>ความคิดเห็น</strong></p>
-                                    <p style="margin-left: 220px;">{{ $task->tsk_comment ?? 'ไม่มีความคิดเห็น' }}</p> <!-- placeholder -->
-                                </div>
+                            {{-- Task Details Items --}}
+                            {{-- Description --}}
+                            <div class="d-flex" style="padding: 10px 0; margin-left: 37px;">
+                                <p class="me-3"><strong>รายละเอียด</strong></p>
+                                <p style="margin-left: 220px;">{{ $task->tsk_description ?? 'ไม่มีคำอธิบาย' }}</p> <!-- placeholder -->
+                            </div>
+                            {{-- Assigned by --}}
+                            <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
+                                <p class="me-3"><strong>ผู้มอบหมาย</strong></p>
+                                <p style="margin-left: 220px;">{{ $reqEmployeeName }}</p> <!-- placeholder -->
+                            </div>
+                            {{-- Priority --}}
+                            <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
+                                <p class="me-3"><strong>ความสำคัญ</strong></p>
+                                <p style="margin-left: 220px;">
+                                    @if ($task->tsk_priority === 'H')
+                                        <span style="display: inline-block; background-color: #E70000; color: white; padding: 5px 10px; border-radius: 20px;">สูง</span>
+                                    @elseif ($task->tsk_priority === 'M')
+                                        <span style="display: inline-block; background-color: #F28D28; color: white; padding: 5px 10px; border-radius: 20px;">ปานกลาง</span>
+                                    @elseif ($task->tsk_priority === 'L')
+                                        <span style="display: inline-block; background-color: #26BC00; color: white; padding: 5px 10px; border-radius: 20px;">ต่ำ</span>
+                                    @else
+                                        <span style="color: #AFB2BA;">ไม่มีระดับความสำคัญ</span>
+                                    @endif
+                                </p>
+                            </div>
+                            {{-- Status --}}
+                            <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
+                                <p class="me-3"><strong>สถานะ</strong></p>
+                                <p style="margin-left: 253px;">
+                                    @if ($task->tsk_status === 'Pending')
+                                        <span style="display: inline-flex; align-items: center;">
+                                            <span style="width: 18px; height: 18px; background-color: grey; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                            Pending
+                                        </span>
+                                    @elseif ($task->tsk_status === 'In Progress')
+                                        <span style="display: inline-flex; align-items: center;">
+                                            <span style="width: 18px; height: 18px; background-color: rgb(0, 72, 255); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                            In Progress
+                                        </span>
+                                    @elseif ($task->tsk_status === 'Completed')
+                                        <span style="display: inline-flex; align-items: center;">
+                                            <span style="width: 18px; height: 18px; background-color: rgb(51, 255, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                            Completed
+                                        </span>
+                                    @elseif ($task->tsk_status === 'Rejected')
+                                        <span style="display: inline-flex; align-items: center;">
+                                            <span style="width: 18px; height: 18px; background-color: rgb(255, 0, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                            Rejected
+                                        </span>
+                                    @else
+                                        <span style="color: #AFB2BA;">ไม่มีสถานะ</span>
+                                    @endif
+                                </p>
+                            </div>
+                            {{-- Due Date --}}
+                            <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
+                                <p class="me-3"><strong>กำหนดส่ง</strong></p>
+                                <p style="margin-left: 235px; color: #E70000">{{ $task->tsk_due_date ?? 'ไม่มีข้อมูล' }}</p> <!-- placeholder -->
+                            </div>
+                            {{-- Actual Date --}}
+                            <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
+                                <p class="me-3"><strong>วันที่เสร็จสิ้น</strong></p>
+                                <p style="margin-left: 220px;">{{ $task->tsk_completed_date ?? 'ยังไม่เสร็จ'}}</p> <!-- placeholder -->
+                            </div>
+                            {{-- Comment --}}
+                            <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
+                                <p class="me-3"><strong>ความคิดเห็น</strong></p>
+                                <p style="margin-left: 220px;">{{ $task->tsk_comment ?? 'ไม่มีความคิดเห็น' }}</p> <!-- placeholder -->
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -174,11 +182,20 @@
             </tbody>
         </table>
 
+    {{-- JavaScript Section --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Function : Dropdown -->
+    {{-- Dropdown Toggle Function --}}
     <script>
+        /*
+        * toggleDropdown()
+        * Handles expanding and collapsing of task detail sections
+        * @input : id (collapse element id), headerId (header row id)
+        * @output : visual changes to expand/collapse sections
+        * @author : Art-anon Phakhananthanon 66160242
+        * @Create Date : 2025-04-06
+        */
         function toggleDropdown(id, headerId) {
             const element = document.getElementById(id);
             const header = document.getElementById(headerId);
@@ -202,13 +219,15 @@
             }
         }
 
-        // Ensure all collapsible elements have maxHeight set to 0 initially
+        // Initialize collapse elements
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.collapse').forEach(element => {
                 element.style.maxHeight = '0';
             });
         });
     </script>
+
+    {{-- CSS Styles --}}
     <style>
         .rotated {
             transform: rotate(180deg);
