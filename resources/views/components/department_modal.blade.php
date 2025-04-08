@@ -85,7 +85,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
-                <form id="departmentFormDelete{{ $department->dept_id }}" action="{{ url(config('app.url') . route('department.deleteDepartment', ['id' => $department->dept_id], false)) }}" method="POST">
+                <form id="departmentFormDelete{{ $department->dept_id }}" action="{{ route('department.deleteDepartment', ['id' => $department->dept_id]) }}" method="POST">
                     @csrf
                     @method('delete')
                     <button type="submit" class="btn btn-save" id="saveDepartmentDelete">ลบ</button>
