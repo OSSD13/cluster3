@@ -1,10 +1,4 @@
 <?php
-/*
-* Department
-* Manage department
-* @author : Natthanan Sirisurayut 66160352
-* @Create Date : 2025-03-30
-*/
 
 namespace App\Models;
 
@@ -24,13 +18,11 @@ class Department extends Model
 
     protected $primaryKey = 'dept_id';
 
-
     protected $fillable = [
         'dept_name',
         'dept_created_date',
         'dept_update_date',
     ];
-
 
     public $timestamps = false;  // เพราะใช้ timestamp ใน Migration แล้ว
 

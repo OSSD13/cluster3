@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * WorkRequest Model
@@ -32,18 +33,6 @@ class WorkRequest extends Model
         'req_code',
     ];
 
-    // protected $fillable = [
-    //     'req_create_type',
-    //     'req_emp_id',
-    //     'req_dept_id',
-    //     'req_status',
-    //     'req_name',
-    //     'req_description',
-    //     'req_draft_status',
-    //     'req_created_date',
-    //     'req_code',
-    // ];
-
     public $timestamps = false;
 
     /**
@@ -69,4 +58,13 @@ class WorkRequest extends Model
     {
         return $this->hasMany(Task::class, 'tsk_req_id', 'req_id');
     }
+    /**
+     * Get the thai date.
+     */
+    public function getThaiCreatedDateAttribute()
+    {
+        $date = \Carbon\Carbon::parse($this->req_created_date)->locale('th');
+        return $date->translatedFormat('j M') . ' ' . ($date->year + 543);
+    }
+
 }

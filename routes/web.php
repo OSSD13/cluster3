@@ -1,16 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{
-    ManageEmployeeControler,
-    FormController,
-    SidebarController,
-    DepartmentController,
-    LoginController
-};
+use App\Http\Controllers\SidebarController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LoginController;
 use App\Http\Middleware\AdminMiddleware;
-
-
 
 Route::middleware(['admin'])->group(function () {
 
@@ -36,6 +31,11 @@ Route::middleware(['employee'])->group(function () {
 
     // AJAX: ดึงรายชื่อพนักงานตามแผนก
     Route::get('/form/employee/{id}', [FormController::class, 'empData'])->name('form.empData');
+    Route::get('/report-table', [ReportController::class, 'showReportTable'])->name('report-data');
+    Route::get('/report-stat', [ReportController::class, 'showReportStat'])->name('report-stat'); // สำหรับแสดงหน้า Dashboard
+    Route::get('/report-statistics', [ReportController::class, 'getTaskStatistics'])->name('report.statistics'); // สำหรับส่งข้อมูล JSON
+    Route::get('/report-co-statistics', [ReportController::class, 'getTaskStatisticsCompany'])->name('report.coStatistics'); // สำหรับส่งข้อมูล JSON
+    Route::get('/department-task-statistics', [ReportController::class, 'getDepartmentTaskStatistics'])->name('department.taskStatistics');
 });
 
 Route::get(

@@ -63,6 +63,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
 
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    {{-- jQuery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
     <style>
         body {
@@ -75,7 +80,7 @@
             padding-top: 90px;
             /* เผื่อให้ตัวหนังสือไม่โดน Header บัง */
         }
-        
+
     </style>
 </head>
 
@@ -92,6 +97,7 @@
             @include('layouts.header')
         </div>
     </div>
+    @yield('script')
 </body>
 
 </html>
