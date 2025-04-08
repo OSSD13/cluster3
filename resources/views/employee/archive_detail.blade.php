@@ -161,7 +161,22 @@
                             {{-- Due Date --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>กำหนดส่ง</strong></p>
-                                <p style="margin-left: 235px; color: #E70000">{{ $task->tsk_due_date ? substr($task->tsk_due_date, 0, 10) : 'ไม่มีข้อมูล' }}</p>
+                                <p style="margin-left: 235px; color: #E70000">
+                                    @php
+                                        if($task->tsk_due_date) {
+                                            $date = \Carbon\Carbon::parse($task->tsk_due_date);
+                                            $thaiMonths = [
+                                                1 => 'มกราคม', 2 => 'กุมภาพันธ์', 3 => 'มีนาคม',
+                                                4 => 'เมษายน', 5 => 'พฤษภาคม', 6 => 'มิถุนายน',
+                                                7 => 'กรกฎาคม', 8 => 'สิงหาคม', 9 => 'กันยายน',
+                                                10 => 'ตุลาคม', 11 => 'พฤศจิกายน', 12 => 'ธันวาคม'
+                                            ];
+                                            echo $date->format('d ') . $thaiMonths[$date->month] . $date->format(' Y H:i');
+                                        } else {
+                                            echo 'ไม่มีข้อมูล';
+                                        }
+                                    @endphp
+                                </p>
                             </div>
                             {{-- Actual Date --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
