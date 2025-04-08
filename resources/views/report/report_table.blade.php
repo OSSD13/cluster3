@@ -17,11 +17,12 @@
                                     <div class="me-2">
                                         <select id="yearDropdown" class="form-select">
                                             @php
-                                                $years = range(2020, date('Y')); // ตั้งค่าปีจาก 2020 ถึงปีปัจจุบัน
+                                                $currentYear = date('Y');
+                                                $years = range($currentYear - 10, $currentYear); // ตั้งค่าปีย้อนหลัง 10 ปีจนถึงปีปัจจุบัน
                                             @endphp
 
                                             @foreach ($years as $year)
-                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option>
+                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option> <!-- แปลงปีเป็น พ.ศ. -->
                                             @endforeach
                                         </select>
                                     </div>
@@ -131,10 +132,10 @@
             const month = document.getElementById('monthDropdown').value;
 
             // ดึงแถวทั้งหมดในตาราง
-            const tableRows = document.querySelectorAll('tbody tr');
+            const mainRows = document.querySelectorAll('tbody tr.main-row');
 
-            tableRows.forEach(row => {
-                const createdDateCell = row.querySelector('td:nth-child(3)'); // เลือกคอลัมน์ "วันที่สร้าง"
+            mainRows.forEach(mainRow => {
+                const createdDateCell = mainRow.querySelector('td:nth-child(3)'); // เลือกคอลัมน์ "วันที่สร้าง"
                 const createdDateText = createdDateCell ? createdDateCell.textContent.trim() : '';
 
                 // เช็คว่าแถวตรงกับปีและเดือนที่เลือกหรือไม่
@@ -143,14 +144,32 @@
 
                 const shouldShowRow = isYearMatch && isMonthMatch;
 
-                // แสดง/ซ่อนแถวตามเงื่อนไข
-                row.style.display = shouldShowRow ? '' : 'none';
+                // แสดง/ซ่อนแถวหลัก
+                mainRow.style.display = shouldShowRow ? '' : 'none';
 
-                // ซ่อนแถวที่เป็น task ถ้าแถวหลักซ่อนไปแล้ว
-                let next = row.nextElementSibling;
+                // แสดง/ซ่อนแถวที่เป็น task ที่เกี่ยวข้อง
+                let next = mainRow.nextElementSibling;
                 while (next && !next.classList.contains('main-row')) {
                     next.style.display = shouldShowRow ? '' : 'none';
                     next = next.nextElementSibling;
+                }
+            });
+
+            // ปรับ rowspan ของแถวหลักให้ถูกต้อง
+            mainRows.forEach(mainRow => {
+                if (mainRow.style.display === '') {
+                    let visibleTaskCount = 0;
+                    let next = mainRow.nextElementSibling;
+                    while (next && !next.classList.contains('main-row')) {
+                        if (next.style.display === '') {
+                            visibleTaskCount++;
+                        }
+                        next = next.nextElementSibling;
+                    }
+                    const rowspanCell = mainRow.querySelector('td[rowspan]');
+                    if (rowspanCell) {
+                        rowspanCell.rowSpan = visibleTaskCount + 1; // รวมแถวหลักด้วย
+                    }
                 }
             });
         }
