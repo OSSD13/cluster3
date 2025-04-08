@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'draft' ? 'active' : ''}}" href="{{ url('/draft') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'draft_list' ? 'active' : ''}}" href="{{ url('/draft_list') }}">
                         <i class="fa-solid fa-file-pen me-2"></i> แบบร่าง
                     </a>
                 </li>

@@ -28,8 +28,6 @@ class Employee extends Model
         'emp_update_date',
     ];
 
-    public $timestamps = false;  // เพราะใช้ timestamp ใน Migration แล้ว
-
     /**
      * Get the department that owns the employee.
      */

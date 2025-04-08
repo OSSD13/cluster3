@@ -5,37 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\SidebarController;
 use App\Http\Controllers\DraftController;
+use App\Http\Controllers\EditDraftController;
 use App\Http\Controllers\EmployeeController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/draft_list', [DraftController::class, 'getShowDraft']);
-
-// layout admin
-Route::get('/layoutA', function () {
-    return view('layouts.admin_layouts');
-});
-
-//layout employee
-Route::get('/layoutE', function () {
-    return view('layouts.employee_layouts');
-});
-
-// route ของการเรียกหน้า view ของการสร้างใบสั่งงาน
-Route::get('/form', function () {
-    return view('create_form');
-})->name('create-form');
-
-Route::get('/draft', function() {
-    return view('draft_details');
-});
-
-Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
-    return view('draft_details');
-
-
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\AdminMiddleware;
@@ -56,9 +27,48 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['employee'])->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
 
+    Route::get('/draft_list', [DraftController::class, 'getShowDraft'])->name('draft_list');
 
+    // layout admin
+    Route::get('/layoutA', function () {
+        return view('layouts.admin_layouts');
+    });
+
+    //layout employee
+    Route::get('/layoutE', function () {
+        return view('layouts.employee_layouts');
+    });
+
+    // route ของการเรียกหน้า view ของการสร้างใบสั่งงาน
+    Route::get('/form', function () {
+        return view('create_form');
+    })->name('create-form');
+
+    //เรียกไปหน้า details draft
+    Route::get('/draft', function () {
+        return view('draft_details');
+    })->name('draft_list');
+
+    Route::get('/draft/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
+
+    // route ลบใบงานใหญ่
+    Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
+
+    //route แก้ไข draft
+    Route::get('/draft/{id}/edit', [DraftController::class, 'edit'])->name('draft.edit');
+
+    //route update draft
+    Route::put('/draft/{id}', [EditDraftController::class, 'update'])->name('draft.update');
+
+     //สำหรับบันทึกฟอร์ม
+    Route::get('/draft/update', [EditDraftController::class, 'update'])->name('draft.update');
 });
+
+// Route::get('/draft', [DraftController::class, 'index'])->name('draft_list');
 
 Route::get(
     '/',
