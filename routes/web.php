@@ -53,22 +53,25 @@ Route::middleware(['employee'])->group(function () {
         return view('draft_details');
     })->name('draft_list');
 
-    Route::get('/draft/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
+    //
+    Route::get('/draft/{id}', [EditDraftController::class, 'index'])->name('draft_list');
 
     // route ลบใบงานใหญ่
     Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
 
-    //route แก้ไข draft
-    Route::get('/draft/{id}/edit', [DraftController::class, 'edit'])->name('draft.edit');
-
-    //route update draft
-    Route::put('/draft/{id}', [EditDraftController::class, 'update'])->name('draft.update');
-
      //สำหรับบันทึกฟอร์ม
     Route::get('/draft/update', [EditDraftController::class, 'update'])->name('draft.update');
+
+    Route::get('/draft/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
+
+    //route แก้ไข draft
+    //Route::get('/draft/{id}/edit', [DraftController::class, 'edit'])->name('draft.edit');
+
+    //route update draft
+    //Route::put('/draft/{id}', [EditDraftController::class, 'update'])->name('draft.update');
 });
 
-// Route::get('/draft', [DraftController::class, 'index'])->name('draft_list');
+
 
 Route::get(
     '/',
