@@ -1,8 +1,8 @@
-{{-- 
+{{--
 * side_bar_employee.blade.php
 * sidebar_for_employee
 * @input : -
-* @output : 
+* @output :
 * @author : Sarocha Dokyeesun
 * @Create Date : 2025-03-18
 --}}
@@ -45,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : ''}}" href="#" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ in_array(Route::currentRouteName(), ['archive.table', 'archive_detail', 'archive_detail_self']) ? 'active' : ''}}" href="{{ route('archive.table') }}" >
                         <i class="fa-solid fa-box-archive me-2"></i> จัดเก็บ
                     </a>
                 </li>
@@ -64,7 +64,7 @@
                                     style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-chart-pie me-2"></i> รายงานสถิติงาน
-                                </a>        
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : ''}} " href="#"

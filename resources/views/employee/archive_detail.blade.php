@@ -195,10 +195,6 @@
             </tbody>
         </table>
 
-    {{-- JavaScript Section --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     {{-- Dropdown Toggle Function --}}
     <script>
         /*
@@ -226,13 +222,13 @@
                 setTimeout(() => {
                     element.style.display = 'none';
                     if (header.dataset.rejected === "true") {
-                        header.style.backgroundColor = ''; // Reset to default
+                        header.style.backgroundColor = ''; // ย้อนกลับสีพื้นหลัง
                     }
-                }, 300); // Match the transition duration
+                }, 300); // เท่ากับเวลาที่ใช้ในการเปลี่ยนแปลง maxHeight
             }
         }
 
-        // Initialize collapse elements
+        // เริ่มต้นซ่อนเนื้อหาที่ถูกยุบเมื่อโหลดหน้า
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.collapse').forEach(element => {
                 element.style.maxHeight = '0';
