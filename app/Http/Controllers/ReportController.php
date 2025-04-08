@@ -55,7 +55,7 @@ class ReportController extends Controller
 
         // กรองข้อมูลตามปีและเดือน
         if ($year) {
-            $tasks->whereYear('tsk_due_date', $year);
+            $tasks->whereYear('tsk_due_date', $year - 543);
         }
         if ($month && $month != 'all') {
             $tasks->whereMonth('tsk_due_date', $month);
@@ -97,7 +97,7 @@ class ReportController extends Controller
         $month = $request->input('month');
 
         if ($year) {
-            $tasks->whereYear('tsk_due_date', $year);
+            $tasks->whereYear('tsk_due_date', $year - 543);
         }
         if ($month && $month != 'all') {
             $tasks->whereMonth('tsk_due_date', $month);

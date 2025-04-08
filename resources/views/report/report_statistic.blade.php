@@ -176,8 +176,8 @@
             for (let i = 0; i < 10; i++) {
                 const year = currentYear - i;
                 const option = document.createElement("option");
-                option.value = year;
-                option.textContent = year;
+                option.value = year + 543;
+                option.textContent = year + 543;
                 if (year === currentYear) {
                     option.selected = true; // ตั้งค่า default เป็นปีปัจจุบัน
                 }
