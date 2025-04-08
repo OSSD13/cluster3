@@ -7,10 +7,10 @@
                 <h3 class="m-0">สถิติงาน</h3>
                 <ul class="nav nav-tabs" id="taskTabs">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('report-stat.myReport', ['tab' => 'myReport']) }}">รายงานของฉัน</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#myReport">รายงานของฉัน</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('report-stat.coReport', ['tab' => 'coReport']) }}">รายงานขององค์กร</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#orgReport">รายงานขององค์กร</a>
                     </li>
                 </ul>
             </div>
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- 🔽 รายงานขององค์กร -->
-                <div class="tab-pane fade mt-3" id="coReport">
+                <div class="tab-pane fade mt-3" id="orgReport">
                     <div class="container py-4">
                         <!-- 🔽 Dropdown ปีและเดือน -->
                         <div class="d-flex justify-content-end align-items-center mb-4">
@@ -86,25 +86,25 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number total">{{ $statistics->total }}</div>
-                                    <div class="stats-label">งานที่ได้รับทั้งหมด</div>
+                                    <div class="stats-number coTotal">{{ $coStatistics->total }}</div>
+                                    <div class="stats-label">งานทั้งหมด</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number completed">{{ $statistics->completed }}</div>
+                                    <div class="stats-number coCompleted">{{ $coStatistics->completed }}</div>
                                     <div class="stats-label">งานที่ทำเสร็จสิ้น</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number delayed">{{ $statistics->delayed }}</div>
+                                    <div class="stats-number coDelayed">{{ $coStatistics->delayed }}</div>
                                     <div class="stats-label">งานที่ส่งล่าช้า</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="stats-card">
-                                    <div class="stats-number rejected">{{ $statistics->rejected }}</div>
+                                    <div class="stats-number coRejected">{{ $coStatistics->rejected }}</div>
                                     <div class="stats-label">งานที่ปฏิเสธ</div>
                                 </div>
                             </div>
@@ -140,21 +140,11 @@
 @endsection
 
 @section('script')
-    <!-- 🔽 Script เติมปีและเดือน -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const tab = urlParams.get('tab');
+        let cachedStatistics = null;
+        let cachedCoStatistics = null;
 
-            if (tab) {
-                const targetTab = document.querySelector(`[href="#${tab}"]`);
-                if (targetTab) {
-                    const tabInstance = new bootstrap.Tab(targetTab);
-                    tabInstance.show();
-                }
-            }
-        });
-
+        // 🔽 เติม Dropdown ปี
         function populateYearDropdown(selectId) {
             const select = document.getElementById(selectId);
             const currentYear = new Date().getFullYear();
@@ -163,19 +153,25 @@
                 const option = document.createElement("option");
                 option.value = year;
                 option.textContent = year;
+                if (year === currentYear) {
+                    option.selected = true; // ตั้งค่า default เป็นปีปัจจุบัน
+                }
                 select.appendChild(option);
             }
         }
 
+        // 🔽 เติม Dropdown เดือน
         function populateMonthDropdown(selectId) {
             const select = document.getElementById(selectId);
-            const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.",
-                "ธ.ค."
-            ];
+            const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+            const currentMonth = new Date().getMonth(); // เดือนปัจจุบัน (0-based index)
             months.forEach((month, index) => {
                 const option = document.createElement("option");
                 option.value = index + 1;
                 option.textContent = month;
+                if (index === currentMonth) {
+                    option.selected = true; // ตั้งค่า default เป็นเดือนปัจจุบัน
+                }
                 select.appendChild(option);
             });
             const allOption = document.createElement("option");
@@ -184,156 +180,103 @@
             select.appendChild(allOption);
         }
 
-        function fetchStatistics(year, month) {
-    const url = "{{ route('report.statistics') }}";
-    const params = new URLSearchParams({ year, month });
+        // 🔽 ดึงข้อมูลสถิติจากเซิร์ฟเวอร์ (รวม "รายงานของฉัน" และ "รายงานขององค์กร")
+        async function fetchStatisticsData(year, month) {
+            const url = "{{ route('report.statistics') }}";
+            const params = new URLSearchParams({ year, month });
 
-    fetch(`${url}?${params}`)
-        .then(response => response.json())
-        .then(data => {
-            // อัปเดตการ์ดสถิติ
+            if (cachedStatistics && cachedStatistics.year === year && cachedStatistics.month === month) {
+                return cachedStatistics.data;
+            }
+
+            const response = await fetch(`${url}?${params}`);
+            const data = await response.json();
+            cachedStatistics = { year, month, data };
+            return data;
+        }
+
+        // 🔽 ดึงข้อมูลสถิติขององค์กรจากเซิร์ฟเวอร์
+        async function fetchCoStatisticsData(year, month) {
+            const url = "{{ route('report.coStatistics') }}";
+            const params = new URLSearchParams({ year, month });
+
+            if (cachedCoStatistics && cachedCoStatistics.year === year && cachedCoStatistics.month === month) {
+                return cachedCoStatistics.data;
+            }
+
+            const response = await fetch(`${url}?${params}`);
+            const data = await response.json();
+            cachedCoStatistics = { year, month, data };
+            return data;
+        }
+
+        // 🔽 อัปเดตการ์ดสถิติ
+        function updateStatisticsCards(data) {
             document.querySelector('.stats-number.total').textContent = data.total;
             document.querySelector('.stats-number.completed').textContent = data.completed;
             document.querySelector('.stats-number.delayed').textContent = data.delayed;
             document.querySelector('.stats-number.rejected').textContent = data.rejected;
+        }
 
-            // 🔁 อัปเดตกราฟด้วย drawPieChart
-            const labels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
-            const values = [data.completed, data.delayed, data.rejected];
-            const colors = [
-                'rgba(255, 99, 132, 0.8)',
-                'rgba(54, 192, 201, 0.8)',
-                'rgba(255, 159, 64, 0.8)'
-            ];
-            drawPieChart('workChart', labels, values, colors);
-        });
-}
+        // 🔽 อัปเดตการ์ดสถิติขององค์กร
+        function updateCoStatisticsCards(data) {
+            document.querySelector('.stats-number.coTotal').textContent = data.total;
+            document.querySelector('.stats-number.coCompleted').textContent = data.completed;
+            document.querySelector('.stats-number.coDelayed').textContent = data.delayed;
+            document.querySelector('.stats-number.coRejected').textContent = data.rejected;
+        }
 
-
-        function updatePieChart(canvasId, values) {
+        // 🔽 สร้างกราฟวงกลม
+        function drawPieChart(canvasId, labels, values, colors) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+            window.myChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['งานที่ทำเสร็จสิ้น ', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'],
+                    labels: labels,
                     datasets: [{
                         data: values,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.8)',
-                            'rgba(54, 192, 201, 0.8)',
-                            'rgba(255, 159, 64, 0.8)'
-                        ],
+                        backgroundColor: colors,
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            populateYearDropdown("yearDropdown");
-            populateMonthDropdown("monthDropdown");
-
-            const yearDropdown = document.getElementById("yearDropdown");
-            const monthDropdown = document.getElementById("monthDropdown");
-
-            yearDropdown.addEventListener('change', () => {
-                fetchStatistics(yearDropdown.value, monthDropdown.value);
-            });
-
-            monthDropdown.addEventListener('change', () => {
-                fetchStatistics(yearDropdown.value, monthDropdown.value);
-            });
-
-            // โหลดข้อมูลเริ่มต้น
-            fetchStatistics(yearDropdown.value, monthDropdown.value);
-        });
-
-        function drawPieChart(canvasId, labels, values, colors) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
-
-    // 🔄 ลบกราฟเก่าก่อนวาดใหม่ (ป้องกันซ้อน)
-    if (window.myChart) {
-        window.myChart.destroy();
-    }
-
-    window.myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: values,
-                backgroundColor: colors,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        usePointStyle: true,
-                        pointStyle: 'circle'
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
                     }
                 }
-            }
+            });
         }
-    });
-}
 
-
-        // ✅ กราฟวงกลมฝั่ง "รายงานของฉัน"
-        const myLabels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
-        const myStats = document.querySelectorAll('#myReport .stats-number');
-        const myValues = [
-            parseFloat(myStats[1]?.textContent) || 0, // งานที่ทำเสร็จสิ้น
-            parseFloat(myStats[2]?.textContent) || 0, // งานที่ส่งล่าช้า
-            parseFloat(myStats[3]?.textContent) || 0 // งานที่ปฏิเสธ
-        ];
-        const myColors = [
-            'rgba(255, 99, 132, 0.8)', // สีของงานที่ทำเสร็จสิ้น
-            'rgba(54, 192, 201, 0.8)', // สีของงานที่ส่งล่าช้า
-            'rgba(255, 159, 64, 0.8)' // สีของงานที่ปฏิเสธ
-        ];
-        drawPieChart('workChart', myLabels, myValues, myColors);
-
-        // ✅ กราฟวงกลมฝั่ง "รายงานขององค์กร"
-        const orgLabels = ['งานที่เสร็จสิ้นทั้งหมด', 'งานล่าช้า', 'งานถูกปฏิเสธ'];
-        const orgStats = document.querySelectorAll('#departmentTasks .stats-number');
-        const orgValues = [
-            parseFloat(orgStats[1]?.textContent) || 0, // งานที่เสร็จสิ้น
-            parseFloat(orgStats[2]?.textContent) || 0, // งานล่าช้า
-            parseFloat(orgStats[3]?.textContent) || 0 // งานถูกปฏิเสธ
-        ];
-        const orgColors = [
-            'rgba(75, 192, 192, 0.8)', // สีของงานที่เสร็จสิ้นทัังหมด
-            'rgba(255, 206, 86, 0.8)', // สีของงานล่าช้า
-            'rgba(153, 102, 255, 0.8)' // สีของงานถูกปฏิเสธ
-        ];
-
-        drawPieChart('orgPieChart', orgLabels, orgValues, orgColors);
-        // ✅ ฟังก์ชันสร้างกราฟแท่งแบบกลุ่ม
+        // 🔽 สร้างกราฟแท่งแบบกลุ่ม
         function drawGroupedBarChart(canvasId, labels, datasets) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            ctx.canvas.width = 500; // กำหนดความกว้าง
-            ctx.canvas.height = 500; // กำหนดความสูง
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels, // ชื่อแผนก เช่น ["ไอจี", "ไอที", "ไอวี"]
-                    datasets: datasets // ข้อมูลของแต่ละกลุ่ม
+                    labels: labels,
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // Disable aspect ratio
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'top' // แสดง legend ด้านบน
+                            position: 'bottom', // ย้ายตำแหน่ง label ไปด้านล่าง
+                            labels: {
+                                usePointStyle: true, // ใช้สัญลักษณ์
+                                pointStyle: 'rect' // กำหนดสัญลักษณ์เป็นสี่เหลี่ยมจตุรัส
+                            }
                         }
                     },
                     scales: {
@@ -348,7 +291,6 @@
             });
         }
 
-        // ✅ ข้อมูลสำหรับ Bar Chart
         const departmentLabels = ['ไอจี', 'ไอที', 'ไอวี']; // ชื่อแผนก
         const departmentDatasets = [{
                 label: 'งานที่เสร็จสิ้นทั้งหมด',
@@ -369,5 +311,71 @@
 
         // ✅ เรียกใช้ฟังก์ชันสร้าง Bar Chart
         drawGroupedBarChart('orgGroupedBarChart', departmentLabels, departmentDatasets);
+
+        // 🔽 โหลดข้อมูลเมื่อเปลี่ยนแท็บ
+        async function handleTabChange(targetTab, year, month) {
+            if (targetTab === '#myReport') {
+                const data = await fetchStatisticsData(year, month);
+                updateStatisticsCards(data);
+
+                // อัปเดตกราฟวงกลม
+                const labels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
+                const values = [data.completed, data.delayed, data.rejected];
+                const colors = ['rgba(255, 99, 132, 0.8)', 'rgba(54, 192, 201, 0.8)', 'rgba(255, 159, 64, 0.8)'];
+                drawPieChart('workChart', labels, values, colors);
+            } else if (targetTab === '#orgReport') {
+                const data = await fetchCoStatisticsData(year, month);
+                updateCoStatisticsCards(data);
+
+                // อัปเดตกราฟวงกลม
+                const labels = ['งานที่ทำเสร็จสิ้น', 'งานที่ส่งล่าช้า', 'งานที่ปฏิเสธ'];
+                const values = [data.completed, data.delayed, data.rejected];
+                const colors = ['rgba(255, 99, 132, 0.8)', 'rgba(54, 192, 201, 0.8)', 'rgba(255, 159, 64, 0.8)'];
+                drawPieChart('orgPieChart', labels, values, colors);
+            }
+        }
+
+        // 🔽 เริ่มต้นเมื่อโหลดหน้า
+        document.addEventListener('DOMContentLoaded', () => {
+            populateYearDropdown("yearDropdown");
+            populateMonthDropdown("monthDropdown");
+            populateYearDropdown("orgYearDropdown");
+            populateMonthDropdown("orgMonthDropdown");
+
+            const yearDropdown = document.getElementById("yearDropdown");
+            const monthDropdown = document.getElementById("monthDropdown");
+            const orgYearDropdown = document.getElementById("orgYearDropdown");
+            const orgMonthDropdown = document.getElementById("orgMonthDropdown");
+
+            // โหลดข้อมูลเริ่มต้นสำหรับ "รายงานของฉัน"
+            handleTabChange('#myReport', yearDropdown.value, monthDropdown.value);
+
+            // Event Listener สำหรับการเปลี่ยนแท็บ
+            document.querySelectorAll('.nav-link').forEach(tab => {
+                tab.addEventListener('click', (event) => {
+                    const targetTab = event.target.getAttribute('href');
+                    const year = targetTab === '#myReport' ? yearDropdown.value : orgYearDropdown.value;
+                    const month = targetTab === '#myReport' ? monthDropdown.value : orgMonthDropdown.value;
+                    handleTabChange(targetTab, year, month);
+                });
+            });
+
+            // Event Listener สำหรับการเปลี่ยนปีและเดือน
+            yearDropdown.addEventListener('change', () => {
+                handleTabChange('#myReport', yearDropdown.value, monthDropdown.value);
+            });
+
+            monthDropdown.addEventListener('change', () => {
+                handleTabChange('#myReport', yearDropdown.value, monthDropdown.value);
+            });
+
+            orgYearDropdown.addEventListener('change', () => {
+                handleTabChange('#orgReport', orgYearDropdown.value, orgMonthDropdown.value);
+            });
+
+            orgMonthDropdown.addEventListener('change', () => {
+                handleTabChange('#orgReport', orgYearDropdown.value, orgMonthDropdown.value);
+            });
+        });
     </script>
 @endsection

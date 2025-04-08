@@ -19,8 +19,12 @@ class ReportController extends Controller
         $request = new Request(['year' => $currentYear, 'month' => $currentMonth]);
         $statistics = $this->getTaskStatistics($request)->getData();
 
+    // สร้าง Request object สำหรับ getTaskStatisticsCompany
+        $companyRequest = new Request(['year' => $currentYear, 'month' => $currentMonth]);
+        $coStatistics = $this->getTaskStatisticsCompany($companyRequest)->getData();
+
         // ส่งข้อมูลไปยัง View
-        return view('report.report_statistic', compact('statistics'));
+        return view('report.report_statistic', compact('statistics','coStatistics'));
     }
 
     public function showReportTable()
@@ -85,11 +89,22 @@ class ReportController extends Controller
         return response()->json($statistics); // ส่งข้อมูลกลับในรูปแบบ JSON
     }
 
-    public function getTaskStatisticsCompany()
+    public function getTaskStatisticsCompany(Request $request)
     {
+        $tasks = Task::query();
 
+        $year = $request->input('year');
+        $month = $request->input('month');
+
+        if ($year) {
+            $tasks->whereYear('tsk_due_date', $year);
+        }
+        if ($month && $month != 'all') {
+            $tasks->whereMonth('tsk_due_date', $month);
+        }
+
+        $tasks = $tasks->get();
         // ดึงข้อมูลงานของผู้ใช้
-        $tasks = Task::all();
 
         // แยกประเภทงาน
         $completedTasks = $tasks->filter(function ($task) {
@@ -115,7 +130,7 @@ class ReportController extends Controller
             'rejected' => $rejectedTasks->count(),
         ];
 
-        return view('report.report_statistic', compact('coStatistics'));
+        return response()->json($coStatistics);
     }
 
 }
