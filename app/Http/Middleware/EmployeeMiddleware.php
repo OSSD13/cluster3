@@ -20,6 +20,4 @@ class EmployeeMiddleware
 
         return redirect('/login');
     }
-
 }
-

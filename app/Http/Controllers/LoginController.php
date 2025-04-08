@@ -7,6 +7,7 @@
 */
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Session;
@@ -41,18 +42,11 @@ class LoginController extends Controller
             // ดึงข้อมูลพนักงานทั้งหมดจากฐานข้อมูล
             if ($user->emp_role == 'E') {
                 Session::put('employees', Employee::where('emp_role', 'E')->get());
-                return redirect()->to('/empDashboard'); //<--เดี่๋ยวเอา path Home ของพนักงานมาใส่
+                return redirect()->to('/form'); //<--เดี่๋ยวเอา path Home ของพนักงานมาใส่
             } elseif ($user->emp_role == 'A') {
                 Session::put('employees', Employee::where('emp_role', 'A')->get());
                 return redirect()->to('/department');
             }
-
-
-        } else {
-            // ถ้า username หรือ password ผิด ให้ส่งกลับไปหน้า login พร้อมข้อความแจ้งเตือน
-            return redirect('/login')->withErrors([
-                'login' => 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง กรุณากรอกข้อมูลใหม่อีกครั้ง'
-            ]);
         }
     }
     /*
@@ -83,4 +77,3 @@ class LoginController extends Controller
         return redirect('/login');
     }
 }
-

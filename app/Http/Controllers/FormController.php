@@ -1,5 +1,10 @@
 <?php
-
+/*
+* FormController
+* Controller สำหรับจัดการฟอร์มใบสั่งงาน รวมถึงงานย่อยและข้อมูลพนักงานที่เกี่ยวข้อง
+* @author : Sarocha Dokyeesun 66160097
+* @Create Date : 2025-03-18
+*/
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,7 +14,12 @@ use Illuminate\Support\Facades\{DB, Auth};
 class FormController extends Controller
 {
     /**
-     * Show form for creating a new work request.
+     * index()
+     * แสดงหน้าฟอร์มสำหรับสร้างใบสั่งงานใหม่ พร้อมข้อมูลแผนกและพนักงาน
+     * @input : -
+     * @output : view 'create_form' พร้อมตัวแปร $dept
+     * @author : Sarocha Dokyeesun 66160097
+     * @Create Date : 2025-03-18
      */
     public function index()
     {
@@ -18,7 +28,12 @@ class FormController extends Controller
     }
 
     /**
-     * Return employee list by department ID.
+     * empData($id)
+     * ดึงรายชื่อพนักงานในแผนกที่เลือก โดยกรองเฉพาะพนักงานที่มี emp_role = 'E'
+     * @input : $id (int) รหัสแผนก
+     * @output : JSON response รายชื่อพนักงานในแผนก
+     * @author : Sarocha Dokyeesun 66160097
+     * @Create Date : 2025-03-18
      */
     public function empData($id)
     {
@@ -28,8 +43,14 @@ class FormController extends Controller
 
         return response()->json($emp);
     }
+
     /**
-     * Handle storing new work request and its tasks.
+     * createWorkRequest(Request $request)
+     * บันทึกข้อมูลใบสั่งงาน และงานย่อยลงฐานข้อมูล โดยตรวจสอบ validation และจัดการ transaction
+     * @input : Request $request (ข้อมูลจากฟอร์มสร้างใบสั่งงาน)
+     * @output : redirect กลับพร้อมข้อความสำเร็จ หรือ error พร้อมย้อนกลับ input เดิม
+     * @author : Sarocha Dokyeesun 66160097
+     * @Create Date : 2025-03-18
      */
     public function createWorkRequest(Request $request)
     {
