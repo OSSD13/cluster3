@@ -107,12 +107,12 @@
                             {{-- Description --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px;">
                                 <p class="me-3"><strong>รายละเอียด</strong></p>
-                                <p style="margin-left: 220px;">{{ $task->tsk_description ?? 'ไม่มีคำอธิบาย' }}</p> <!-- placeholder -->
+                                <p style="margin-left: 220px;">{{ $task->tsk_description ?? 'ไม่มีคำอธิบาย' }}</p>
                             </div>
                             {{-- Assigned by --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>ผู้มอบหมาย</strong></p>
-                                <p style="margin-left: 220px;">{{ $reqEmployeeName }}</p> <!-- placeholder -->
+                                <p style="margin-left: 220px;">{{ $reqEmployeeName }}</p>
                             </div>
                             {{-- Priority --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
@@ -136,22 +136,22 @@
                                     @if ($task->tsk_status === 'Pending')
                                         <span style="display: inline-flex; align-items: center;">
                                             <span style="width: 18px; height: 18px; background-color: grey; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                            Pending
+                                            รอดำเนินการ
                                         </span>
                                     @elseif ($task->tsk_status === 'In Progress')
                                         <span style="display: inline-flex; align-items: center;">
                                             <span style="width: 18px; height: 18px; background-color: rgb(0, 72, 255); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                            In Progress
+                                            กำลังดำเนินการ
                                         </span>
                                     @elseif ($task->tsk_status === 'Completed')
                                         <span style="display: inline-flex; align-items: center;">
                                             <span style="width: 18px; height: 18px; background-color: rgb(51, 255, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                            Completed
+                                            เสร็จสิ้น
                                         </span>
                                     @elseif ($task->tsk_status === 'Rejected')
                                         <span style="display: inline-flex; align-items: center;">
                                             <span style="width: 18px; height: 18px; background-color: rgb(255, 0, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
-                                            Rejected
+                                            ถูกปฏิเสธ
                                         </span>
                                     @else
                                         <span style="color: #AFB2BA;">ไม่มีสถานะ</span>
@@ -161,17 +161,17 @@
                             {{-- Due Date --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>กำหนดส่ง</strong></p>
-                                <p style="margin-left: 235px; color: #E70000">{{ $task->tsk_due_date ?? 'ไม่มีข้อมูล' }}</p> <!-- placeholder -->
+                                <p style="margin-left: 235px; color: #E70000">{{ $task->tsk_due_date ? substr($task->tsk_due_date, 0, 10) : 'ไม่มีข้อมูล' }}</p>
                             </div>
                             {{-- Actual Date --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>วันที่เสร็จสิ้น</strong></p>
-                                <p style="margin-left: 220px;">{{ $task->tsk_completed_date ?? 'ยังไม่เสร็จ'}}</p> <!-- placeholder -->
+                                <p style="margin-left: 220px;">{{ $task->tsk_completed_date ?? 'ยังไม่เสร็จ'}}</p>
                             </div>
                             {{-- Comment --}}
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>ความคิดเห็น</strong></p>
-                                <p style="margin-left: 220px;">{{ $task->tsk_comment ?? 'ไม่มีความคิดเห็น' }}</p> <!-- placeholder -->
+                                <p style="margin-left: 220px;">{{ $task->tsk_comment ?? 'ไม่มีความคิดเห็น' }}</p>
                             </div>
                         </div>
                     </td>
