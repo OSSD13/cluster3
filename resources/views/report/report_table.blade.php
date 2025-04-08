@@ -5,7 +5,9 @@
         <!-- Main Content Only -->
         <div class="row">
             <div class="col-12">
-                <h2 class="main-header">สรุปรายการ Work Request ประจำวันที่ 1 มี.ค. 68</h2>
+                <h2 class="main-header">สรุปรายการ Work Request ประจำเดือน <span id="selectedMonth">ม.ค.</span> ปี <span
+                        id="selectedYear">2568</span></h2>
+
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
@@ -22,7 +24,8 @@
                                             @endphp
 
                                             @foreach ($years as $year)
-                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option> <!-- แปลงปีเป็น พ.ศ. -->
+                                                <option value="{{ $year + 543 }}">{{ $year + 543 }}</option>
+                                                <!-- แปลงปีเป็น พ.ศ. -->
                                             @endforeach
                                         </select>
                                     </div>
@@ -124,6 +127,17 @@
 @endsection
 @section('script')
     <script>
+        document.getElementById('yearDropdown').addEventListener('change', updateHeader);
+        document.getElementById('monthDropdown').addEventListener('change', updateHeader);
+
+        function updateHeader() {
+            const selectedYear = document.getElementById('yearDropdown').value;
+            const selectedMonth = document.getElementById('monthDropdown').value;
+
+            document.getElementById('selectedYear').textContent = selectedYear;
+            document.getElementById('selectedMonth').textContent = selectedMonth;
+        }
+
         document.getElementById('yearDropdown').addEventListener('change', filterWorkRequests);
         document.getElementById('monthDropdown').addEventListener('change', filterWorkRequests);
 
