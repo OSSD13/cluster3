@@ -27,21 +27,8 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['employee'])->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
 
-    Route::get('/draft_list', [DraftController::class, 'getShowDraft'])->name('draft_list');
-
-    // layout admin
-    Route::get('/layoutA', function () {
-        return view('layouts.admin_layouts');
-    });
-
-    //layout employee
-    Route::get('/layoutE', function () {
-        return view('layouts.employee_layouts');
-    });
+    Route::get('/draft_list', [DraftController::class, 'showDraftList'])->name('draft_list');
 
     // route ของการเรียกหน้า view ของการสร้างใบสั่งงาน
     Route::get('/form', function () {
@@ -57,7 +44,7 @@ Route::middleware(['employee'])->group(function () {
     Route::get('/draft/{id}', [EditDraftController::class, 'index'])->name('draft_list');
 
     // route ลบใบงานใหญ่
-    Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
+    Route::delete('/draft/{id}', [DraftController::class, 'deleteDraft'])->name('drafts.destroy');
 
      //สำหรับบันทึกฟอร์ม
     Route::get('/draft/update', [EditDraftController::class, 'update'])->name('draft.update');
