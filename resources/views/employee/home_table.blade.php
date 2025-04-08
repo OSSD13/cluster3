@@ -9,21 +9,19 @@
 
 @extends('layouts.employee_layouts')
 @section('content')
-
 <div class="d-flex">
     <div class="content w-100">
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="m-0">รายการงาน</h3>
             <ul class="nav nav-tabs" id="taskTabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-bs-toggle="tab" href="#myTasks" onclick="toggleMyTask()">ใบงานของฉัน</a>
+                    <a class="nav-link active" data-bs-toggle="tab" href="#myTasks">ใบงานของฉัน</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#teamTasks" onclick="toggleTeamTask()">ใบงานของแผนก</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#departmentTasks">ใบงานของแผนก</a>
                 </li>
             </ul>
         </div>
-        <!-- @include('components.task-tabs') -->
 
         <div class="tab-content">
             <div class="tab-pane fade show active mt-3" id="myTasks">
@@ -66,8 +64,6 @@
                                         @if ($task->workRequest->req_create_type == 'dept')
                                         {{ $task->workRequest->department->dept_name }}
                                         @endif
-
-                                        <!-- {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }} -->
                                     </td>
                                     <td>
                                         @if($task->tsk_priority == 'H' )
@@ -117,8 +113,6 @@
                                         @if ($task->workRequest->req_create_type == 'dept')
                                         {{ $task->workRequest->department->dept_name }}
                                         @endif
-
-                                        <!-- {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }} -->
                                     </td>
                                     <td>
                                         @if($task->tsk_priority == 'H' )
@@ -132,7 +126,6 @@
                                         @endif
                                     </td>
                                     <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-                                    <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
                                 </tr>
                                 @endforeach
                                 @else
@@ -169,8 +162,6 @@
                                         @if ($task->workRequest->req_create_type == 'dept')
                                         {{ $task->workRequest->department->dept_name }}
                                         @endif
-
-
                                     </td>
                                     <td>
                                         @if($task->tsk_priority == 'H' )
@@ -184,13 +175,12 @@
                                         @endif
                                     </td>
                                     <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-                                    <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
                                 </tr>
                                 @endif
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> <!-- ปรับ colspan เป็น 6 -->
+                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> 
                                 </tr>
                                 @endif
                             </tbody>
@@ -198,7 +188,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade mt-3" id="teamTasks">
+            <div class="tab-pane fade mt-3" id="departmentTasks">
                 <ul class="nav nav-tabs">
                     <!-- แท็บย่อยสำหรับใบงานของแผนก -->
                     <li class="nav-item">
@@ -236,8 +226,6 @@
                                         @if ($task->workRequest->req_create_type == 'dept')
                                         {{ $task->workRequest->department->dept_name }}
                                         @endif
-
-                                        <!-- {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }} -->
                                     </td>
                                     <td>
                                         @if($task->tsk_priority == 'H' )
@@ -251,12 +239,11 @@
                                         @endif
                                     </td>
                                     <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-                                    <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
                                 </tr>
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> <!-- ปรับ colspan เป็น 6 -->
                                 </tr>
                                 @endif
                             </tbody>
@@ -286,8 +273,6 @@
                                         @if ($task->workRequest->req_create_type == 'dept')
                                         {{ $task->workRequest->department->dept_name }}
                                         @endif
-
-                                        <!-- {{ $workRequests[$task->tsk_req_id]->req_create_type == 'ind' ? 'บุคคล' : 'แผนก' }} -->
                                     </td>
                                     <td>
                                         @if($task->tsk_priority == 'H' )
@@ -306,7 +291,7 @@
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> <!-- ปรับ colspan เป็น 6 -->
                                 </tr>
                                 @endif
                             </tbody>
@@ -337,8 +322,6 @@
                                         @if ($task->workRequest->req_create_type == 'dept')
                                         {{ $task->workRequest->department->dept_name }}
                                         @endif
-
-
                                     </td>
                                     <td>
                                         @if($task->tsk_priority == 'H' )
@@ -352,13 +335,12 @@
                                         @endif
                                     </td>
                                     <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-                                    <!-- <td class="col-2">{{ $task->tsk_due_date }}</td> -->
                                 </tr>
                                 @endif
                                 @endforeach
                                 @else
                                 <tr>
-                                    <td colspan="6" class="text-center">ไม่มีข้อมูล</td> <!-- ปรับ colspan เป็น 6 -->
+                                    <td colspan="6" class="text-center">ไม่มีงานที่ได้รับมอบหมาย</td> <!-- ปรับ colspan เป็น 6 -->
                                 </tr>
                                 @endif
                             </tbody>
@@ -370,7 +352,7 @@
     </div>
 </div>
 @endsection
-@section('script')
+@section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const rows = document.querySelectorAll(".clickable-row");
@@ -383,30 +365,5 @@
             });
         });
     });
-
-    function toggleMyTask() {
-        var x = document.getElementById("teamTasks");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-        var mytask = document.getElementById("myTasks");
-        mytask.style.display = "block";
-    
-    }
-    function toggleTeamTask() {
-        var x = document.getElementById("myTasks");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-        var mytask = document.getElementById("teamTasks");
-        mytask.style.display = "block";
-
-    }
 </script>
-
-
 @endsection

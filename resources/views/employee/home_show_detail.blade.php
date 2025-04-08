@@ -8,15 +8,13 @@ Display form create subtask by employee
 
  @extends('layouts.employee_layouts')
  @section('content')
-
-
  <div class="content">
-
      <div class="col">
          <div class="d-flex justify-content-between align-items-center">
-             <h3>รายการงาน</h3>
+             <h3 class="m-0" >รายการงาน</h3>
              <ul class="nav nav-tabs">
                  <li class="nav-item">
+                    
                      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#myTasks">ใบงานของฉัน</button>
                  </li>
                  <li class="nav-item">
@@ -24,21 +22,20 @@ Display form create subtask by employee
                  </li>
              </ul>
          </div>
-         <!-- @include('components.task-tabs') -->
 
      </div>
-     <div class=" tab-content">
+     <div class="tab-content">
          <table class="table">
              <thead>
                  <tr>
                      <th class="col-3">
                          <div class="d-flex gap-2">
-                             <a href="javascript:history.back()" class="back-button d-flex align-items-center text-decoration-none ">
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left ms-4 mt-1" viewBox="0 0 16 16">
-                                     <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-                                 </svg>
-                                 <span class="ms-5 fs-5">รายละเอียดใบงานทั้งหมด</span>
-                             </a>
+                         <a href="javascript:history.back()" class="back-button d-flex align-items-center text-decoration-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left ms-4 mt-1" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                            </svg>
+                            <span class="ms-4 fs-5">รายละเอียดใบงานทั้งหมด</span>
+                        </a>
                          </div>
 
                      <th class="col-9 text-secondary"></th>
@@ -49,6 +46,7 @@ Display form create subtask by employee
                  @method('put')
                  <input type="hidden" name="tsk_id" value="{{$task->first()->tsk_id}}">
                  <input type="hidden" name="tsk_comment_reject" id="tsk_comment_reject" value="{{$task->first()->tsk_comment_reject}}">
+                 <input type="hidden" name="tsk_emp_id" id="tsk_emp_id" value="{{$emp->emp_id}}">
                  <tbody>
                      <tr>
                          <th scope=" row">ชื่อใบงาน</th>
@@ -172,21 +170,17 @@ Display form create subtask by employee
                                          </div>
 
                                          @endif
-
-
                                      </div>
                                  </div>
                              </div>
                          </td>
                      </tr>
                  </tbody>
-
-
          </table>
          <div class="container text-center">
              <div class="row align-items-start">
-                 <div class="col d-flex justify-content-start">
-                     <a class="link-underline-dark icon-link-hover mb-3" href="{{ route('more_detail', ['id' => $task->first()->tsk_req_id]) }}" style="color:black">
+                 <div class="col d-flex justify-content-start mb-3">
+                     <a class="link-underline-dark icon-link-hover " href="{{ route('more_detail', ['id' => $task->first()->tsk_req_id]) }}" style="color:black">
                          ดูรายละเอียดเพิ่มเติม
                      </a>
                  </div>
@@ -204,81 +198,76 @@ Display form create subtask by employee
          </div>
      </div>
      </form>
-     @endsection
-     @section('script')
+ </div>
+
+ @endsection
+ @section('scripts')
+
+ <script>
+     function changeStatus(statusText, statusColor, statusValue) {
+         // เปลี่ยนข้อความในปุ่ม
+         const statusButton = document.getElementById("statusButton");
+         statusButton.innerHTML = `<span id="statusIndicator" class="status-dot ${statusColor}"></span> ${statusText}`;
+
+         // เปลี่ยนค่าของฟอร์มที่ต้องการส่ง (ค่า value ของ input hidden)
+         document.getElementById("tsk_status").value = statusValue; // กำหนดค่า value ของ input hidden
+     }
+
+     function comfirm_save(event) {
+         event.preventDefault();
+         const swalWithBootstrapButtons = Swal.mixin({
+             customClass: {
+                 confirmButton: "swal-confirm btn ",
+                 cancelButton: "btn btn-danger me-5 "
+             },
+             buttonsStyling: false
+         });
+         swalWithBootstrapButtons.fire({
+             title: "คุณต้องการเปลี่ยนแปลงข้อมูลใช่หรือไม่?",
+             text: "",
+             icon: "warning",
+             showCancelButton: true,
+
+             confirmButtonText: "ยืนยัน",
+             cancelButtonText: "ยกเลิก",
+             reverseButtons: true
 
 
-
-
-
-     <script>
-         function changeStatus(statusText, statusColor, statusValue) {
-             // เปลี่ยนข้อความในปุ่ม
-             const statusButton = document.getElementById("statusButton");
-             statusButton.innerHTML = `<span id="statusIndicator" class="status-dot ${statusColor}"></span> ${statusText}`;
-
-             // เปลี่ยนค่าของฟอร์มที่ต้องการส่ง (ค่า value ของ input hidden)
-             document.getElementById("tsk_status").value = statusValue; // กำหนดค่า value ของ input hidden
-         }
-     </script>
-
-     <script>
-         function comfirm_save(event) {
-             event.preventDefault();
-             const swalWithBootstrapButtons = Swal.mixin({
-                 customClass: {
-                     confirmButton: "swal-confirm btn ",
-                     cancelButton: "btn btn-danger me-5 "
-                 },
-                 buttonsStyling: false
-             });
-             swalWithBootstrapButtons.fire({
-                 title: "คุณต้องการเปลี่ยนแปลงข้อมูลใช่หรือไม่?",
-                 text: "",
-                 icon: "warning",
-                 showCancelButton: true,
-
-                 confirmButtonText: "ยืนยัน",
-                 cancelButtonText: "ยกเลิก",
-                 reverseButtons: true
-
-
-             }).then((result) => {
-                 if (result.isConfirmed) {
-                     event.target.submit();
-                 }
-             });
-         }
-         //  $(document).ready(function() {})
-     </script>
-     <script>
-         async function comfirm_reject(event) {
-             event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
-
-             const {
-                 value: reason
-             } = await Swal.fire({
-                 title: "กรุณากรอกเหตุผลการปฏิเสธ",
-                 input: "text",
-                 inputLabel: " ",
-                 showCancelButton: true,
-                 cancelButtonText: 'ยกเลิก',
-                 confirmButtonText: 'ยืนยัน',
-                 inputValidator: (value) => {
-                     if (!value) {
-                         return "กรุณากรอกเหตุผล!";
-                     }
-                 }
-             });
-
-             if (reason) {
-                 // เซ็ตค่าที่ต้องการส่ง
-                 document.getElementById("tsk_status").value = "Rejected";
-                 document.getElementById("tsk_comment_reject").value = reason;
-
-                 // ส่งฟอร์ม
-                 document.getElementById("taskForm").submit();
+         }).then((result) => {
+             if (result.isConfirmed) {
+                 event.target.submit();
              }
+         });
+     }
+
+
+     async function comfirm_reject(event) {
+         event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
+
+         const {
+             value: reason
+         } = await Swal.fire({
+             title: "กรุณากรอกเหตุผลการปฏิเสธ",
+             input: "text",
+             inputLabel: " ",
+             showCancelButton: true,
+             cancelButtonText: 'ยกเลิก',
+             confirmButtonText: 'ยืนยัน',
+             inputValidator: (value) => {
+                 if (!value) {
+                     return "กรุณากรอกเหตุผล!";
+                 }
+             }
+         });
+
+         if (reason) {
+             // เซ็ตค่าที่ต้องการส่ง
+             document.getElementById("tsk_status").value = "Rejected";
+             document.getElementById("tsk_comment_reject").value = reason;
+
+             // ส่งฟอร์ม
+             document.getElementById("taskForm").submit();
          }
-     </script>
-     @endsection
+     }
+ </script>
+ @endsection

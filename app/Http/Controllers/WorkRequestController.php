@@ -11,11 +11,14 @@ use Illuminate\Support\Facades\Session;
 
 class WorkRequestController extends Controller
 {
+
     public function index()
     {
         $currentUser = Session::get('user');
 
-        $workRequestSubmit = WorkRequest::where('req_draft_status', 'S')->get();
+        $workRequestSubmit = WorkRequest::where('req_draft_status', 'S')
+            ->where('req_draft_status', '!=', 'A')
+            ->get();
 
         $task = [
             'received' => [
@@ -131,8 +134,9 @@ class WorkRequestController extends Controller
     }
     public function showDetail($id)
     {
+        $currentUser = Session::get('user');
         $taskWith = Task::with(['workRequest.employee', 'workRequest.department'])->findOrFail($id);
-        $emp = Employee::all();
+        $emp = Employee::find($currentUser->emp_id);
         $workRequest = WorkRequest::all();
         $task = Task::all()->where('tsk_id', $id);
         $dept = Department::all();
@@ -142,11 +146,11 @@ class WorkRequestController extends Controller
     public function updateTask(Request $req, $id)
     {
         $task = Task::find($id);
-
         if ($req->tsk_status == 'Completed') {
             $task->tsk_completed_date = now();
+            $task->tsk_emp_id = $req->tsk_emp_id;
         }
-
+        $task->tsk_emp_id = $req->tsk_emp_id;
         $task->tsk_status = $req->tsk_status;
         $task->tsk_comment = $req->tsk_comment;
         $task->tsk_comment_reject = $req->tsk_comment_reject;
@@ -156,30 +160,100 @@ class WorkRequestController extends Controller
     }
     public function moreDetail($id)
     {
-    // ดึงข้อมูลจากตาราง wrs_tasks พร้อมข้อมูลผู้รับมอบหมาย
-$tasks = Task::with(['employee', 'workRequest','department'])
-    ->where('tsk_req_id', $id)
-    ->get();
-
-
-
-
-    // ส่งข้อมูลไปยัง view
+        // ดึงข้อมูลจากตาราง wrs_tasks พร้อมข้อมูลผู้รับมอบหมาย
+        $tasks = Task::with(['employee', 'workRequest', 'department'])
+            ->where('tsk_req_id', $id)
+            ->get();
+        // ส่งข้อมูลไปยัง view
         return view('employee.home_more_detail', compact('tasks'));
     }
-
-
-    public function achrive()
+    public function archive()
     {
-        // ดึงข้อมูลงานที่เสร็จแล้วและถูกปฏิเสธ
-        $completedRequests = WorkRequest::where('req_status', 'Completed')->get();
-        $rejectedRequests = WorkRequest::where('req_status', 'Rejected')->get();
-        $completedTasks = Task::where('tsk_status', 'Completed')->get();
-        $rejectedTasks = Task::where('tsk_status', 'Rejected')->get();
-        $tasks = Task::with('workRequest.tasks')->get();
-        $workRequests = WorkRequest::with(['employee', 'department', 'tasks'])->get();
-        // ส่งข้อมูลไปยัง view
-        return view('employee.achrive_table', compact('completedRequests', 'rejectedRequests', 'completedTasks', 'rejectedTasks', 'tasks', 'workRequests'));
+        $currentUser = Session::get('user'); // หรือ Auth::user()
+
+        // Archive ที่ส่งแล้วเท่านั้น (Approved)
+        $workRequestArchive = WorkRequest::where('req_draft_status', 'A')
+            ->where('req_emp_id', $currentUser->emp_id)
+            ->whereIn('req_status', ['Completed', 'Rejected'])
+            ->get();
+
+
+        $completedRequests = $workRequestArchive->where('req_status', 'Completed');
+        $rejectedRequests = $workRequestArchive->where('req_status', 'Rejected');
+
+        $completedTasks = Task::where('tsk_status', 'Completed')
+            ->where('tsk_emp_id', $currentUser->emp_id)
+            ->get();
+
+        $rejectedTasks = Task::where('tsk_status', 'Rejected')
+            ->where('tsk_emp_id', $currentUser->emp_id)
+            ->get();
+        $completedTasks = Task::where('tsk_status', 'Completed')
+            ->where('tsk_emp_id', $currentUser->emp_id)
+            ->whereHas('workRequest', function ($query) {
+                $query->where('req_draft_status', 'A');
+            })
+            ->get();
+
+        $rejectedTasks = Task::where('tsk_status', 'Rejected')
+            ->where('tsk_emp_id', $currentUser->emp_id)
+            ->whereHas('workRequest', function ($query) {
+                $query->where('req_draft_status', 'A');
+            })
+            ->get();
+        // $tasks = Task::with('workRequest.tasks')->get();
+
+        $workRequests = WorkRequest::all()->keyBy('req_id');
+
+        return view('employee.archive_table', compact(
+            'completedRequests',
+            'rejectedRequests',
+            'completedTasks',
+            'rejectedTasks',
+            'workRequests'
+        ));
+    }
+
+    public function archiveDetail($id)
+    {
+        $req_id = $id; // req_id ไอดีใบงานส่งมาจากหน้ารายการ เปลี่ยนเลขเป็น id ที่ส่งมาจากหน้ารายการได้เลย
+        $workRequest = WorkRequest::with(['tasks.employee'])->where('req_id', $req_id)->first();
+
+        // หาใบงานไม่เจอ
+        if (!$workRequest) {
+            abort(404, 'Work request not found.');
+        }
+
+        // Retrieve the work request details and associated tasks
+        $reqName = $workRequest->req_name ?? 'ไม่มีชื่อ';
+        $reqDescription = $workRequest->req_description ?? 'ไม่มีคำอธิบาย';
+        $tasks = $workRequest->tasks; // Retrieve associated tasks with employees
+        $reqEmployeeName = $workRequest->employee->emp_name ?? 'ไม่มีข้อมูล'; // Get the employee name
+
+        // ส่งเข้าไปยัง view
+        return view('employee.archive_detail', compact('reqName', 'reqDescription', 'tasks', 'reqEmployeeName'));
+    }
+
+    public function archiveDetailSelf($id, $empId)
+    {
+        $req_id = $id; // req_id ไอดีใบงานส่งมาจากหน้ารายการ
+        $emp_id = $empId; // emp_id ไอดีพนักงานส่งมาจากหน้ารายการ
+
+        $workRequest = WorkRequest::with(['tasks' => function ($query) use ($emp_id) {
+            $query->where('tsk_emp_id', $emp_id);
+        }, 'tasks.employee'])->where('req_id', $req_id)->first();
+
+        // หาใบงานไม่เจอ
+        if (!$workRequest) {
+            abort(404, 'Work request not found.');
+        }
+
+        $reqName = $workRequest->req_name ?? 'ไม่มีชื่อ';
+        $reqDescription = $workRequest->req_description ?? 'ไม่มีคำอธิบาย';
+        $tasks = $workRequest->tasks; // Now contains only tasks for this employee
+        $reqEmployeeName = $workRequest->employee->emp_name ?? 'ไม่มีข้อมูล';
+
+        return view('employee.archive_detail_self', compact('reqName', 'reqDescription', 'tasks', 'reqEmployeeName'));
     }
 
     public function sent()
