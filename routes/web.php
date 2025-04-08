@@ -51,7 +51,7 @@ Route::middleware(['employee'])->group(function () {
     //เรียกไปหน้า details draft
     Route::get('/draft', function () {
         return view('draft_details');
-    })->name('draft_list');
+    })->name('draft_deatails');
 
     //
     Route::get('/draft/{id}', [EditDraftController::class, 'index'])->name('draft_list');

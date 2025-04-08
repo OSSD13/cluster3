@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('public/css/components/side_bar.css')}}">
+    <link rel="stylesheet" href="{{ asset('public/css/components/side_bar.css') }}">
     <title>Document</title>
 </head>
 
@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'draft_list' ? 'active' : ''}}" href="{{ url('/draft_list') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::is('draft_list', 'draft.edit', 'draft.update', 'drafts.destroy', 'draft_details') ? 'active' : '' }}" href="{{ url('/draft_list') }}">
                         <i class="fa-solid fa-file-pen me-2"></i> แบบร่าง
                     </a>
                 </li>
