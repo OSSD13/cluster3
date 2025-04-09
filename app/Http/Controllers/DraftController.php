@@ -1,11 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\WorkRequest;
-use App\Models\Department;
-use App\Models\Employee;
 use Illuminate\Support\Facades\Session;
 
 /*
@@ -17,14 +13,14 @@ use Illuminate\Support\Facades\Session;
 class DraftController extends Controller
 {
     /*
-     * getShowDraft()
+     * showDraft()
      * แสดงรายการใบสั่งงานแบบร่างที่ผู้ใช้ล็อกอินเป็นผู้สร้าง
      * @input : ไม่มี
      * @output : view draft_list พร้อมข้อมูลใบสั่งงานที่อยู่ในสถานะแบบร่าง
      * @author : Salsabeela Sa-e 66160349
      * @Create Date : 2025-04-04
      */
-    public function getShowDraft()
+    public function showDraft()
     {
         // ดึงข้อมูลจาก session
         $user = Session::get('user');
@@ -48,7 +44,7 @@ class DraftController extends Controller
     }
 
     /*
-     * destroy()
+     * delete()
      * ลบใบสั่งงานและงานย่อยที่เกี่ยวข้อง
      * @input : $id (ID ของใบสั่งงานที่ต้องการลบ)
      * @output : redirect กลับพร้อมข้อความสำเร็จ
@@ -56,7 +52,7 @@ class DraftController extends Controller
      * @Create Date : 2025-04-04
      */
 
-    public function destroy($id)
+    public function delete($id)
     {
         $request = WorkRequest::with('tasks')->findOrFail($id);
 

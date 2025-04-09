@@ -40,7 +40,7 @@
                                     </a>
                                     {{-- ฟอร์มลบใบสั่งงาน --}}
                                     <form id="delete-form-{{ $request->req_id }}"
-                                        action="{{ route('drafts.destroy', $request->req_id) }}" method="POST"
+                                        action="{{ route('drafts.delete', $request->req_id) }}" method="POST"
                                         style="display:inline;">
                                         @csrf
                                         @method('DELETE')
