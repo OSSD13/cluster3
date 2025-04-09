@@ -52,18 +52,24 @@ class ManageEmployeeControler extends Controller
     * @author : Naphat Maneechansuk 66160099
     * @Create Date : 2025-04-05
     */
-    public function searchEmployee(Request $req){
+    public function searchEmployee(Request $req)
+    {
         $output = "";
-        $employees = Employee::where('emp_name', 'LIKE', '%' . $req->search . '%')->get();
-        foreach($employees as $employee){
+        $employees = Employee::where('emp_name', 'LIKE', '%' . $req->search . '%')
+            ->orWhereHas('department', function ($query) use ($req) {
+                $query->where('dept_name', 'LIKE', '%' . $req->search . '%');
+            })
+            ->get();
+
+        foreach ($employees as $employee) {
             $output .=
-            '<tr>
-                <th scope="row " class="text-center">' . str_pad($employee->emp_id, 4, '0' , STR_PAD_LEFT) . '</th>
-                <td class="text-center">'. $employee->emp_name . '</td>
-                <td></td>
-                <td class="text-center">' . $employee->department->dept_name . '</td>
-                <td class="text-center"><i class="bi bi-pencil action-icon" data-bs-toggle="modal" data-bs-target="#editEmployeeModal' . $employee->emp_id .' "></i></td>
-            </tr>';
+                '<tr>
+                    <th scope="row " class="text-center">' . str_pad($employee->emp_id, 4, '0', STR_PAD_LEFT) . '</th>
+                    <td class="text-center">' . $employee->emp_name . '</td>
+                    <td></td>
+                    <td class="text-center">' . $employee->department->dept_name . '</td>
+                    <td class="text-center"><i class="bi bi-pencil action-icon" data-bs-toggle="modal" data-bs-target="#editEmployeeModal' . $employee->emp_id . '"></i></td>
+                </tr>';
         }
 
         return response($output);
