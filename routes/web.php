@@ -8,7 +8,9 @@ use App\Http\Controllers\{
     DepartmentController,
     LoginController,
     ReportController,
-    SentController
+    SentController,
+    DraftController,
+    EditDraftController
 };
 use App\Http\Middleware\AdminMiddleware;
 
