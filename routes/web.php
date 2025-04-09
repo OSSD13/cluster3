@@ -33,7 +33,7 @@ Route::middleware(['employee'])->group(function () {
     })->name('create-form');
 
 
-    Route::get('/draft_list', [DraftController::class, 'getShowDraft'])->name('draft_list');
+    Route::get('/draft_list', [DraftController::class, 'showDraft'])->name('draft_list');
 
 
     // Route สำหรับแก้ไขแบบร่าง
@@ -42,7 +42,7 @@ Route::middleware(['employee'])->group(function () {
     Route::put('/draft/update/{id}', [EditDraftController::class, 'update'])->name('draft.update');
 
     // Route สำหรับลบใบงาน
-    Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
+    Route::delete('/draft/{id}', [DraftController::class, 'delete'])->name('drafts.delete');
 
     // Route สำหรับดึงข้อมูลพนักงานตามแผนก
     Route::get('/form/employee/{deptId}', [EmployeeController::class, 'getEmployeesByDepartment']);

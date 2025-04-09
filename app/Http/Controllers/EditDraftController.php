@@ -34,7 +34,7 @@ class EditDraftController extends Controller
         $user = Session::get('user');
 
         // ดึงข้อมูลใบสั่งงานที่ต้องการแก้ไข พร้อมงานย่อย
-        $draft = WorkRequest::with('tasks')->findOrFail($id);
+        $draft = WorkRequest::with(['tasks.employee'])->findOrFail($id); // โหลด tasks พร้อม employee
 
         // ดึง emp_id ของผู้ใช้ที่ล็อกอิน
         $empId = $user->emp_id;
