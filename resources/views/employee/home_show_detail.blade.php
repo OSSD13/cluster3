@@ -144,19 +144,26 @@
                              <div class="d-flex gap-2">
                                  <ion-icon name="person-circle-outline" size="large"></ion-icon>
                                  <div class="input-group my-2">
-                                     <div class="form-floating">
-                                         @if (($task->first()->tsk_comment) == null)
-                                         <div class="form-floating">
-                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" style="height: 100px"></textarea>
-                                             <label for="floatingTextarea2">เพิ่มความคิดเห็น...</label>
-                                         </div>
-                                         @else
-                                         <div class="form-floating">
-                                             <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" style="height: 100px">{{ $task->first()->tsk_comment }}</textarea>
-                                             <label for="floatingTextarea2">ความคิดเห็นเดิม</label>
-                                         </div>
-                                         @endif
-                                     </div>
+                                    <div class="form-floating">
+                                        @if ($task->first()->tsk_status != 'Completed' )
+                                            @if (($task->first()->tsk_comment) == null )
+                                            <div class="form-floating">
+                                                <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" style="height: 100px"></textarea>
+                                                <label for="floatingTextarea2">เพิ่มความคิดเห็น...</label>
+                                            </div>
+                                            @else
+                                            <div class="form-floating">
+                                                <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" style="height: 100px">{{ $task->first()->tsk_comment }}</textarea>
+                                                <label for="floatingTextarea2">ความคิดเห็นเดิม</label>
+                                            </div>
+                                            @endif
+                                        @else
+                                            <div class="form-floating">
+                                                <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" readonly  style="height: 100px">{{ $task->first()->tsk_comment }}</textarea>
+                                                <label for="floatingTextarea2">ความคิดเห็น</label>
+                                            </div>
+                                        @endif
+                                    </div>
                                  </div>
                              </div>
                          </td>
