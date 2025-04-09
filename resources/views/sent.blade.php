@@ -11,8 +11,10 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="row">
-            <h3 class="mb-3 col" style="color: #4B49AC;">รายการใบงานที่ส่งแล้ว</h3>
+        <div class="row ">
+            <div class="col">
+                <h2 class="mb-3" style="color: #4B49AC;"><b>รายการใบงานที่ส่งแล้ว</b></h2>
+            </div>
             <div class="col">
                 <div class="d-flex justify-content-end mb-3 mt-2">
                     <div class="position-relative" style="width: 300px;">
@@ -22,6 +24,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="card shadow-sm">
             <div class="custom-box py-0">
                 <table class="table mt-3 table table-hover" style="border-collapse: separate; border-spacing: 0;"
                     id="dataTable">
@@ -50,22 +55,16 @@
                         @forelse ($sortedRequests as $req)
                             @php
                                 $statuses = $req->tasks->pluck('tsk_status')->toArray();
-                                $hasRejected = in_array('Rejected', $statuses);
                                 $allCompleted =
                                     count($statuses) > 0 && collect($statuses)->every(fn($s) => $s === 'Completed');
-                                $canApprove = $hasRejected || $allCompleted;
 
-                                $statuses = $req->tasks->pluck('tsk_status')->toArray();
-                                $hasRejected = in_array('Rejected', $statuses);
-                                $allCompleted =
-                                    count($statuses) > 0 && collect($statuses)->every(fn($s) => $s === 'Completed');
-                                $hasInProgress = in_array('In Progress', $statuses);
+                                $canApprove = $req->req_status === 'Completed'; // ใช้ req_status ที่อัปเดตมาจาก Controller แล้ว
 
                                 $statusText = 'รอดำเนินการ';
                                 $statusClass = 'status-dot-1';
                                 $rowClass = '';
-
                                 $latestDueDate = $req->tasks->max('tsk_due_date');
+
                                 $thaiMonths = [
                                     1 => 'ม.ค.',
                                     2 => 'ก.พ.',
@@ -81,16 +80,28 @@
                                     12 => 'ธ.ค.',
                                 ];
 
-                                $latestDueDate = $req->tasks->max('tsk_due_date');
-
-                                if ($hasRejected) {
+                                if ($req->req_status == 'Rejected') {
                                     $statusText = 'ปฏิเสธ';
                                     $statusClass = 'status-dot-4';
                                     $rowClass = 'table-danger';
-                                } elseif ($allCompleted) {
+                                } elseif ($req->req_status == 'Completed') {
                                     $statusText = 'เสร็จสิ้น';
                                     $statusClass = 'status-dot-3';
-                                } elseif ($hasInProgress) {
+                                } elseif ($req->req_status == 'In Progress') {
+                                    $statusText = 'กำลังดำเนินการ';
+                                    $statusClass = 'status-dot-2';
+                                }
+
+                                $latestDueDate = $req->tasks->max('tsk_due_date');
+
+                                if ($req->req_status == 'Rejected') {
+                                    $statusText = 'ปฏิเสธ';
+                                    $statusClass = 'status-dot-4';
+                                    $rowClass = 'table-danger';
+                                } elseif ($req->req_status == 'Completed') {
+                                    $statusText = 'เสร็จสิ้น';
+                                    $statusClass = 'status-dot-3';
+                                } elseif ($req->req_status == 'In Progress') {
                                     $statusText = 'กำลังดำเนินการ';
                                     $statusClass = 'status-dot-2';
                                 }
@@ -135,7 +146,7 @@
                                             $time = $date->format('H:i');
                                         @endphp
                                         <div>{{ "$day $month $year" }}</div>
-                                        <div>เวลา {{ $time }} น.</div>
+                                        <div>{{ $time }} น.</div>
                                     @else
                                         -
                                     @endif

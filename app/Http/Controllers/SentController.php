@@ -31,12 +31,47 @@ class SentController extends Controller
         $user = session('user');
         $employeeId = $user->emp_id ?? null;
 
+        // ดึงใบงานที่ส่งแล้ว พร้อมงานย่อยทั้งหมด
         $requests = WorkRequest::with('tasks')
             ->where('req_emp_id', $employeeId)
             ->where('req_draft_status', 'S')
             ->get();
 
-        $sorted = $requests->sortBy(function ($req) {
+        foreach ($requests as $req) {
+            $statuses = $req->tasks->pluck('tsk_status')->toArray();
+
+            if (count($statuses) === 0) {
+                continue; // ข้ามถ้ายังไม่มีงานย่อย
+            }
+
+            $newStatus = $req->req_status; // ค่าเริ่มต้น
+
+            if (collect($statuses)->every(fn($s) => $s === 'Completed')) {
+                $newStatus = 'Completed';
+            } elseif (in_array('Rejected', $statuses)) {
+                $newStatus = 'Rejected';
+            } elseif (in_array('In Progress', $statuses)) {
+                $newStatus = 'In Progress';
+            } elseif (collect($statuses)->every(fn($s) => $s === 'Pending')) {
+                $newStatus = 'Pending';
+            } else {
+                $newStatus = 'In Progress'; // ถ้ามีสถานะผสมหรือไม่เข้าข่ายด้านบน
+            }
+
+            // ถ้ามีการเปลี่ยนแปลงสถานะจริง → ค่อย save
+            if ($req->req_status !== $newStatus) {
+                $req->req_status = $newStatus;
+                $req->save();
+            }
+        }
+
+        // โหลดข้อมูลใหม่หลังอัปเดตสถานะ เพื่อให้ view เห็นข้อมูลล่าสุด
+        $updatedRequests = WorkRequest::with('tasks')
+            ->where('req_emp_id', $employeeId)
+            ->where('req_draft_status', 'S')
+            ->get();
+
+        $sorted = $updatedRequests->sortBy(function ($req) {
             $priority = in_array($req->req_status, ['Completed', 'Rejected']) ? 0 : 1;
 
             $earliestDueDate = $req->tasks
