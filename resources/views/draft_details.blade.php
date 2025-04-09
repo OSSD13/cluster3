@@ -1,27 +1,35 @@
 {{--
-* employee_layouts.blade.php
-* Layout for employee dashboard
-*
-* @input : -
-* @output : Employee_layout_with_header_and_sidebar
-* @author : Sarocha Dokyeesun 66160097
-* @Create Date : 2025-03-18
+* draft_details.blade.php
+* Display form for editing draft work request
+* @input : task_name, creator_status, task_description, subtask_name, dept[], emp[], priority[], end_date[], description[]
+* @output : ข้อมูลที่แสดงจากการดึงข้อมูลในฐานข้อมูลหรือส่งออกมาจาก View นี้ เช่น ฟอร์มสำหรับการแก้ไขใบสั่งงานแบบร่าง พร้อมงานย่อยที่เกี่ยวข้อง
+* @author : Salsabeela Sa-e 66160349
+* @Create Date : 2025-03-20
 --}}
+
 @extends('layouts.employee_layouts')
 @section('content')
-    <form action="{{ route('form.create') }}" method="POST" id="work-form" novalidate>
-        <input type="hidden" name="submit_type" id="submit_type" value="create">
+    <!-- ต้องมี script sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <form action="{{ route('draft.update', $draft->req_id) }}" method="POST" id="draft-form" novalidate>
+        @method('PUT')
         @csrf
+        <input type="hidden" name="submit_type" id="submit_type" value="create">
+        <input type="hidden" id="deleted-tasks" name="deleted_tasks" value="">
+
         <div class="container-fluid">
             <div style="color: #4B49AC">
-                <h3>สร้างใบสั่งงาน</h3>
+                <h3>แก้ไขแบบร่าง</h3>
             </div>
 
             <div class="card shadow-sm p-4">
                 {{-- ชื่อใบสั่งงาน --}}
                 <div class="mb-3">
                     <label class="form-label">ชื่อใบสั่งงาน <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="task_name" required>
+                    <input type="text" class="form-control" name="task_name" value="{{ $draft->req_name }}" required>
+
                 </div>
 
                 {{-- สถานะผู้สร้างใบสั่งงาน --}}
@@ -29,23 +37,24 @@
                     <label class="form-label">สถานะผู้สร้างใบสั่งงาน <span class="text-danger">*</span></label>
                     <div class="d-inline-flex">
                         <div class="form-check me-3">
-                            <input class="form-check-input" type="radio" name="creator_status" id="individual"
-                                value="ind" required>
+                            <input class="form-check-input" type="radio" name="creator_status" id="individual" value="ind"
+                                required {{ $draft->req_create_type == 'ind' ? 'checked' : '' }}>
                             <label class="form-check-label" for="individual">นามบุคคล</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="creator_status" id="department"
-                                value="dept" required>
+                            <input class="form-check-input" type="radio" name="creator_status" id="department" value="dept"
+                                required {{ $draft->req_create_type == 'dept' ? 'checked' : '' }}>
                             <label class="form-check-label" for="department">นามแผนก</label>
                         </div>
                     </div>
                 </div>
 
+
                 {{-- คำอธิบายงาน --}}
                 <div class="mb-3">
                     <label class="form-label">คำอธิบายงาน <span class="text-danger">*</span></label>
                     <textarea class="form-control" id="task_description" name="task_description" rows="3"
-                        placeholder="หากไม่มีคำอธิบาย กรุณากรอก -" required></textarea>
+                        required>{{ $draft->req_description }}</textarea>
                 </div>
             </div>
 
@@ -79,15 +88,15 @@
         let taskCount = 1;
 
         /*
-         * document.addEventListener('DOMContentLoaded', ...)
-         * โหลด event listener เพื่อให้ JS เริ่มทำงานเมื่อ DOM โหลดเสร็จ
-         * @input : -
-         * @output : set event change ให้กับ select[name="dept[]"] เพื่อโหลด employee ตามแผนก
-         * @author : Sarocha Dokyeesun 66160097
-         * @Create Date : 2025-04-04
-         */
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.addEventListener('change', function(e) {
+        * document.addEventListener('DOMContentLoaded', ...)
+        * โหลด event listener เพื่อให้ JS เริ่มทำงานเมื่อ DOM โหลดเสร็จ
+        * @input : -
+        * @output : set event change ให้กับ select[name="dept[]"] เพื่อโหลด employee ตามแผนก
+        * @author : Sarocha Dokyeesun 66160097
+        * @Create Date : 2025-04-04
+        */
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.addEventListener('change', function (e) {
                 if (e.target && e.target.name === 'dept[]') {
                     const deptSelect = e.target;
                     const deptId = deptSelect.value;
@@ -97,10 +106,7 @@
                         'select[name="emp[]"]');
                     empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
 
-                    const baseUrl = "{{ config('app.url') }}";
-                    const url = `${baseUrl}/form/employee/${deptId}`;
-
-                    fetch(url)
+                    fetch(`/form/employee/${deptId}`)
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(emp => {
@@ -113,95 +119,158 @@
                         .catch(error => console.error('เกิดข้อผิดพลาดในการโหลดพนักงาน:', error));
                 }
             });
+
+            const subtasks = @json($draft->tasks); // ดึงข้อมูลงานย่อยจาก PHP
+            const taskList = document.getElementById("taskList"); // อ้างอิง taskList
+
+            // วนลูปข้อมูลงานย่อยและเพิ่มลงใน DOM
+            subtasks.forEach((subtask, index) => {
+                const taskId = `task${index + 1}`;
+                const newTask = document.createElement("div");
+                newTask.classList.add("accordion-item");
+                newTask.id = `task-item-${index + 1}`;
+                newTask.setAttribute('data-task-id', subtask.tsk_id); // เพิ่ม data-task-id
+                newTask.innerHTML = `
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                                งานย่อย ${index + 1}
+                            </button>
+                        </h2>
+                        <div id="${taskId}" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="dept[]" required>
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            ${@json($dept).map(d => `
+                                                <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
+                                                    ${d.dept_name}
+                                                </option>
+                                            `).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">ผู้รับมอบหมาย</label>
+                                        <select class="form-select" name="emp[]">
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            <option value="${subtask.tsk_emp_id}" selected>${subtask.employee?.emp_name || ''}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="priority[]" required>
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            <option value="L" ${subtask.tsk_priority == 'L' ? 'selected' : ''}>ต่ำ</option>
+                                            <option value="M" ${subtask.tsk_priority == 'M' ? 'selected' : ''}>ปานกลาง</option>
+                                            <option value="H" ${subtask.tsk_priority == 'H' ? 'selected' : ''}>สูง</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
+                                        <input type="datetime-local" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                taskList.appendChild(newTask);
+            });
+
+            // อัปเดตตัวนับ task
+            taskCount = subtasks.length + 1;
         });
 
         /*
-         * addTask()
-         * เพิ่ม task ย่อยใหม่ลงใน accordion
-         * @input : -
-         * @output : แสดง task ย่อยใหม่ใน DOM
-         * @author : Sarocha Dokyeesun 66160097
-         * @Create Date : 2025-03-17
-         */
+        * addTask()
+        * เพิ่ม task ย่อยใหม่ลงใน accordion
+        * @input : -
+        * @output : แสดง task ย่อยใหม่ใน DOM
+        */
         function addTask() {
-            const departments = @json($dept);
-            const taskList = document.getElementById("taskList");
-            const taskId = `task${taskCount}`;
-
+            const departments = @json($dept); // ดึงข้อมูลแผนกจาก PHP
+            const taskList = document.getElementById("taskList"); // อ้างอิง taskList
+            const taskId = `task${taskCount}`; // สร้าง ID สำหรับ task ใหม่
             const deptOptions = departments.map(d =>
-                `<option value="${d.dept_id}">${d.dept_name}</option>`).join('');
+                `<option value="${d.dept_id}">${d.dept_name}</option>`).join(''); // สร้างตัวเลือกแผนก
 
+            // สร้างโครงสร้าง HTML สำหรับ task ใหม่
             const newTask = document.createElement("div");
             newTask.classList.add("accordion-item");
             newTask.id = `task-item-${taskCount}`;
             newTask.innerHTML = `
-    <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
-            งานย่อย ${taskCount}
-        </button>
-    </h2>
-    <div id="${taskId}" class="accordion-collapse collapse">
-        <div class="accordion-body">
-            <div class="mb-3 col">
-                <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="subtask_name[]" required>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
-                    <select class="form-select" name="dept[]" required>
-                        <option selected disabled value="">กรุณาเลือก</option>
-                        ${deptOptions}
-                    </select>
-                </div>
-                <div class="col-6">
-                    <label class="form-label">ผู้รับมอบหมาย </label>
-                    <select class="form-select" name="emp[]">
-                        <option selected disabled value="">กรุณาเลือก</option>
-                    </select>
-                </div>
-                <div class="mb">
-                    <small class="form-text text-danger">
-                        * หากไม่เลือกผู้รับมอบหมาย จะถือว่าส่งให้แผนกโดยรวม
-                    </small>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6 mb-3 mt-2">
-                    <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
-                    <select class="form-select" name="priority[]" required>
-                        <option selected disabled value="">กรุณาเลือก</option>
-                        <option value="L">ต่ำ</option>
-                        <option value="M">ปานกลาง</option>
-                        <option value="H">สูง</option>
-                    </select>
-                </div>
-                <div class="col-6 mb-3 mt-2">
-                    <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
-                    <input type="datetime-local" class="form-control" name="end_date[]" required>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
-                <textarea class="form-control" name="description[]" placeholder="หากไม่มีคำอธิบาย กรุณากรอก -" required></textarea>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="button"  class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
-            </div>
-        </div>
-    </div>`;
-            taskList.appendChild(newTask);
-            taskCount++;
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                            งานย่อย ${taskCount}
+                        </button>
+                    </h2>
+                    <div id="${taskId}" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="mb-3">
+                                <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="subtask_name[]" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="dept[]" required>
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        ${deptOptions}
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">ผู้รับมอบหมาย</label>
+                                    <select class="form-select" name="emp[]">
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="priority[]" required>
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        <option value="L">ต่ำ</option>
+                                        <option value="M">ปานกลาง</option>
+                                        <option value="H">สูง</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="end_date[]" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                                <textarea class="form-control" name="description[]" placeholder="กรุณากรอกคำอธิบาย" required></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            taskList.appendChild(newTask); // เพิ่ม task ใหม่ลงใน taskList
+            taskCount++; // เพิ่มตัวนับ task
         }
 
         /*
-         * removeTask(id)
-         * ลบ task ย่อยออกจากหน้า และอัปเดตหมายเลข
-         * @input : id ของ task ย่อย
-         * @output : ลบ DOM element ของ task ย่อยออกไป พร้อมอัปเดตหมายเลข task ใหม่ทั้งหมดในหน้าเพจ
-         * @author : Sarocha Dokyeesun 66160097
-         * @Create Date : 2025-03-17
-         */
+        * removeTask(id)
+        * ลบ task ย่อยออกจากหน้า และอัปเดตหมายเลข
+        * @input : id ของ task ย่อย
+        * @output : ลบ DOM element ของ task ย่อยออกไป พร้อมอัปเดตหมายเลข task ใหม่ทั้งหมดในหน้าเพจ
+        */
         function removeTask(id) {
             Swal.fire({
                 title: 'ยืนยันการลบ?',
@@ -335,7 +404,7 @@
                     const error = document.createElement("div");
                     error.className = "invalid-feedback";
 
-                    //ตั้งข้อความ error เฉพาะเจาะจงตาม name
+                    // ตั้งข้อความ error เฉพาะเจาะจงตาม name
                     let message = "กรุณากรอกข้อมูลให้ครบถ้วน";
                     if (fieldName === "task_name") message = "กรุณากรอกชื่อใบสั่งงาน";
                     if (fieldName === "creator_status") message = "กรุณาเลือกสถานะผู้สร้าง";
@@ -358,9 +427,9 @@
             return isValid;
         }
 
-        document.getElementById("create-task-btn").addEventListener("click", function(e) {
+        document.getElementById("create-task-btn").addEventListener("click", function (e) {
             e.preventDefault();
-            const form = document.getElementById('work-form');
+            const form = document.getElementById('draft-form');
 
             if (!validateFormFields(form)) return;
 
@@ -411,9 +480,9 @@
             });
         });
 
-        document.getElementById("save-draft-btn").addEventListener("click", function(e) {
+        document.getElementById("save-draft-btn").addEventListener("click", function (e) {
             e.preventDefault();
-            const form = document.getElementById('work-form');
+            const form = document.getElementById('draft-form');
 
             if (!validateFormFields(form)) return;
 
@@ -458,8 +527,12 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('submit_type').value = 'draft'; //set เป็น draft
+                    document.getElementById('submit_type').value = 'draft'; // set เป็น draft
                     form.submit();
+                    // Redirect to draft_list after submission
+                    form.addEventListener('submit', function () {
+                        window.location.href = "{{ route('draft_list') }}";
+                    });
                 }
             });
         });

@@ -98,7 +98,7 @@ class DepartmentController extends Controller
 
             return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->with();
+            return redirect()->back();
         }
     }
     /*
