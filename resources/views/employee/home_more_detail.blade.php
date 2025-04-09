@@ -10,7 +10,7 @@
 @extends('layouts.employee_layouts')
 @section('content')
 
-<div class="content">
+<div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center">
         <h3 class="m-0">รายการงาน</h3>
         <!-- <ul class="nav nav-tabs">

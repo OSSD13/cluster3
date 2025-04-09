@@ -10,7 +10,7 @@
 @extends('layouts.employee_layouts')
 @section('content')
 <div class="d-flex">
-    <div class="content w-100">
+    <div class="container-fluid">
         @include('components.tab_task')
         <div class="tab-content">
             @include('components.home_my_task', ['tasks' => $tasks, 'workRequests' => $workRequests,'employees' => $employees,'departments' => $departments, 'allTask' => $allTask])
@@ -48,5 +48,4 @@
         }
     });
 </script>
-@endsection         
-            
+@endsection

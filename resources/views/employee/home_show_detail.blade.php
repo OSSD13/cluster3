@@ -1,6 +1,6 @@
-{{-- 
+{{--
 * home_showdetail.blade.php
-* แสดงรายละเอียดของใบงานในระบบ Work Request 
+* แสดงรายละเอียดของใบงานในระบบ Work Request
 * @input : ข้อมูลของงานย่อย เช่น st_name, st_description, st_due_date, st_priority และ st_assignee จากตัวแปร $task และ $emp
 * @output : หน้าจอแสดงรายละเอียดใบงานพร้อมปุ่มเปลี่ยนสถานะและแสดงความคิดเห็น
 * @author : Saruta Saisuwan 66160375
@@ -9,7 +9,7 @@
 
  @extends('layouts.employee_layouts')
  @section('content')
- <div class="content">
+ <div class="containetr-fluid">
      <div class="col">
          <div class="d-flex justify-content-between align-items-center">
              <h3 class="m-0" >รายการงาน</h3>
@@ -91,7 +91,7 @@
                             @if($task->first()->tsk_priority == 'L' )
                             <span class="badge rounded-pill text-white " style="background-color: #26BC00;" >ต่ำ</span>
                             @endif
-                             
+
                          </td>
                      </tr>
                      <tr>
@@ -244,7 +244,7 @@
     //              }
     //          }
     //      });
-    
+
 
     //      if (reason) {
     //          // เซ็ตค่าที่ต้องการส่ง

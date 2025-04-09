@@ -1,4 +1,4 @@
-{{-- 
+{{--
 * archive.blade.php
 * แสดงรายการงานที่จัดเก็บทั้งหมด, แยกตามสถานะงาน (มอบหมาย, ได้รับมอบหมาย)
 * @input : $completedRequests, $rejectedRequests, $completedTasks, $rejectedTasks, $workRequests
@@ -8,7 +8,7 @@
 --}}
 @extends('layouts.employee_layouts')
 @section('content')
-<div class="content">
+<div class="container-fluid">
   <h3 class="mb-0" style="color: #4B49AC;">รายการงานที่จัดเก็บ</h3>
   <div class="custom-box">
     <nav class="navbar">

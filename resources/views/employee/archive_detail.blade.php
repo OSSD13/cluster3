@@ -10,7 +10,8 @@
 
 @extends('Layouts.employee_layouts')
 @section('content')
-<div class="content">
+<div class="container-fluid">
+    {{-- Page Title --}}
 
     <h3 class="text-primary">รายการงานที่จัดเก็บ</h3>
     <div class="tab-content">
@@ -162,7 +163,7 @@
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>เหตุผลการปฏิเสธ</strong></p>
                                 <p style="margin-left: 185px;">{{ $task->tsk_comment_reject ?? 'ไม่มีความคิดเห็น' }}</p>
-                             
+
                             </div>
                         </div>
                     </td>

@@ -11,7 +11,8 @@
 @extends('Layouts.employee_layouts')
 @section('content')
 
-<div class="content">
+<div class="contaner-fluid">
+    {{-- Include Sidebar --}}
     {{-- Header Section --}}
     <h3 class="text-primary">รายการงานที่จัดเก็บ</h3>
     <div class="tab-content">
