@@ -178,7 +178,7 @@
                 </div>
                 <div class="col-6 mb-3 mt-2">
                     <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control" name="end_date[]" required>
+                    <input type="datetime-local" class="form-control" name="end_date[]" required>
                 </div>
             </div>
             <div class="mb-3">
