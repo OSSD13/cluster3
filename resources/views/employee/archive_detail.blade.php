@@ -7,22 +7,6 @@
 * @Create Date : 2025-03-24
 --}}
 
-{{--
-* Database Tables:
-* wrs_work_requests : Table for storing work request data
-* Columns: req_id, req_create_type, req_emp_id, req_dept_id, req_status, req_name,
-*          req_description, req_draft_status, req_created_date, req_update_date,
-*          req_completed_date, req_code
-*
-* wrs_tasks : Table for storing task data under work requests
-* Columns: tsk_id, tsk_req_id, tsk_assignee_type, tsk_emp_id, tsk_dept_id, tsk_status,
-*          tsk_name, tsk_description, tsk_due_date, tsk_priority, tsk_update_date,
-*          tsk_completed_date, tsk_comment_reject, tsk_comment
-*
-* wrs_employees : Table for storing employee information
-* Columns: emp_dept_id, emp_username, emp_password, emp_name, emp_role,
-*          emp_created_date, emp_update_date
---}}
 
 @extends('Layouts.employee_layouts')
 @section('content')
@@ -127,17 +111,17 @@
                                     </span>
                                     @elseif ($task->tsk_status === 'In Progress')
                                     <span style="display: inline-flex; align-items: center;">
-                                        <span style="width: 18px; height: 18px; background-color: rgb(0, 72, 255); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                        <span style="width: 18px; height: 18px; background-color: #facc15; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
                                         กำลังดำเนินการ
                                     </span>
                                     @elseif ($task->tsk_status === 'Completed')
                                     <span style="display: inline-flex; align-items: center;">
-                                        <span style="width: 18px; height: 18px; background-color: rgb(51, 255, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                        <span style="width: 18px; height: 18px;  background-color: #a3e635; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
                                         เสร็จสิ้น
                                     </span>
                                     @elseif ($task->tsk_status === 'Rejected')
                                     <span style="display: inline-flex; align-items: center;">
-                                        <span style="width: 18px; height: 18px; background-color: rgb(255, 0, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                        <span style="width: 18px; height: 18px; background-color:rgb(255, 0, 0); border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
                                         ถูกปฏิเสธ
                                     </span>
                                     @else
@@ -177,7 +161,7 @@
                             </div>
                             <div class="d-flex" style="padding: 10px 0; margin-left: 37px; border-top: 1px solid #E9E9E9;">
                                 <p class="me-3"><strong>เหตุผลการปฏิเสธ</strong></p>
-                                <p style="margin-left: 220px;">{{ $task->tsk_comment_reject ?? 'ไม่มีความคิดเห็น' }}</p>
+                                <p style="margin-left: 185px;">{{ $task->tsk_comment_reject ?? 'ไม่มีความคิดเห็น' }}</p>
                              
                             </div>
                         </div>

@@ -12,7 +12,17 @@ use Illuminate\Support\Facades\Session;
 class WorkRequestController extends Controller
 {
 
-    public function index()
+    /*
+* viewAssignment()
+* ฟังก์ชันสำหรับดึงข้อมูลใบงานและงานที่เกี่ยวข้องของผู้ใช้งานปัจจุบัน แยกตามสถานะของงาน (ได้รับ, กำลังดำเนินการ, เสร็จสิ้น)
+* พร้อมกรองเฉพาะงานที่สามารถดำเนินการได้ตามลำดับขั้น (หากมีงานก่อนหน้ายังไม่เสร็จจะไม่แสดงงานถัดไป)
+* @input : Session::get('user') => ผู้ใช้งานปัจจุบัน
+* @output : ส่งข้อมูล tasks, workRequests, employees, departments, allTask ไปยัง view employee.home_table
+* @author : Saruta Saisuwan 66160375
+* @Create Date : 2025-04-06
+*/
+
+    public function viewAssignment()
     {
         $currentUser = Session::get('user');
 
@@ -132,7 +142,15 @@ class WorkRequestController extends Controller
             'allTask' => $allTask
         ]);
     }
-    
+    /*
+* showDetail($id)
+* แสดงรายละเอียดของงานตาม ID ที่ระบุ พร้อมดึงข้อมูลพนักงาน ใบคำขอ และแผนกที่เกี่ยวข้อง
+* @input : $id (int) => รหัสงาน (Task ID)
+* @output : ส่งข้อมูล emp, workRequest, task, dept, taskWith ไปยัง view employee.home_show_detail
+* @author : Saruta Saisuwan 66160375
+* @Create Date : 2025-04-06
+*/
+
     public function showDetail($id)
     {
         $currentUser = Session::get('user');
@@ -143,6 +161,16 @@ class WorkRequestController extends Controller
         $dept = Department::all();
         return view('employee.home_show_detail', compact('emp', 'workRequest', 'task', 'dept', 'taskWith'));
     }
+/*
+* updateTask(Request $req, $id)
+* อัปเดตสถานะและข้อมูลของงานตาม ID ที่ระบุ หากสถานะเป็น Completed จะบันทึกวันที่เสร็จงานด้วย
+* @input : 
+*   - $req (Illuminate\Http\Request) => ข้อมูลที่รับมาจากฟอร์ม เช่น สถานะ ผู้รับผิดชอบ ความเห็น ฯลฯ
+*   - $id (int) => รหัสงาน (Task ID)
+* @output : redirect กลับไปยัง route 'main-page' หลังจากบันทึกข้อมูลแล้ว
+* @author : Saruta Saisuwan 66160375
+* @Create Date : 2025-04-06
+*/
 
     public function updateTask(Request $req, $id)
     {
@@ -159,6 +187,16 @@ class WorkRequestController extends Controller
 
         return redirect()->route('main-page'); // ใช้ชื่อ Route ที่ถูกต้อง
     }
+    /*
+* moreDetail($id)
+* แสดงรายละเอียดของงานทั้งหมดที่เกี่ยวข้องกับใบคำร้อง (Work Request) ที่มี ID ตามที่ระบุ
+* @input : 
+*   - $id (int) => รหัสใบคำร้อง (req_id)
+* @output : view 'employee.home_more_detail' ที่แสดงรายการงานทั้งหมดในใบคำร้องนั้น ๆ
+* @author : Kidrakon Rattanahiran
+* @Create Date : 2025-04-08
+*/
+
     public function moreDetail($id)
     {
         // ดึงข้อมูลจากตาราง wrs_tasks พร้อมข้อมูลผู้รับมอบหมาย
@@ -168,6 +206,20 @@ class WorkRequestController extends Controller
         // ส่งข้อมูลไปยัง view
         return view('employee.home_more_detail', compact('tasks'));
     }
+    /*
+* archive()
+* แสดงรายการใบงานและงานที่เสร็จสิ้นหรือถูกปฏิเสธ (Archive) ของผู้ใช้ปัจจุบัน
+* @input : ไม่มี (ดึงข้อมูลจาก Session)
+* @output : view 'employee.archive_table' พร้อมข้อมูล:
+*   - completedRequests : ใบงานที่สถานะ Completed
+*   - rejectedRequests : ใบงานที่สถานะ Rejected
+*   - completedTasks : งานที่สถานะ Completed และอยู่ในใบงานที่อนุมัติแล้ว
+*   - rejectedTasks : งานที่สถานะ Rejected และอยู่ในใบงานที่อนุมัติแล้ว
+*   - workRequests : ข้อมูลใบงานทั้งหมด (ใช้ keyBy เพื่อเข้าถึงง่าย)
+* @author : Saruta Saisuwan 66160375
+* @Create Date : 2025-04-08
+*/
+
     public function archive()
     {
         $currentUser = Session::get('user'); // หรือ Auth::user()
@@ -214,6 +266,19 @@ class WorkRequestController extends Controller
             'workRequests'
         ));
     }
+ /*
+* archiveDetail($id)
+* แสดงรายละเอียดของใบงาน (ที่อยู่ในสถานะ Archive) และรายการ Task ที่เกี่ยวข้อง
+* @input : 
+*   - $id : รหัสของใบคำร้องงาน (req_id)
+* @output : view 'employee.archive_detail' พร้อมข้อมูล:
+*   - reqName : ชื่อใบงาน
+*   - reqDescription : คำอธิบายใบงาน
+*   - tasks : รายการงานในใบคำร้อง พร้อมข้อมูลผู้รับมอบหมาย
+*   - reqEmployeeName : ชื่อพนักงานที่สร้างใบคำร้อง
+* @author :  Art-anon Phakhananthanon 66160242
+* @Create Date : 2025-04-08
+*/
 
     public function archiveDetail($id)
     {
@@ -234,6 +299,20 @@ class WorkRequestController extends Controller
         // ส่งเข้าไปยัง view
         return view('employee.archive_detail', compact('reqName', 'reqDescription', 'tasks', 'reqEmployeeName'));
     }
+/*
+* archiveDetailSelf($id, $empId)
+* แสดงรายละเอียดใบคำร้อง และรายการ Task เฉพาะของพนักงานที่ระบุ (ใช้สำหรับดูงานที่ตัวเองได้รับมอบหมายใน Archive)
+* @input : 
+*   - $id : รหัสของใบคำร้อง (req_id)
+*   - $empId : รหัสของพนักงาน (emp_id)
+* @output : view 'employee.archive_detail_self' พร้อมข้อมูล:
+*   - reqName : ชื่อใบคำร้อง
+*   - reqDescription : คำอธิบายใบคำร้อง
+*   - tasks : รายการงานเฉพาะที่พนักงานนี้ได้รับมอบหมาย
+*   - reqEmployeeName : ชื่อพนักงานที่สร้างใบคำร้อง
+* @author : Art-anon Phakhananthanon 66160242
+* @Create Date : 2025-04-08
+*/
 
     public function archiveDetailSelf($id, $empId)
     {
@@ -255,11 +334,5 @@ class WorkRequestController extends Controller
         $reqEmployeeName = $workRequest->employee->emp_name ?? 'ไม่มีข้อมูล';
 
         return view('employee.archive_detail_self', compact('reqName', 'reqDescription', 'tasks', 'reqEmployeeName'));
-    }
-
-
-    public function sent()
-    {
-        return view('employee.sent');
     }
 }

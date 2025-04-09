@@ -25,7 +25,7 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['employee'])->group(function () {
-    Route::get('/main', [WorkRequestController::class, 'index'])->name('main-page');
+    Route::get('/main', [WorkRequestController::class, 'viewAssignment'])->name('main-page');
     Route::get('/archive',   [WorkRequestController::class, 'archive'])->name('archive');
     Route::get('/show/{id}', [WorkRequestController::class, 'showDetail'])->name('show');
     Route::put('/show/{id}', [WorkRequestController::class, 'updateTask'])->name('update-task');
@@ -46,7 +46,7 @@ Route::get(
 
 
 
-Route::get('/main', [App\Http\Controllers\WorkRequestController::class, 'index'])->name('main-page');
+// Route::get('/main', [App\Http\Controllers\WorkRequestController::class, 'index'])->name('main-page');
 Route::get('/login', function () {
     return view('login');
 });

@@ -2,10 +2,15 @@
   background-color: #4B49AC !important; /* เขียว */
   color: white !important;
 }
-.custom-title-size {
-  font-size: 24px; /* Adjust the size as needed */
+.swal-reject {
+  background-color: #4B49AC !important; /* เขียว */
+  color: white !important;
 }
 
+.swal-title-small {
+  font-size: 1.5rem !important; /* เล็กลงจากค่าปกติที่ ~1.875rem */
+  font-weight: bold !important;
+}
 h3 {
     color: #4B49AC !important; 
 }

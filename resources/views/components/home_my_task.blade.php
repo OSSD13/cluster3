@@ -1,3 +1,11 @@
+{{-- 
+* my_tasks.blade.php
+* แสดงรายการงานที่ได้รับมอบหมายของผู้ใช้ แบ่งตามสถานะงาน (งานที่ได้รับ, กำลังดำเนินการ, เสร็จสิ้น)
+* @input : $tasks (ข้อมูลงานที่ได้รับมอบหมายของผู้ใช้ในแต่ละสถานะ)
+* @output : แสดงตารางรายการงานของผู้ใช้ที่แบ่งตามสถานะการดำเนินการ
+* @author : Saruta Saisuwan 66160375
+* @Create Date : 2025-04-08
+--}}
 <div class="tab-pane fade show active mt-3" id="myTasks">
     <ul class="nav nav-tabs">
         <!-- แท็บย่อยสำหรับงานของฉัน -->
@@ -41,13 +49,13 @@
                         </td>
                         <td>
                             @if($task->tsk_priority == 'H' )
-                            <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
+                            <span class="badge rounded-pill text-white" style="background-color: #E70000">สูง</span>
                             @endif
                             @if($task->tsk_priority == 'M' )
-                            <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
+                            <span class="badge rounded-pill text-white " style="background-color: #F28D28;">กลาง</span>
                             @endif
                             @if($task->tsk_priority == 'L' )
-                            <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
+                            <span class="badge rounded-pill text-white " style="background-color: #26BC00;" >ต่ำ</span>
                             @endif
                         </td>
                         <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
@@ -90,13 +98,13 @@
                         </td>
                         <td>
                             @if($task->tsk_priority == 'H' )
-                            <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
+                            <span class="badge rounded-pill text-white" style="background-color: #E70000"">สูง</span>
                             @endif
                             @if($task->tsk_priority == 'M' )
-                            <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
+                            <span class="badge rounded-pill text-white" style="background-color: #F28D28;">กลาง</span>
                             @endif
                             @if($task->tsk_priority == 'L' )
-                            <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
+                            <span class="badge rounded-pill text-white "style="background-color: #26BC00;"   >ต่ำ</span>
                             @endif
                         </td>
                         <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
@@ -139,13 +147,13 @@
                         </td>
                         <td>
                             @if($task->tsk_priority == 'H' )
-                            <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
+                            <span class="badge rounded-pill text-white " style="background-color: #E70000">สูง</span>
                             @endif
                             @if($task->tsk_priority == 'M' )
-                            <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
+                            <span class="badge rounded-pill text-white " style="background-color: #F28D28;">กลาง</span>
                             @endif
                             @if($task->tsk_priority == 'L' )
-                            <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
+                            <span class="badge rounded-pill text-white " style="background-color: #26BC00;">ต่ำ</span>
                             @endif
                         </td>
                         <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>

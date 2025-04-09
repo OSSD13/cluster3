@@ -7,37 +7,9 @@
 * @Create Date : 2025-04-07
 --}}
 
-{{--
-* Database Tables:
-* wrs_work_requests : Table for storing work request data
-* Columns: req_id, req_create_type, req_emp_id, req_dept_id, req_status, req_name,
-*          req_description, req_draft_status, req_created_date, req_update_date,
-*          req_completed_date, req_code
-*
-* wrs_tasks : Table for storing task data under work requests
-* Columns: tsk_id, tsk_req_id, tsk_assignee_type, tsk_emp_id, tsk_dept_id, tsk_status,
-*          tsk_name, tsk_description, tsk_due_date, tsk_priority, tsk_update_date,
-*          tsk_completed_date, tsk_comment_reject, tsk_comment
-*
-* wrs_employees : Table for storing employee information
-* Columns: emp_dept_id, emp_username, emp_password, emp_name, emp_role,
-*          emp_created_date, emp_update_date
---}}
 
 @extends('Layouts.employee_layouts')
 @section('content')
-<!-- <!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Archive Details My</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="{{ asset('public/css/archive_detail.css') }}" rel="stylesheet">
-
-</head> -->
 
 <div class="content">
     {{-- Header Section --}}

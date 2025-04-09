@@ -1,10 +1,11 @@
- <!-- home_showdetail.blade.php
-Display form create subtask by employee
-@input : st_name st_description st_due_date st_priority และ st_assignee
-@output : form create subtask
-@author : Saruta saisuwan 66160375
-@Create Date : 2025-02-09 -->
-
+{{-- 
+* home_showdetail.blade.php
+* แสดงรายละเอียดของใบงานในระบบ Work Request 
+* @input : ข้อมูลของงานย่อย เช่น st_name, st_description, st_due_date, st_priority และ st_assignee จากตัวแปร $task และ $emp
+* @output : หน้าจอแสดงรายละเอียดใบงานพร้อมปุ่มเปลี่ยนสถานะและแสดงความคิดเห็น
+* @author : Saruta Saisuwan 66160375
+* @Create Date : 2025-03-20
+--}}
 
  @extends('layouts.employee_layouts')
  @section('content')
@@ -12,15 +13,6 @@ Display form create subtask by employee
      <div class="col">
          <div class="d-flex justify-content-between align-items-center">
              <h3 class="m-0" >รายการงาน</h3>
-             <!-- <ul class="nav nav-tabs">
-                 <li class="nav-item">
-                    
-                     <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#myTasks">ใบงานของฉัน</button>
-                 </li>
-                 <li class="nav-item">
-                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#teamTasks">ใบงานของแผนก</button>
-                 </li>
-             </ul> -->
          </div>
 
      </div>
@@ -90,15 +82,16 @@ Display form create subtask by employee
                      <tr>
                          <th scope="row">ความสำคัญ</th>
                          <td>
-                             @if($task->first()->tsk_priority == 'H' )
-                             <span class="badge rounded-pill text-white text-bg-danger">สูง</span>
-                             @endif
-                             @if($task->first()->tsk_priority == 'M' )
-                             <span class="badge rounded-pill text-white text-bg-warning">กลาง</span>
-                             @endif
-                             @if($task->first()->tsk_priority == 'L' )
-                             <span class="badge rounded-pill text-white text-bg-success">ต่ำ</span>
-                             @endif
+                         @if($task->first()->tsk_priority == 'H' )
+                            <span class="badge rounded-pill text-white" style="background-color: #E70000">สูง</span>
+                            @endif
+                            @if($task->first()->tsk_priority == 'M' )
+                            <span class="badge rounded-pill text-white " style="background-color: #F28D28;">กลาง</span>
+                            @endif
+                            @if($task->first()->tsk_priority == 'L' )
+                            <span class="badge rounded-pill text-white " style="background-color: #26BC00;" >ต่ำ</span>
+                            @endif
+                             
                          </td>
                      </tr>
                      <tr>
@@ -116,17 +109,11 @@ Display form create subtask by employee
                                      @elseif($task->first()->tsk_status == 'Completed')
                                      <span id="statusIndicator" class="status-dot bg-success"></span> เสร็จสิ้น
                                      @endif
-
-
-                                     <!-- <span id="statusIndicator" class="status-dot bg-secondary"></span> {{ $task->first()->tsk_status }} -->
                                  </button>
-
-                                 <!-- ปุ่ม Dropdown -->
                                  @if ($task->first()->tsk_status == 'Pending' || $task->first()->tsk_status == 'In Progress')
                                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="border: none; background: none;">
                                      <span class="visually-hidden">Toggle Dropend</span>
                                  </button>
-                                 <!-- รายการสถานะที่เลือกได้ -->
                                  <ul class="dropdown-menu">
                                      <li><a class="dropdown-item" href="#" onclick="changeStatus('รอดำเนินการ', 'bg-secondary', 'Pending')">รอดำเนินการ</a></li>
                                      <li><a class="dropdown-item" href="#" onclick="changeStatus('กำลังดำเนินการ', 'bg-warning', 'In Progress')">กำลังดำเนินการ</a></li>
@@ -139,9 +126,7 @@ Display form create subtask by employee
 
                      <tr>
                          <th scope="row">กำหนดส่ง</th>
-                         <!-- <td class="text-danger">{{ \Carbon\Carbon::parse($task->first()->tsk_due_date)->format('d F Y H:i') }}</td> -->
                          <td class="text-danger">{{ \Carbon\Carbon::parse($task->first()->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
-
                      </tr>
                      <tr>
                          <th scope="row">วันที่เสร็จสิ้น</th>
@@ -168,7 +153,6 @@ Display form create subtask by employee
                                              <textarea class="form-control" placeholder="เพิ่มความคิดเห็น" id="floatingTextarea2" name="tsk_comment" value="{{$task->first()->tsk_comment}}" style="height: 100px">{{ $task->first()->tsk_comment }}</textarea>
                                              <label for="floatingTextarea2">ความคิดเห็นเดิม</label>
                                          </div>
-
                                          @endif
                                      </div>
                                  </div>
@@ -217,13 +201,14 @@ Display form create subtask by employee
          event.preventDefault();
          const swalWithBootstrapButtons = Swal.mixin({
              customClass: {
+                title: "swal-title-small",
                  confirmButton: "swal-confirm btn ",
                  cancelButton: "btn btn-danger me-5 "
              },
              buttonsStyling: false
          });
          swalWithBootstrapButtons.fire({
-             title: "คุณต้องการเปลี่ยนแปลงข้อมูลใช่หรือไม่?",
+             title: "คุณต้องการเปลี่ยนแปลงข้อมูลหรือไม่?",
              text: "",
              icon: "warning",
              showCancelButton: true,
@@ -241,33 +226,65 @@ Display form create subtask by employee
      }
 
 
-     async function comfirm_reject(event) {
-         event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
+    //  async function comfirm_reject(event) {
+    //      event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
 
-         const {
-             value: reason
-         } = await Swal.fire({
-             title: "กรุณากรอกเหตุผลการปฏิเสธ",
-             input: "text",
-             inputLabel: " ",
-             showCancelButton: true,
-             cancelButtonText: 'ยกเลิก',
-             confirmButtonText: 'ยืนยัน',
-             inputValidator: (value) => {
-                 if (!value) {
-                     return "กรุณากรอกเหตุผล!";
-                 }
-             }
-         });
+    //      const {
+    //          value: reason
+    //      } = await Swal.fire({
+    //          title: "กรุณากรอกเหตุผลการปฏิเสธ",
+    //          input: "text",
+    //          inputLabel: " ",
+    //          showCancelButton: true,
+    //          cancelButtonText: 'ยกเลิก',
+    //          confirmButtonText: 'ยืนยัน',
+    //          inputValidator: (value) => {
+    //              if (!value) {
+    //                  return "กรุณากรอกเหตุผล!";
+    //              }
+    //          }
+    //      });
+    
 
-         if (reason) {
-             // เซ็ตค่าที่ต้องการส่ง
-             document.getElementById("tsk_status").value = "Rejected";
-             document.getElementById("tsk_comment_reject").value = reason;
+    //      if (reason) {
+    //          // เซ็ตค่าที่ต้องการส่ง
+    //          document.getElementById("tsk_status").value = "Rejected";
+    //          document.getElementById("tsk_comment_reject").value = reason;
 
-             // ส่งฟอร์ม
-             document.getElementById("taskForm").submit();
-         }
-     }
+    //          // ส่งฟอร์ม
+    //          document.getElementById("taskForm").submit();
+    //      }
+    //  }
+    async function comfirm_reject(event) {
+    event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
+
+    const { value: reason } = await Swal.fire({
+        title: "กรุณากรอกเหตุผลการปฏิเสธ",
+        input: "text",
+        inputLabel: " ",
+        showCancelButton: true,
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonText: 'ยืนยัน',
+        reverseButtons: true,
+        customClass: {
+            confirmButton: 'swal-reject btn ',   // ✅ สีเขียวสำหรับ "ยืนยัน"
+            cancelButton: 'btn btn-danger me-5'  // ✅ สีเทาสำหรับ "ยกเลิก"
+        },
+        buttonsStyling: false, // ต้องใส่เพื่อให้ใช้ customClass แทนของ default
+        inputValidator: (value) => {
+            if (!value) {
+                return "กรุณากรอกเหตุผล!";
+            }
+        }
+    });
+
+    if (reason) {
+        document.getElementById("tsk_status").value = "Rejected";
+        document.getElementById("tsk_comment_reject").value = reason;
+        document.getElementById("taskForm").submit();
+    }
+}
+
+
  </script>
  @endsection
