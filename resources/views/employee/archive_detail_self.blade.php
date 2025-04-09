@@ -8,7 +8,7 @@
 --}}
 
 
-@extends('Layouts.employee_layouts')
+@extends('layouts.employee_layouts')
 @section('content')
 
 <div class="contaner-fluid">
