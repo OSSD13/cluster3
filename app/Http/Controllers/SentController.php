@@ -31,12 +31,30 @@ class SentController extends Controller
         $user = session('user');
         $employeeId = $user->emp_id ?? null;
 
+        // ดึงใบงานที่ส่งแล้ว พร้อมงานย่อยทั้งหมด
         $requests = WorkRequest::with('tasks')
             ->where('req_emp_id', $employeeId)
             ->where('req_draft_status', 'S')
             ->get();
 
-        $sorted = $requests->sortBy(function ($req) {
+        // ตรวจสอบแต่ละใบงาน หากงานย่อยครบ → อัปเดตสถานะใบหลักเป็น Completed และ save ลงฐานข้อมูล
+        foreach ($requests as $req) {
+            $statuses = $req->tasks->pluck('tsk_status')->toArray();
+            $allCompleted = count($statuses) > 0 && collect($statuses)->every(fn($s) => $s === 'Completed');
+
+            if ($allCompleted && $req->req_status !== 'Completed') {
+                $req->req_status = 'Completed';
+                $req->save(); //บันทึกลงฐานข้อมูลจริง
+            }
+        }
+
+        // โหลดข้อมูลใหม่หลังอัปเดตสถานะ เพื่อให้ view เห็นข้อมูลล่าสุด
+        $updatedRequests = WorkRequest::with('tasks')
+            ->where('req_emp_id', $employeeId)
+            ->where('req_draft_status', 'S')
+            ->get();
+
+        $sorted = $updatedRequests->sortBy(function ($req) {
             $priority = in_array($req->req_status, ['Completed', 'Rejected']) ? 0 : 1;
 
             $earliestDueDate = $req->tasks
