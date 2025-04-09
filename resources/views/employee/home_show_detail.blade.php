@@ -12,7 +12,7 @@ Display form create subtask by employee
      <div class="col">
          <div class="d-flex justify-content-between align-items-center">
              <h3 class="m-0" >รายการงาน</h3>
-             <ul class="nav nav-tabs">
+             <!-- <ul class="nav nav-tabs">
                  <li class="nav-item">
                     
                      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#myTasks">ใบงานของฉัน</button>
@@ -20,7 +20,7 @@ Display form create subtask by employee
                  <li class="nav-item">
                      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#teamTasks">ใบงานของแผนก</button>
                  </li>
-             </ul>
+             </ul> -->
          </div>
 
      </div>

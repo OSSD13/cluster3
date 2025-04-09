@@ -32,6 +32,8 @@ Route::middleware(['employee'])->group(function () {
     Route::get('/more_detail/{id}', [WorkRequestController::class, 'moreDetail'])->name('more_detail');
     Route::get('/archive-detail/{id}', [WorkRequestController::class, 'archiveDetail'])->name('archive_detail');
     Route::get('/archive-detail-self/[{id}/{empId}', [WorkRequestController::class, 'archiveDetailSelf'])->name('archive_detail_self');
+    
+
     Route::get('/sent',   [WorkRequestController::class, 'sent'])->name('send');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

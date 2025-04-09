@@ -132,6 +132,7 @@ class WorkRequestController extends Controller
             'allTask' => $allTask
         ]);
     }
+    
     public function showDetail($id)
     {
         $currentUser = Session::get('user');
@@ -255,6 +256,7 @@ class WorkRequestController extends Controller
 
         return view('employee.archive_detail_self', compact('reqName', 'reqDescription', 'tasks', 'reqEmployeeName'));
     }
+
 
     public function sent()
     {

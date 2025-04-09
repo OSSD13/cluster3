@@ -16,8 +16,8 @@
         </ul>
         <div class="position-relative" style="width: 300px;">
           <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-          <input type="text" class="form-control ps-5 rounded-4 shadow-sm" placeholder="Search">
-        </div>
+          <input type="text" name="search" id="searchInput" class="form-control ps-5 rounded-4 shadow-sm" placeholder="Search">
+          </div>
       </div>
     </nav>
 
@@ -97,6 +97,7 @@
             </tr>
             @endforeach
           </tbody>
+
         </table>
       </div>
     </div>
@@ -116,5 +117,33 @@
       });
     });
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // คลิกแถวเพื่อเปิดหน้า
+    const rows = document.querySelectorAll(".clickable-row");
+    rows.forEach(row => {
+      row.addEventListener("click", function () {
+        const url = this.getAttribute("data-href");
+        if (url) {
+          window.location.href = url;
+        }
+      });
+    });
+
+    // 🔍 ฟังก์ชันค้นหา
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keyup', function () {
+      const keyword = this.value.toLowerCase();
+
+      // เลือกทุก tbody ของทุกแท็บ
+      document.querySelectorAll('.tab-content table tbody').forEach(tbody => {
+        tbody.querySelectorAll('tr').forEach(row => {
+          const text = row.innerText.toLowerCase();
+          row.style.display = text.includes(keyword) ? '' : 'none';
+        });
+      });
+    });
+  });
 </script>
 @endsection
+
