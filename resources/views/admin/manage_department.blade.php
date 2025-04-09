@@ -50,6 +50,23 @@
 
 @section('script')
 <script>
+    @if (session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: '{{ session('error') }}',
+            confirmButtonText: 'ตกลง'
+        });
+    @endif
+    @if (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'สำเร็จ',
+            text: '{{ session('success') }}',
+            confirmButtonText: 'ตกลง'
+        });
+    @endif
+
     /*
     * searchDepartments()
     * search department
