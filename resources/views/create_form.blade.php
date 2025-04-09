@@ -98,7 +98,7 @@
                     empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
 
                     const baseUrl = "{{ config('app.url') }}";
-                    const url = `${baseUrl}/cluster3/form/employee/${deptId}`;
+                    const url = `${baseUrl}/form/employee/${deptId}`;
 
                     fetch(url)
                         .then(response => response.json())
