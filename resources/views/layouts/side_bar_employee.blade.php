@@ -63,14 +63,14 @@
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : '' }}"
-                                    href="#" style="">
+                                    href="{{ url('/report-stat') }}" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-chart-pie me-2"></i> รายงานสถิติงาน
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : '' }} "
-                                    href="#" style="">
+                                    href="{{ url('/report-data') }}" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-table-list me-2"></i> รายงานข้อมูล
                                 </a>
