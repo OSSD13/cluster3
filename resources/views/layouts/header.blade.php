@@ -66,6 +66,25 @@
                     </form>
                 </div>
             </div>
+        {{-- โปรไฟล์  --}} 
+        <div class="dropdown">
+            <a class="nav-link  d-flex align-items-center text-dark" href="#" id="profileDropdown"
+                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow" aria-labelledby="profileDropdown"
+                style="border-radius: 12px;">
+                <li>
+                    {{-- href="{{ route('logout') }} ยังไม่มี route --}}
+                    <a class="dropdown-item text-danger d-flex align-items-center"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fa-solid fa-power-off me-2"></i> ออกจากระบบ
+                    </a>
+                </li>
+                {{-- <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form> --}}
+            </ul>
         </div>
     </div>
 </body>

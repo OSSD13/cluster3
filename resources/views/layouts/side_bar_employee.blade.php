@@ -25,12 +25,14 @@
             <br><br><br><br>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'main-page' ? 'active' : ''}}" href="{{ url('/main') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'main-page' ? 'active' : '' }}"
+                        href="{{ url('/main') }}">
                         <i class="fa-solid fa-house me-2"></i> หน้าหลัก
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'create-form' ? 'active' : ''}}" href="{{ url('/form') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'form.index' ? 'active' : '' }}"
+                        href="{{ route('form.index') }}">
                         <i class="fa-solid fa-folder-plus me-2"></i> สร้างใบสั่งงาน
                     </a>
                 </li>
@@ -40,17 +42,20 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'send' ? 'active' : ''}}" href="#" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'send' ? 'active' : '' }}"
+                        href="#">
                         <i class="fa-solid fa-upload me-2"></i> ส่งแล้ว
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : ''}}" href="#" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : '' }}"
+                        href="#">
                         <i class="fa-solid fa-box-archive me-2"></i> จัดเก็บ
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link justify-content-between {{ in_array(Route::currentRouteName(), ['report-stat', 'report-data']) ? 'active' : ''}}" href="#" data-bs-toggle="collapse" data-bs-target="#reportMenu" aria-expanded="false"
+                    <a class="nav-link rounded p-3 sidebar-link justify-content-between {{ in_array(Route::currentRouteName(), ['report-stat', 'report-data']) ? 'active' : '' }}"
+                        href="#" data-bs-toggle="collapse" data-bs-target="#reportMenu" aria-expanded="false"
                         aria-controls="reportMenu">
                         <div>
                             <i class="fa-solid fa-chart-line me-1"></i> รายงาน
@@ -60,15 +65,15 @@
                     <div class="collapse" id="reportMenu">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : ''}}"  href="#"
-                                    style="">
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : '' }}"
+                                    href="#" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-chart-pie me-2"></i> รายงานสถิติงาน
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : ''}} " href="#"
-                                    style="">
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : '' }} "
+                                    href="#" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-table-list me-2"></i> รายงานข้อมูล
                                 </a>
@@ -84,16 +89,24 @@
 
 
 <script>
+    function setActive(element) {
+        // ลบ 'active' ออกจากทุกลิงก์
+        document.querySelectorAll('.sidebar-link').forEach((link) => {
+            link.classList.remove('active');
+        });
 
-    // function setActive(element) {
-    //     // ลบ 'active' ออกจากทุกลิงก์
-    //     document.querySelectorAll('.sidebar-link').forEach((link) => {
-    //         link.classList.remove('active');
-    //     });
+        function setActiveSubtask(element) {
+            // ลบ 'active' ออกจากทุกลิงก์
+            document.querySelectorAll('.sidebar-sub-link').forEach((link) => {
+                link.classList.remove('active');
+            });
+            // เพิ่ม 'active' ลิงก์ที่คลิก
+            element.classList.add('active', '#A9A8F5');
+        }
 
-    //     // เพิ่ม 'active' ลิงก์ที่คลิก
-    //     element.classList.add('active');
-    // }
+        document.addEventListener("DOMContentLoaded", function() {
+            // ดึง URL ปัจจุบัน
+            const currentPath = window.location.pathname;
 
     // function setActiveSubtask(element) {
     //     // ลบ 'active' ออกจากทุกลิงก์
@@ -116,4 +129,11 @@
     //         }
     //     });
     // });
+            // กำหนดค่า Active ตาม URL
+            document.querySelectorAll('.sidebar-link').forEach((link) => {
+                if (link.getAttribute("href") === currentPath) {
+                    link.classList.add('active'); // เพิ่ม active class
+                }
+            });
+        });
 </script>

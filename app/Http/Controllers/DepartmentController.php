@@ -5,6 +5,7 @@
 * @author : Natthanan Sirisurayut 66160352
 * @Create Date : 2025-03-30
 */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -108,13 +109,14 @@ class DepartmentController extends Controller
     * @author : Natthanan Sirisurayut 66160352
     * @Create Date : 2025-04-04
     */
-    public function searchDepartment(Request $req){
+    public function searchDepartment(Request $req)
+    {
         $output = "";
         $department = Department::where('dept_name', 'LIKE', '%' . $req->search . '%')->get();
 
-        foreach($department as $dept){
+        foreach ($department as $dept) {
             $output .=
-            '<tr>
+                '<tr>
                 <td class="ps-5">' . $dept->dept_name . '</td>
                 <td class="text-end">
                     <i class="bi bi-pencil action-icon" data-bs-toggle="modal" data-bs-target="#editDepartmentModal' . $dept->dept_id . '"></i>
