@@ -36,13 +36,15 @@
     {{-- Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('public\css\pages\manage_department_style.css') }}">
     <link rel="stylesheet" href="{{ asset('public\css\pages\manage_employee.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('public\css\pages\department_model.css') }}">
     {{-- Bosstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
     {{-- jQuery --}}
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
     <style>
@@ -63,7 +65,7 @@
         <div class="flex-grow-1">
             {{-- Sidebar --}}
             @include('layouts.side_bar_admin')
-            
+
 
             {{-- Content Area --}}
             <main class="container-fluid" style="margin-left: 250px">
