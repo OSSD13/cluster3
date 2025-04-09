@@ -121,7 +121,6 @@ class FormController extends Controller
             }
 
             DB::commit();
-            DB::commit();
             return redirect($isDraft ? '/draft_list' : '/sent');
         } catch (\Throwable $e) {
             DB::rollBack();
