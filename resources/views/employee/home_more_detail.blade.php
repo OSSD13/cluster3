@@ -98,7 +98,7 @@
 </div>
 <!-- Team Tasks Tab -->
 @endsection
-@section('scripts')
+@section('script')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Make task rows clickable to toggle details

@@ -185,7 +185,7 @@
  </div>
 
  @endsection
- @section('scripts')
+ @section('script')
 
  <script>
      function changeStatus(statusText, statusColor, statusValue) {

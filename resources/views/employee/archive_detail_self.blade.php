@@ -165,7 +165,7 @@
 </div>
 
 @endsection
-@section('scripts')
+@section('script')
 
 {{-- Dropdown Toggle Function --}}
 <script>
