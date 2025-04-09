@@ -50,12 +50,21 @@
 
 @section('script')
 <script>
+    /*
+    * alert message
+    * alert message
+    * @input : alert message
+    * @output : alert message
+    * @author : Naphat Maneechansuk 66160099
+    * @Create Date : 2025-04-09
+    */
     @if (session('error'))
         Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
             text: '{{ session('error') }}',
-            confirmButtonText: 'ตกลง'
+            showConfirmButton: false, // ซ่อนปุ่มตกลง
+            timer: 3000 // ปิดอัตโนมัติใน 3 วินาที
         });
     @endif
     @if (session('success'))
@@ -63,7 +72,8 @@
             icon: 'success',
             title: 'สำเร็จ',
             text: '{{ session('success') }}',
-            confirmButtonText: 'ตกลง'
+            showConfirmButton: false, // ซ่อนปุ่มตกลง
+            timer: 3000 // ปิดอัตโนมัติใน 3 วินาที
         });
     @endif
 
