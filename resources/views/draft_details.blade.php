@@ -174,7 +174,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+                                        <input type="datetime-local" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
                                     </div>
                                 </div>
                                 <div class="mb-3 mt-3">
