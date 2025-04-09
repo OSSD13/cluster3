@@ -9,6 +9,8 @@ use App\Http\Controllers\{
     LoginController
 };
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\SentController;
+
 
 
 
@@ -36,6 +38,10 @@ Route::middleware(['employee'])->group(function () {
 
     // AJAX: ดึงรายชื่อพนักงานตามแผนก
     Route::get('/form/employee/{id}', [FormController::class, 'empData'])->name('form.empData');
+
+    Route::get('/sent', [SentController::class, 'sent'])->name('sent');
+    Route::get('/sent/detail/{id}', [SentController::class, 'SentDetail'])->name('sent_detail');
+    Route::post('/approve-request/{id}', [SentController::class, 'approve'])->name('request.approve');
 });
 
 Route::get(

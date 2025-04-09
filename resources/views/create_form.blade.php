@@ -97,11 +97,7 @@
                         'select[name="emp[]"]');
                     empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
 
-                    const baseUrl = "{{ config('app.url') }}";
-                    const url = `${baseUrl}/cluster3/form/employee/${deptId}`;
-                    console.log(url);
-
-                    fetch(url)
+                    fetch(`/form/employee/${deptId}`)
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(emp => {
