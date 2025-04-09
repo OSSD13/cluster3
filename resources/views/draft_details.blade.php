@@ -184,9 +184,6 @@
                                 <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
                                 <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
                             </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
-                            </div>
                         </div>
                     </div>
                 `;
