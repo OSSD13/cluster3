@@ -70,7 +70,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : '' }} "
-                                    href="{{ url('/report-data') }}" style="">
+                                    href="{{ url('/report-table') }}" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-table-list me-2"></i> รายงานข้อมูล
                                 </a>
