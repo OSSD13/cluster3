@@ -44,7 +44,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'sent' ? 'active' : '' }}"
-                        href="{{ url('sent') }}">
+                        href="{{ url('/sent') }}">
                         <i class="fa-solid fa-upload me-2"></i> ส่งแล้ว
                     </a>
                 </li>

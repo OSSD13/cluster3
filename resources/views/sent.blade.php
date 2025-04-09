@@ -10,11 +10,11 @@
 @extends('layouts.employee_layouts')
 
 @section('content')
-    <div class="container-fluid content">
+    <div class="container-fluid">
         <div class="row">
             <h3 class="mb-3 col" style="color: #4B49AC;">รายการใบงานที่ส่งแล้ว</h3>
             <div class="col">
-                <div class="container-fluid d-flex justify-content-end mb-3 mt-2">
+                <div class="d-flex justify-content-end mb-3 mt-2">
                     <div class="position-relative" style="width: 300px;">
                         <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
                         <input type="text" id="searchInput" class="form-control ps-5 rounded-4 shadow-sm"
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="custom-box">
-                <table class="table mt-3" style="border-collapse: separate; border-spacing: 0;" id="dataTable">
+                <table class="table mt-3 table table-hover" style="border-collapse: separate; border-spacing: 0;" id="dataTable">
                     <thead class="table-secondary">
                         <tr>
                             <th class="col-5">ชื่อใบงาน</th>
@@ -204,7 +204,6 @@
         function confirmApprove(reqId) {
             Swal.fire({
                 title: 'คุณแน่ใจหรือไม่?',
-                text: 'เมื่อกดยืนยัน สถานะจะถูกเปลี่ยนเป็น "A"',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'ใช่, ยืนยัน!',
