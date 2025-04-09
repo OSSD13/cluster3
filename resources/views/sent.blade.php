@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <div class="custom-box">
+            <div class="custom-box py-0">
                 <table class="table mt-3 table table-hover" style="border-collapse: separate; border-spacing: 0;"
                     id="dataTable">
                     <thead class="table-secondary">
