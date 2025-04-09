@@ -42,7 +42,7 @@ Route::middleware(['employee'])->group(function () {
     Route::delete('/draft/{id}', [DraftController::class, 'delete'])->name('drafts.delete');
 
     // Route สำหรับดึงข้อมูลพนักงานตามแผนก
-    Route::get('/form/employee/{deptId}', [EmployeeController::class, 'getEmployeesByDepartment']);
+    Route::get('/form/employees/{deptId}', [EmployeeController::class, 'getEmployeesByDepartment']);
 
     //สำหรับบันทึกฟอร์ม
     // POST สำหรับบันทึกฟอร์ม
