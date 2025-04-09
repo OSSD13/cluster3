@@ -10,7 +10,8 @@ use App\Http\Controllers\{
     ReportController,
     SentController,
     DraftController,
-    EditDraftController
+    EditDraftController,
+    WorkRequestController
 };
 use App\Http\Middleware\AdminMiddleware;
 
@@ -57,6 +58,17 @@ Route::middleware(['employee'])->group(function () {
     Route::get('/sent', [SentController::class, 'sent'])->name('sent');
     Route::get('/sent/detail/{id}', [SentController::class, 'SentDetail'])->name('sent_detail');
     Route::post('/approve-request/{id}', [SentController::class, 'approve'])->name('request.approve');
+    Route::get('/main', [WorkRequestController::class, 'viewAssignment'])->name('main-page');
+    Route::get('/archive',   [WorkRequestController::class, 'archive'])->name('archive');
+    Route::get('/show/{id}', [WorkRequestController::class, 'showDetail'])->name('show');
+    Route::put('/show/{id}', [WorkRequestController::class, 'updateTask'])->name('update-task');
+    Route::get('/more_detail/{id}', [WorkRequestController::class, 'moreDetail'])->name('more_detail');
+    Route::get('/archive-detail/{id}', [WorkRequestController::class, 'archiveDetail'])->name('archive_detail');
+    Route::get('/archive-detail-self/[{id}/{empId}', [WorkRequestController::class, 'archiveDetailSelf'])->name('archive_detail_self');
+
+
+    Route::get('/sent',   [WorkRequestController::class, 'sent'])->name('send');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
 
@@ -65,6 +77,10 @@ Route::get(
     [LoginController::class, 'index']
 );
 
+
+
+
+// Route::get('/main', [App\Http\Controllers\WorkRequestController::class, 'index'])->name('main-page');
 Route::get('/login', function () {
     return view('login');
 });
