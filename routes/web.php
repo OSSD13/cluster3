@@ -11,7 +11,8 @@ use App\Http\Controllers\{
     SentController,
     DraftController,
     EditDraftController,
-    WorkRequestController
+    WorkRequestController,
+    EmployeeController
 };
 use App\Http\Middleware\AdminMiddleware;
 
