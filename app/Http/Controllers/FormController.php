@@ -40,7 +40,7 @@ class FormController extends Controller
         $emp = Employee::where('emp_dept_id', $id)
             ->where('emp_role', 'E') // แสดงเฉพาะที่ role = 'E'
             ->get(['emp_id', 'emp_name']); // ดึงเฉพาะฟิลด์ที่จำเป็น
-        
+
         return response()->json($emp);
     }
 
@@ -51,6 +51,8 @@ class FormController extends Controller
      * @output : redirect กลับพร้อมข้อความสำเร็จ หรือ error พร้อมย้อนกลับ input เดิม
      * @author : Sarocha Dokyeesun 66160097
      * @Create Date : 2025-03-18
+     * @update by : Natthanan Sirsurayut 66160352
+     * @update Date : 2025-04-25
      */
     public function createWorkRequest(Request $request)
     {
@@ -119,7 +121,8 @@ class FormController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('form.index')->with('success', 'สร้างใบสั่งงานเรียบร้อยแล้ว');
+            DB::commit();
+            return redirect($isDraft ? '/draft_list' : '/sent');
         } catch (\Throwable $e) {
             DB::rollBack();
             return back()->withInput()->withErrors([
