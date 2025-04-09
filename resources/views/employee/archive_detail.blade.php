@@ -8,7 +8,7 @@
 --}}
 
 
-@extends('Layouts.employee_layouts')
+@extends('layouts.employee_layouts')
 @section('content')
 <div class="container-fluid">
     <link rel="stylesheet" href="{{ asset('public\css\pages\archive_detail.css') }}" >

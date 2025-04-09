@@ -32,7 +32,7 @@
             <div class="tab-content">
                 <!-- 🔽 รายงานของฉัน -->
                 <div class="tab-pane fade show active mt-3" id="myReport">
-                    <div class="container py-4">
+                    <div class="container pt-0">
                         <!-- 🔽 Dropdown ปีและเดือน -->
                         <div class="d-flex justify-content-end align-items-center mb-4">
                             <div class="me-2">
@@ -85,7 +85,7 @@
 
                 <!-- 🔽 รายงานขององค์กร -->
                 <div class="tab-pane fade mt-3" id="orgReport">
-                    <div class="container py-4">
+                    <div class="container pt-0">
                         <!-- 🔽 Dropdown ปีและเดือน -->
                         <div class="d-flex justify-content-end align-items-center mb-4">
                             <div class="me-2">
