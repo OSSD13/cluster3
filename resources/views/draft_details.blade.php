@@ -215,7 +215,7 @@ description[]
             newTask.classList.add("accordion-item");
             newTask.id = `task-item-${taskCount}`;
             newTask.innerHTML = `
-                        <h2 class="accordion-header">
+                        <h2 class="accordion-header" >
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
                                 งานย่อย ${taskCount}
                             </button>
