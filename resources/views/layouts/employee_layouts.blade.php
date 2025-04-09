@@ -33,6 +33,12 @@
 
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    {{-- Custom CSS --}}
+    <link rel="stylesheet" href="{{ asset('public\css\pages\home_table_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\archive_table.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\home_show_detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\detail_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\archive_detail.css') }}" >
 
     {{-- Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('public\css\pages\manage_department_style.css') }}">
@@ -61,6 +67,13 @@
     <!-- Month Plugin -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+
+    {{-- JavaScript Section --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

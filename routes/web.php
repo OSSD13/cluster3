@@ -7,9 +7,11 @@ use App\Http\Controllers\{
     SidebarController,
     DepartmentController,
     LoginController,
-    ReportController
+    ReportController,
+    SentController
 };
 use App\Http\Middleware\AdminMiddleware;
+
 
 Route::middleware(['admin'])->group(function () {
 
@@ -40,6 +42,9 @@ Route::middleware(['employee'])->group(function () {
     Route::get('/report-statistics', [ReportController::class, 'getTaskStatistics'])->name('report.statistics'); // สำหรับส่งข้อมูล JSON
     Route::get('/report-co-statistics', [ReportController::class, 'getTaskStatisticsCompany'])->name('report.coStatistics'); // สำหรับส่งข้อมูล JSON
     Route::get('/department-task-statistics', [ReportController::class, 'getDepartmentTaskStatistics'])->name('department.taskStatistics');
+    Route::get('/sent', [SentController::class, 'sent'])->name('sent');
+    Route::get('/sent/detail/{id}', [SentController::class, 'SentDetail'])->name('sent_detail');
+    Route::post('/approve-request/{id}', [SentController::class, 'approve'])->name('request.approve');
 });
 
 Route::get(
