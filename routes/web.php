@@ -33,7 +33,7 @@ Route::middleware(['employee'])->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     // หน้าแบบฟอร์มสร้างใบสั่งงาน (GET ต้องอยู่ก่อน)
     Route::get('/form', [FormController::class, 'index'])->name('form.index');
-    Route::get('/draft_list', [DraftController::class, 'getShowDraft'])->name('draft_list');
+    Route::get('/draft_list', [DraftController::class, 'showDraft'])->name('draft_list');
     // Route สำหรับแก้ไขแบบร่าง
     Route::get('/draft/edit/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
     // Route สำหรับอัปเดตแบบร่าง
