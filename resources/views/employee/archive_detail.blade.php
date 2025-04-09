@@ -175,7 +175,7 @@
 @endsection
 
 
-@section('scripts')
+@section('script')
 {{-- Clickable Row Script --}}
 {{-- Dropdown Toggle Function --}}
 <script>

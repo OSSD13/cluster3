@@ -111,7 +111,7 @@
   </div>
 </div>
 @endsection
-@section('scripts')
+@section('script')
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const rows = document.querySelectorAll(".clickable-row");

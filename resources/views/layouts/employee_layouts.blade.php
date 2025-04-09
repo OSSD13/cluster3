@@ -75,7 +75,7 @@
             </main>
         </div>
     </div>
-    @yield('scripts')
+    @yield('script')
     
 </body>
 </html>
