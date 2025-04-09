@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('public/css/components/side_bar.css') }}">
+    <link rel="stylesheet" href="{{asset('public/css/components/side_bar.css')}}">
     <title>Document</title>
 </head>
 
@@ -25,8 +25,7 @@
             <br><br><br><br>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'main-page' ? 'active' : '' }}"
-                        href="{{ url('/main') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ in_array(Route::currentRouteName() ,['main-page' , 'show' , 'update-task','more_detail' ] ) ? 'active' : ''}}" href="{{ url('/main') }}">
                         <i class="fa-solid fa-house me-2"></i> หน้าหลัก
                     </a>
                 </li>
@@ -37,19 +36,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::is('draft_list', 'draft.edit', 'draft.update', 'drafts.destroy', 'draft_details') ? 'active' : '' }}" href="{{ url('/draft_list') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'draft' ? 'active' : '' }}"
+                        href="#">
                         <i class="fa-solid fa-file-pen me-2"></i> แบบร่าง
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'sent' ? 'active' : '' }}"
-                        href="{{ url('/sent') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ in_array(Route::currentRouteName(), ['sent', 'sent_detail']) ? 'active' : '' }}" href="{{ route('sent') }}">
                         <i class="fa-solid fa-upload me-2"></i> ส่งแล้ว
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'achrive' ? 'active' : '' }}"
-                        href="#">
+                    <a class="nav-link rounded p-3 sidebar-link {{ in_array(Route::currentRouteName() ,[ 'archive' ,'archive_detail' , 'archive_detail_self']) ? 'active' : ''}}" href="{{ url('/archive') }}" >
                         <i class="fa-solid fa-box-archive me-2"></i> จัดเก็บ
                     </a>
                 </li>
@@ -65,14 +63,14 @@
                     <div class="collapse" id="reportMenu">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : ''}}"  href="{{ url('/report-stat') }}"
-                                    style="">
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : '' }}"
+                                    href="#" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-chart-pie me-2"></i> รายงานสถิติงาน
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : '' }} " href="{{ url('/report-table') }}"
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : '' }} "
                                     href="#" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-table-list me-2"></i> รายงานข้อมูล

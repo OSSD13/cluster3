@@ -34,11 +34,7 @@
     <!-- เรียกใช้ฟอนต์จาก Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     {{-- Custom CSS --}}
-    <link rel="stylesheet" href="{{ asset('public\css\pages\home_table_style.css') }}">
-    <link rel="stylesheet" href="{{ asset('public\css\pages\archive_table.css') }}">
-    <link rel="stylesheet" href="{{ asset('public\css\pages\home_show_detail.css') }}">
-    <link rel="stylesheet" href="{{ asset('public\css\pages\detail_style.css') }}">
-    <link rel="stylesheet" href="{{ asset('public\css\pages\archive_detail.css') }}" >
+
 
     {{-- Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('public\css\pages\manage_department_style.css') }}">
@@ -82,6 +78,11 @@
     {{-- jQuery --}}
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
@@ -114,3 +115,4 @@
 </body>
 
 </html>
+

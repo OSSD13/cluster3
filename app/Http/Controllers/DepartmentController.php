@@ -94,11 +94,17 @@ class DepartmentController extends Controller
     {
         try {
             $department = Department::findOrFail($id);
-            $department->delete();
 
-            return redirect()->back();
+            // ตรวจสอบว่ามีพนักงานในแผนกนี้หรือไม่
+            if ($department->employees()->exists()) {
+                // ส่งข้อความแจ้งเตือนกลับไป
+                return redirect()->back()->with('error', 'ไม่สามารถลบแผนกนี้ได้ เนื่องจากมีพนักงานอยู่ในแผนก');
+            }
+
+            $department->delete();
+            return redirect()->back()->with('success', 'ลบแผนกสำเร็จ');
         } catch (\Exception $e) {
-            return redirect()->back();
+            return redirect()->back()->with('error', 'เกิดข้อผิดพลาดในการลบแผนก');
         }
     }
     /*

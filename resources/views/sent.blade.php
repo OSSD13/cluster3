@@ -22,19 +22,32 @@
                     </div>
                 </div>
             </div>
-            <div class="custom-box">
-                <table class="table mt-3 table table-hover" style="border-collapse: separate; border-spacing: 0;" id="dataTable">
+            <div class="custom-box py-0">
+                <table class="table mt-3 table table-hover" style="border-collapse: separate; border-spacing: 0;"
+                    id="dataTable">
                     <thead class="table-secondary">
                         <tr>
-                            <th class="col-5">ชื่อใบงาน</th>
+                            <th class="col-4">ชื่อใบงาน</th>
                             <th class="col-2">สถานะ</th>
-                            <th class="text-center col-3">ความสำคัญ</th>
+                            <th class="text-center col-2">ความสำคัญ</th>
                             <th class="text-center col-3">กำหนดส่ง</th>
                             <th class="text-center">ยอมรับ</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($sentRequests as $req)
+                        @php
+                            $sortedRequests = $sentRequests->sortBy([
+                                fn($a, $b) => $b->tasks->pluck('tsk_status')->contains('Approved') <=>
+                                    $a->tasks->pluck('tsk_status')->contains('Approved'),
+                                fn($a, $b) => ($b->tasks->pluck('tsk_status')->contains('Rejected') ||
+                                    $b->tasks->pluck('tsk_status')->every(fn($s) => $s === 'Completed')) <=>
+                                    ($a->tasks->pluck('tsk_status')->contains('Rejected') ||
+                                        $a->tasks->pluck('tsk_status')->every(fn($s) => $s === 'Completed')),
+                                fn($a, $b) => \Carbon\Carbon::parse($a->tasks->max('tsk_due_date'))->timestamp <=>
+                                    \Carbon\Carbon::parse($b->tasks->max('tsk_due_date'))->timestamp,
+                            ]);
+                        @endphp
+                        @forelse ($sortedRequests as $req)
                             @php
                                 $statuses = $req->tasks->pluck('tsk_status')->toArray();
                                 $hasRejected = in_array('Rejected', $statuses);
@@ -96,23 +109,21 @@
                                     @endphp
 
                                     @if ($priority === 'H')
-                                        <span
-                                            style="display: inline-block; background-color: #E70000; color: white; padding: 5px 15px; border-radius: 20px;">
+                                        <span class="badge rounded-pill text-white" style="background-color: #E70000">
                                             สูง
                                         </span>
                                     @elseif ($priority === 'M')
-                                        <span
-                                            style="display: inline-block; background-color: #F28D28; color: white; padding: 5px 15px; border-radius: 20px;">
+                                        <span class="badge rounded-pill text-white " style="background-color: #F28D28;">
                                             กลาง
                                         </span>
                                     @elseif ($priority === 'L')
-                                        <span
-                                            style="display: inline-block; background-color: #26BC00; color: white; padding: 5px 15px; border-radius: 20px;">
+                                        <span class="badge rounded-pill text-white " style="background-color: #26BC00;">
                                             ต่ำ
                                         </span>
                                     @else
                                         <span style="color: #AFB2BA;">ไม่ระบุ</span>
                                     @endif
+
                                 </td>
                                 <td class="text-center">
                                     @if ($latestDueDate)
@@ -120,9 +131,11 @@
                                             $date = \Carbon\Carbon::parse($latestDueDate);
                                             $day = $date->format('d');
                                             $month = $thaiMonths[$date->month];
-                                            $year = $date->year + 543; // แปลงเป็น พ.ศ.
-                                            echo "$day $month $year";
+                                            $year = $date->year + 543;
+                                            $time = $date->format('H:i');
                                         @endphp
+                                        <div>{{ "$day $month $year" }}</div>
+                                        <div>เวลา {{ $time }} น.</div>
                                     @else
                                         -
                                     @endif
@@ -204,10 +217,43 @@
         function confirmApprove(reqId) {
             Swal.fire({
                 title: 'คุณแน่ใจหรือไม่?',
+                text: 'เมื่อกดยืนยัน ใบงานจะถูกจัดเก็บ',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'ใช่, ยืนยัน!',
                 cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'swal2-confirm',
+                    cancelButton: 'swal2-cancel'
+                },
+                didOpen: () => {
+                    const confirmBtn = Swal.getConfirmButton();
+                    const cancelBtn = Swal.getCancelButton();
+
+                    Object.assign(confirmBtn.style, {
+                        backgroundColor: '#4B49AC',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        fontWeight: '400',
+                        fontSize: '1rem',
+                        padding: '8px 24px',
+                        marginLeft: '10px',
+                        border: 'none'
+                    });
+
+                    Object.assign(cancelBtn.style, {
+                        backgroundColor: '#DC3545',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        fontWeight: '400',
+                        fontSize: '1rem',
+                        padding: '8px 24px',
+                        marginRight: '10px',
+                        border: 'none'
+                    });
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const baseUrl = "{{ config('app.url') }}";
@@ -221,17 +267,37 @@
                             body: JSON.stringify({
                                 req_id: reqId
                             })
-                        }).then(res => res.json())
+                        })
+                        .then(res => res.json())
                         .then(data => {
                             if (data.success) {
                                 document.getElementById(`row-${reqId}`).remove();
-                                Swal.fire('สำเร็จ', 'สถานะถูกอัปเดตแล้ว', 'success');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'สำเร็จ',
+                                    text: 'สถานะถูกอัปเดตแล้ว',
+                                    confirmButtonText: 'ตกลง',
+                                    buttonsStyling: false,
+                                    customClass: {
+                                        confirmButton: 'swal2-confirm'
+                                    },
+                                    didOpen: () => {
+                                        Object.assign(Swal.getConfirmButton().style, {
+                                            backgroundColor: '#4B49AC',
+                                            color: '#fff',
+                                            borderRadius: '12px',
+                                            fontWeight: '400',
+                                            fontSize: '1rem',
+                                            padding: '8px 24px',
+                                            border: 'none'
+                                        });
+                                    }
+                                });
                             }
                         });
                 }
             });
         }
-
         /*
          * Search filter
          * ฟังก์ชันกรองข้อมูลในตารางตามคำที่พิมพ์ใน input

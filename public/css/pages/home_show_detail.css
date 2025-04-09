@@ -1,0 +1,97 @@
+.swal-confirm {
+  background-color: #4B49AC !important; /* เขียว */
+  color: white !important;
+}
+.swal-reject {
+  background-color: #4B49AC !important; /* เขียว */
+  color: white !important;
+}
+
+.swal-title-small {
+  font-size: 1.5rem !important; /* เล็กลงจากค่าปกติที่ ~1.875rem */
+  font-weight: bold !important;
+}
+h3 {
+    color: #4B49AC !important; 
+}
+.tab-content {
+  border: 0px solid #ddd;
+  border-radius: 0 0 8px 8px;
+  padding: 0px;
+  background: white;
+}
+.content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.nav-tabs {
+    border-bottom: none;
+}
+.nav-tabs .nav-link {
+    font-size: 18px;
+    font-weight: bold;
+    color: #6c757d;
+    padding: 10px 20px;
+    border-radius: 8px 8px 0 0;
+    margin-right: 5px;
+}
+.nav-tabs .nav-link.active {
+    background-color: #4B49AC;
+    color: white;
+    border: none;
+}
+.tab-content {
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    padding: 0px;
+    background: white;
+}
+
+.nav-tabs-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+ion-icon {
+    color: #AFB2BA;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    }
+  
+  /* ปุ่มสถานะแบบพื้นหลังสีขาว */
+  .status-btn {
+    background-color: white;
+    border: 0px solid;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  
+    /* จุดสถานะเป็นวงกลม */
+  .status-dot {
+    display: inline-block;
+    width: 10px;
+    height:10px;
+    border-radius: 50%;
+  }
+  
+  /* เอาเส้นขอบปุ่ม dropdown ออก */
+  .dropdown-toggle::after {
+    margin-left: 8px;
+  }
+  /* สไตล์สำหรับจุดสถานะ */
+  /* .status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  } */
+
+
+                      
+    

@@ -16,7 +16,6 @@ class WorkRequest extends Model
     use HasFactory;
 
     protected $table = 'wrs_work_requests';
-
     protected $primaryKey = 'req_id';
 
     protected $fillable = [
