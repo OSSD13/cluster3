@@ -1,10 +1,12 @@
 {{--
 * draft_details.blade.php
 * Display form for editing draft work request
-* @input : task_name, creator_status, task_description, subtask_name, dept[], emp[], priority[], end_date[], description[]
-* @output : ข้อมูลที่แสดงจากการดึงข้อมูลในฐานข้อมูลหรือส่งออกมาจาก View นี้ เช่น ฟอร์มสำหรับการแก้ไขใบสั่งงานแบบร่าง พร้อมงานย่อยที่เกี่ยวข้อง
+* @input : task_name, creator_status, task_description, subtask_name, dept[], emp[], priority[], end_date[],
+description[]
+* @output : ข้อมูลที่แสดงจากการดึงข้อมูลในฐานข้อมูลหรือส่งออกมาจาก View นี้ เช่น ฟอร์มสำหรับการแก้ไขใบสั่งงานแบบร่าง
+พร้อมงานย่อยที่เกี่ยวข้อง
 * @author : Salsabeela Sa-e 66160349
-* @Create Date : 2025-03-20
+* @Create Date : 2025-03-23
 --}}
 
 @extends('layouts.employee_layouts')
@@ -132,59 +134,59 @@
                 newTask.id = `task-item-${index + 1}`;
                 newTask.setAttribute('data-task-id', subtask.tsk_id); // เพิ่ม data-task-id
                 newTask.innerHTML = `
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
-                                งานย่อย ${index + 1}
-                            </button>
-                        </h2>
-                        <div id="${taskId}" class="accordion-collapse collapse">
-                            <div class="accordion-body">
-                                <div class="mb-3">
-                                    <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="dept[]" required>
-                                            <option selected disabled value="">กรุณาเลือก</option>
-                                            ${@json($dept).map(d => `
-                                                <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
-                                                    ${d.dept_name}
-                                                </option>
-                                            `).join('')}
-                                        </select>
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                                    งานย่อย ${index + 1}
+                                </button>
+                            </h2>
+                            <div id="${taskId}" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label">ผู้รับมอบหมาย</label>
-                                        <select class="form-select" name="emp[]">
-                                            <option selected disabled value="">กรุณาเลือก</option>
-                                            <option value="${subtask.tsk_emp_id}" selected>${subtask.employee?.emp_name || ''}</option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                            <select class="form-select" name="dept[]" required>
+                                                <option selected disabled value="">กรุณาเลือก</option>
+                                                ${@json($dept).map(d => `
+                                                    <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
+                                                        ${d.dept_name}
+                                                    </option>
+                                                `).join('')}
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">ผู้รับมอบหมาย</label>
+                                            <select class="form-select" name="emp[]">
+                                                <option selected disabled value="">กรุณาเลือก</option>
+                                                ${subtask.employee ? `<option value="${subtask.employee.emp_id}" selected>${subtask.employee.emp_name}</option>` : ''}
+                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-6">
-                                        <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="priority[]" required>
-                                            <option selected disabled value="">กรุณาเลือก</option>
-                                            <option value="L" ${subtask.tsk_priority == 'L' ? 'selected' : ''}>ต่ำ</option>
-                                            <option value="M" ${subtask.tsk_priority == 'M' ? 'selected' : ''}>ปานกลาง</option>
-                                            <option value="H" ${subtask.tsk_priority == 'H' ? 'selected' : ''}>สูง</option>
-                                        </select>
+                                    <div class="row mt-3">
+                                        <div class="col-6">
+                                            <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
+                                            <select class="form-select" name="priority[]" required>
+                                                <option selected disabled value="">กรุณาเลือก</option>
+                                                <option value="L" ${subtask.tsk_priority == 'L' ? 'selected' : ''}>ต่ำ</option>
+                                                <option value="M" ${subtask.tsk_priority == 'M' ? 'selected' : ''}>ปานกลาง</option>
+                                                <option value="H" ${subtask.tsk_priority == 'H' ? 'selected' : ''}>สูง</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
+                                            <input type="datetime-local" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+                                        </div>
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
                                     </div>
-                                </div>
-                                <div class="mb-3 mt-3">
-                                    <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
                 taskList.appendChild(newTask);
             });
 
@@ -210,57 +212,57 @@
             newTask.classList.add("accordion-item");
             newTask.id = `task-item-${taskCount}`;
             newTask.innerHTML = `
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
-                            งานย่อย ${taskCount}
-                        </button>
-                    </h2>
-                    <div id="${taskId}" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <div class="mb-3">
-                                <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="subtask_name[]" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="dept[]" required>
-                                        <option selected disabled value="">กรุณาเลือก</option>
-                                        ${deptOptions}
-                                    </select>
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                                งานย่อย ${taskCount}
+                            </button>
+                        </h2>
+                        <div id="${taskId}" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="subtask_name[]" required>
                                 </div>
-                                <div class="col-6">
-                                    <label class="form-label">ผู้รับมอบหมาย</label>
-                                    <select class="form-select" name="emp[]">
-                                        <option selected disabled value="">กรุณาเลือก</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="dept[]" required>
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            ${deptOptions}
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">ผู้รับมอบหมาย</label>
+                                        <select class="form-select" name="emp[]">
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-6">
-                                    <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="priority[]" required>
-                                        <option selected disabled value="">กรุณาเลือก</option>
-                                        <option value="L">ต่ำ</option>
-                                        <option value="M">ปานกลาง</option>
-                                        <option value="H">สูง</option>
-                                    </select>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="priority[]" required>
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            <option value="L">ต่ำ</option>
+                                            <option value="M">ปานกลาง</option>
+                                            <option value="H">สูง</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
+                                        <input type="datetime-local" class="form-control" name="end_date[]" required>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="end_date[]" required>
+                                <div class="mb-3 mt-3">
+                                    <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="description[]" placeholder="กรุณากรอกคำอธิบาย" required></textarea>
                                 </div>
-                            </div>
-                            <div class="mb-3 mt-3">
-                                <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description[]" placeholder="กรุณากรอกคำอธิบาย" required></textarea>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
 
             taskList.appendChild(newTask); // เพิ่ม task ใหม่ลงใน taskList
             taskCount++; // เพิ่มตัวนับ task

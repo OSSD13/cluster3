@@ -39,7 +39,11 @@ Route::middleware(['employee'])->group(function () {
     // Route สำหรับอัปเดตแบบร่าง
     Route::put('/draft/update/{id}', [EditDraftController::class, 'update'])->name('draft.update');
     // Route สำหรับลบใบงาน
-    Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
+    Route::delete('/draft/{id}', [DraftController::class, 'delete'])->name('drafts.delete');
+
+    // Route สำหรับดึงข้อมูลพนักงานตามแผนก
+    Route::get('/form/employee/{deptId}', [EmployeeController::class, 'getEmployeesByDepartment']);
+
     //สำหรับบันทึกฟอร์ม
     // POST สำหรับบันทึกฟอร์ม
     Route::post('/form/create', [FormController::class, 'createWorkRequest'])->name('form.create');
