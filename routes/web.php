@@ -27,17 +27,19 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['employee'])->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
+    // route ของการเรียกหน้า view ของการสร้างใบสั่งงาน
+    Route::get('/form', function () {
+        return view('create_form');
+    })->name('create-form');
+
 
     Route::get('/draft_list', [DraftController::class, 'getShowDraft'])->name('draft_list');
 
-    // Route สำหรับแก้ไขแบบร่าง
-    Route::get('/draft/{id}/edit', [EditDraftController::class, 'edit'])->name('draft.edit');
 
+    // Route สำหรับแก้ไขแบบร่าง
+    Route::get('/draft/edit/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
     // Route สำหรับอัปเดตแบบร่าง
-    Route::put('/draft/{id}', [EditDraftController::class, 'update'])->name('draft.update');
+    Route::put('/draft/update/{id}', [EditDraftController::class, 'update'])->name('draft.update');
 
     // Route สำหรับลบใบงาน
     Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
@@ -45,47 +47,10 @@ Route::middleware(['employee'])->group(function () {
     // Route สำหรับดึงข้อมูลพนักงานตามแผนก
     Route::get('/form/employee/{deptId}', [EmployeeController::class, 'getEmployeesByDepartment']);
 
-    // layout admin
-    Route::get('/layoutA', function () {
-        return view('layouts.admin_layouts');
-    });
+    //สำหรับบันทึกฟอร์ม
 
-    //layout employee
-    Route::get('/layoutE', function () {
-        return view('layouts.employee_layouts');
-    });
-
-    // route ของการเรียกหน้า view ของการสร้างใบสั่งงาน
-    Route::get('/form', function () {
-        return view('create_form');
-    })->name('create-form');
-
-    //เรียกไปหน้า details draft
-    Route::get('/draft', function () {
-        return view('draft_details');
-    })->name('draft_deatails');
-    Route::get('/draft_list', [DraftController::class, 'getShowDraft'])->name('draft_list');
-
-    // Route สำหรับแสดงแบบร่าง (แสดงรายการ)
-Route::get('/draft/{id}', [EditDraftController::class, 'index'])->name('draft.index');
-
-// Route สำหรับแก้ไขแบบร่าง
-Route::get('/draft/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
-
-// Route สำหรับอัปเดตแบบร่าง
-Route::put('/draft/{id}', [EditDraftController::class, 'update'])->name('draft.update');
-
-// Route สำหรับลบใบงาน
-Route::delete('/draft/{id}', [DraftController::class, 'destroy'])->name('drafts.destroy');
-
-// Route สำหรับดึงข้อมูลพนักงานตามแผนก
-Route::get('/form/employee/{deptId}', [EmployeeController::class, 'getEmployeesByDepartment']);
-
-//สำหรับบันทึกฟอร์ม
-Route::get('/draft/update', [EditDraftController::class, 'update'])->name('draft.update');
 
 });
-
 
 
 Route::get(

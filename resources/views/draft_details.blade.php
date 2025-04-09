@@ -1,20 +1,19 @@
 {{--
 * draft_details.blade.php
-* Layout for employee dashboard
-*
-* @input : -
-* @output : Details_of_draft_work_request
+* Display form for editing draft work request
+* @input : task_name, creator_status, task_description, subtask_name, dept[], emp[], priority[], end_date[], description[]
+* @output : ข้อมูลที่แสดงจากการดึงข้อมูลในฐานข้อมูลหรือส่งออกมาจาก View นี้ เช่น ฟอร์มสำหรับการแก้ไขใบสั่งงานแบบร่าง พร้อมงานย่อยที่เกี่ยวข้อง
 * @author : Salsabeela Sa-e 66160349
 * @Create Date : 2025-03-20
 --}}
 
 @extends('layouts.employee_layouts')
 @section('content')
-<!-- ต้องมี script sweetalert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- ต้องมี script sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <form action="{{ route('draft.update', $draft->draft_id) }}" method="POST" id="draft-form" novalidate>
+    <form action="{{ route('draft.update', $draft->req_id) }}" method="POST" id="draft-form" novalidate>
         @method('PUT')
         @csrf
         <input type="hidden" name="submit_type" id="submit_type" value="create">
@@ -29,36 +28,33 @@
                 {{-- ชื่อใบสั่งงาน --}}
                 <div class="mb-3">
                     <label class="form-label">ชื่อใบสั่งงาน <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="task_name"
-    value="{{ $draft->req_name }}" required>
+                    <input type="text" class="form-control" name="task_name" value="{{ $draft->req_name }}" required>
 
                 </div>
 
                 {{-- สถานะผู้สร้างใบสั่งงาน --}}
-<div class="mb-3">
-    <label class="form-label">สถานะผู้สร้างใบสั่งงาน <span class="text-danger">*</span></label>
-    <div class="d-inline-flex">
-        <div class="form-check me-3">
-            <input class="form-check-input" type="radio" name="creator_status" id="individual"
-                value="ind" required
-                {{ $draft->req_create_type == 'ind' ? 'checked' : '' }}>
-            <label class="form-check-label" for="individual">นามบุคคล</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="creator_status" id="department"
-                value="dept" required
-                {{ $draft->req_create_type == 'dept' ? 'checked' : '' }}>
-            <label class="form-check-label" for="department">นามแผนก</label>
-        </div>
-    </div>
-</div>
+                <div class="mb-3">
+                    <label class="form-label">สถานะผู้สร้างใบสั่งงาน <span class="text-danger">*</span></label>
+                    <div class="d-inline-flex">
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="radio" name="creator_status" id="individual" value="ind"
+                                required {{ $draft->req_create_type == 'ind' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="individual">นามบุคคล</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="creator_status" id="department" value="dept"
+                                required {{ $draft->req_create_type == 'dept' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="department">นามแผนก</label>
+                        </div>
+                    </div>
+                </div>
 
 
                 {{-- คำอธิบายงาน --}}
                 <div class="mb-3">
                     <label class="form-label">คำอธิบายงาน <span class="text-danger">*</span></label>
                     <textarea class="form-control" id="task_description" name="task_description" rows="3"
-    required>{{ $draft->req_description }}</textarea>
+                        required>{{ $draft->req_description }}</textarea>
                 </div>
             </div>
 
@@ -77,7 +73,8 @@
 
             {{-- ปุ่มบันทึกและสร้าง --}}
             <div class="d-flex justify-content-end my-4">
-                <button type="submit" class="btn btn-secondary" name="submit_type" value="draft" id="save-draft-btn">แบบร่าง</button>
+                <button type="submit" class="btn btn-secondary" name="submit_type" value="draft"
+                    id="save-draft-btn">แบบร่าง</button>
                 &nbsp;&nbsp;
                 <button type="submit" class="btn btn-outline-light" name="submit_type" value="create" id="create-task-btn"
                     style="border: 1px solid #2B467E; color: #ffffff; background-color: #4B49AC">
@@ -98,8 +95,8 @@
         * @author : Sarocha Dokyeesun 66160097
         * @Create Date : 2025-04-04
         */
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.addEventListener('change', function(e) {
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.addEventListener('change', function (e) {
                 if (e.target && e.target.name === 'dept[]') {
                     const deptSelect = e.target;
                     const deptId = deptSelect.value;
@@ -134,59 +131,59 @@
                 newTask.id = `task-item-${index + 1}`;
                 newTask.setAttribute('data-task-id', subtask.tsk_id); // เพิ่ม data-task-id
                 newTask.innerHTML = `
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
-                            งานย่อย ${index + 1}
-                        </button>
-                    </h2>
-                    <div id="${taskId}" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <div class="mb-3">
-                                <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="dept[]" required>
-                                        <option selected disabled value="">กรุณาเลือก</option>
-                                        ${@json($dept).map(d => `
-                                            <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
-                                                ${d.dept_name}
-                                            </option>
-                                        `).join('')}
-                                    </select>
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                                งานย่อย ${index + 1}
+                            </button>
+                        </h2>
+                        <div id="${taskId}" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
                                 </div>
-                                <div class="col-6">
-                                    <label class="form-label">ผู้รับมอบหมาย</label>
-                                    <select class="form-select" name="emp[]">
-                                        <option selected disabled value="">กรุณาเลือก</option>
-                                        <option value="${subtask.tsk_emp_id}" selected>${subtask.employee?.emp_name || ''}</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="dept[]" required>
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            ${@json($dept).map(d => `
+                                                <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
+                                                    ${d.dept_name}
+                                                </option>
+                                            `).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">ผู้รับมอบหมาย</label>
+                                        <select class="form-select" name="emp[]">
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            <option value="${subtask.tsk_emp_id}" selected>${subtask.employee?.emp_name || ''}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-6">
-                                    <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="priority[]" required>
-                                        <option selected disabled value="">กรุณาเลือก</option>
-                                        <option value="L" ${subtask.tsk_priority == 'L' ? 'selected' : ''}>ต่ำ</option>
-                                        <option value="M" ${subtask.tsk_priority == 'M' ? 'selected' : ''}>ปานกลาง</option>
-                                        <option value="H" ${subtask.tsk_priority == 'H' ? 'selected' : ''}>สูง</option>
-                                    </select>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="priority[]" required>
+                                            <option selected disabled value="">กรุณาเลือก</option>
+                                            <option value="L" ${subtask.tsk_priority == 'L' ? 'selected' : ''}>ต่ำ</option>
+                                            <option value="M" ${subtask.tsk_priority == 'M' ? 'selected' : ''}>ปานกลาง</option>
+                                            <option value="H" ${subtask.tsk_priority == 'H' ? 'selected' : ''}>สูง</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+                                <div class="mb-3 mt-3">
+                                    <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
                                 </div>
-                            </div>
-                            <div class="mb-3 mt-3">
-                                <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
                 taskList.appendChild(newTask);
             });
 
@@ -212,57 +209,57 @@
             newTask.classList.add("accordion-item");
             newTask.id = `task-item-${taskCount}`;
             newTask.innerHTML = `
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
-                        งานย่อย ${taskCount}
-                    </button>
-                </h2>
-                <div id="${taskId}" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                        <div class="mb-3">
-                            <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="subtask_name[]" required>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
-                                <select class="form-select" name="dept[]" required>
-                                    <option selected disabled value="">กรุณาเลือก</option>
-                                    ${deptOptions}
-                                </select>
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                            งานย่อย ${taskCount}
+                        </button>
+                    </h2>
+                    <div id="${taskId}" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="mb-3">
+                                <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="subtask_name[]" required>
                             </div>
-                            <div class="col-6">
-                                <label class="form-label">ผู้รับมอบหมาย</label>
-                                <select class="form-select" name="emp[]">
-                                    <option selected disabled value="">กรุณาเลือก</option>
-                                </select>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="dept[]" required>
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        ${deptOptions}
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">ผู้รับมอบหมาย</label>
+                                    <select class="form-select" name="emp[]">
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-6">
-                                <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
-                                <select class="form-select" name="priority[]" required>
-                                    <option selected disabled value="">กรุณาเลือก</option>
-                                    <option value="L">ต่ำ</option>
-                                    <option value="M">ปานกลาง</option>
-                                    <option value="H">สูง</option>
-                                </select>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="priority[]" required>
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        <option value="L">ต่ำ</option>
+                                        <option value="M">ปานกลาง</option>
+                                        <option value="H">สูง</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="end_date[]" required>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="end_date[]" required>
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
+                                <textarea class="form-control" name="description[]" placeholder="กรุณากรอกคำอธิบาย" required></textarea>
                             </div>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="description[]" placeholder="กรุณากรอกคำอธิบาย" required></textarea>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger" onclick="removeTask(${taskCount})">ลบ</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
 
             taskList.appendChild(newTask); // เพิ่ม task ใหม่ลงใน taskList
             taskCount++; // เพิ่มตัวนับ task
@@ -430,7 +427,7 @@
             return isValid;
         }
 
-        document.getElementById("create-task-btn").addEventListener("click", function(e) {
+        document.getElementById("create-task-btn").addEventListener("click", function (e) {
             e.preventDefault();
             const form = document.getElementById('draft-form');
 
@@ -483,7 +480,7 @@
             });
         });
 
-        document.getElementById("save-draft-btn").addEventListener("click", function(e) {
+        document.getElementById("save-draft-btn").addEventListener("click", function (e) {
             e.preventDefault();
             const form = document.getElementById('draft-form');
 
@@ -532,6 +529,10 @@
                 if (result.isConfirmed) {
                     document.getElementById('submit_type').value = 'draft'; // set เป็น draft
                     form.submit();
+                    // Redirect to draft_list after submission
+                    form.addEventListener('submit', function () {
+                        window.location.href = "{{ route('draft_list') }}";
+                    });
                 }
             });
         });
