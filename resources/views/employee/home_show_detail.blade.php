@@ -142,7 +142,6 @@
                          <th scope="row mt-3">ความคิดเห็น</th>
                          <td>
                              <div class="d-flex gap-2">
-                                 <ion-icon name="person-circle-outline" size="large"></ion-icon>
                                  <div class="input-group my-2">
                                     <div class="form-floating">
                                         @if ($task->first()->tsk_status != 'Completed' )
