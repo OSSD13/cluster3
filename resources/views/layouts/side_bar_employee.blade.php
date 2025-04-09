@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('public/css/components/side_bar.css') }}">
+    <link rel="stylesheet" href="{{asset('public/css/components/side_bar.css')}}">
     <title>Document</title>
 </head>
 
@@ -36,12 +36,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::is('draft_list', 'draft.edit', 'draft.update', 'drafts.destroy', 'draft_details') ? 'active' : '' }}" href="{{ url('/draft_list') }}">
+                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'draft' ? 'active' : '' }}"
+                        href="#">
                         <i class="fa-solid fa-file-pen me-2"></i> แบบร่าง
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link rounded p-3 sidebar-link {{ Route::currentRouteName() == 'send' ? 'active' : ''}}" href="{{ url('/sent') }}" >
+                    <a class="nav-link rounded p-3 sidebar-link {{ in_array(Route::currentRouteName(), ['sent', 'sent_detail']) ? 'active' : '' }}" href="{{ route('sent') }}">
                         <i class="fa-solid fa-upload me-2"></i> ส่งแล้ว
                     </a>
                 </li>
@@ -62,14 +63,14 @@
                     <div class="collapse" id="reportMenu">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : ''}}"  href="{{ url('/report-stat') }}"
-                                    style="">
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-stat' ? 'active' : '' }}"
+                                    href="#" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-chart-pie me-2"></i> รายงานสถิติงาน
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : '' }} " href="{{ url('/report-table') }}"
+                                <a class="sidebar-sub-link rounded p-3 {{ Route::currentRouteName() == 'report-data' ? 'active' : '' }} "
                                     href="#" style="">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="icon-sub fa-solid fa-table-list me-2"></i> รายงานข้อมูล
