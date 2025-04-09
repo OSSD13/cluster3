@@ -11,6 +11,7 @@
 @section('content')
 
 <div class="container-fluid">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\detail_style.css') }}">
     <div class="d-flex justify-content-between align-items-center">
         <h3 class="m-0">รายการงาน</h3>
         <!-- <ul class="nav nav-tabs">

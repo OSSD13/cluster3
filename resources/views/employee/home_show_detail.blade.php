@@ -9,6 +9,8 @@
 
  @extends('layouts.employee_layouts')
  @section('content')
+ <link rel="stylesheet" href="{{ asset('public\css\pages\home_show_detail.css') }}">
+ <link rel="stylesheet" href="{{ asset('public\css\pages\detail_style.css') }}">
  <div class="containetr-fluid">
      <div class="col">
          <div class="d-flex justify-content-between align-items-center">

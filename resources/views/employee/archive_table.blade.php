@@ -8,6 +8,7 @@
 --}}
 @extends('layouts.employee_layouts')
 @section('content')
+<link rel="stylesheet" href="{{ asset('public\css\pages\archive_table.css') }}">
 <div class="container-fluid">
   <h3 class="mb-0" style="color: #4B49AC;">รายการงานที่จัดเก็บ</h3>
   <div class="custom-box">

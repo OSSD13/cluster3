@@ -11,6 +11,8 @@
 @extends('Layouts.employee_layouts')
 @section('content')
 <div class="container-fluid">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\archive_detail.css') }}" >
+    <link rel="stylesheet" href="{{ asset('public\css\pages\detail_style.css') }}">
     {{-- Page Title --}}
 
     <h3 class="text-primary">รายการงานที่จัดเก็บ</h3>

@@ -9,6 +9,7 @@
 
 @extends('layouts.employee_layouts')
 @section('content')
+<link rel="stylesheet" href="{{ asset('public\css\pages\home_table_style.css') }}">
 <div class="d-flex">
     <div class="container-fluid">
         @include('components.tab_task')

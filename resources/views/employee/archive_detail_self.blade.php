@@ -12,6 +12,8 @@
 @section('content')
 
 <div class="contaner-fluid">
+    <link rel="stylesheet" href="{{ asset('public\css\pages\archive_detail.css') }}" >
+    <link rel="stylesheet" href="{{ asset('public\css\pages\detail_style.css') }}">
     {{-- Include Sidebar --}}
     {{-- Header Section --}}
     <h3 class="text-primary">รายการงานที่จัดเก็บ</h3>
