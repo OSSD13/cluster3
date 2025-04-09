@@ -184,11 +184,14 @@ description[]
                                         <label class="form-label">คำอธิบาย <span class="text-danger">*</span></label>
                                         <textarea class="form-control" name="description[]" required>${subtask.tsk_description}</textarea>
                                     </div>
-                                </div>
-                            </div>
-                        `;
-                taskList.appendChild(newTask);
-            });
+                                    <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-danger" onclick="removeTask(${index + 1})">ลบ</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            taskList.appendChild(newTask);
+        });
 
             // อัปเดตตัวนับ task
             taskCount = subtasks.length + 1;
@@ -283,11 +286,11 @@ description[]
                 confirmButtonText: 'ลบเลย',
                 cancelButtonText: 'ยกเลิก',
                 reverseButtons: true,
+                buttonsStyling: false,
                 customClass: {
                     confirmButton: 'swal2-confirm',
                     cancelButton: 'swal2-cancel'
                 },
-                buttonsStyling: false,
                 didOpen: () => {
                     const confirmBtn = Swal.getConfirmButton();
                     const cancelBtn = Swal.getCancelButton();
