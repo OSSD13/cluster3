@@ -6,7 +6,9 @@ use App\Http\Controllers\{
     FormController,
     SidebarController,
     DepartmentController,
-    LoginController
+    LoginController,
+    DraftController,
+    EditDraftController
 };
 use App\Http\Middleware\AdminMiddleware;
 
@@ -29,35 +31,20 @@ Route::middleware(['admin'])->group(function () {
 Route::middleware(['employee'])->group(function () {
     // หน้าแบบฟอร์มสร้างใบสั่งงาน (GET ต้องอยู่ก่อน)
     Route::get('/form', [FormController::class, 'index'])->name('form.index');
+// แสดงรายการแบบร่าง
+Route::get('/draft_list', [DraftController::class, 'showDraftList'])->name('draft_list');
 
-    Route::get('/draft_list', [DraftController::class, 'showDraftList'])->name('draft_list');
+// หน้าแก้ไขแบบร่าง
+Route::get('/draft/edit/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
 
-    // route ของการเรียกหน้า view ของการสร้างใบสั่งงาน
-    Route::get('/form', function () {
-        return view('create_form');z
-    })->name('create-form');
 
-    //เรียกไปหน้า details draft
-    Route::get('/draft', function () {
-        return view('draft_details');
-    })->name('draft_deatails');
 
-    //
-    Route::get('/draft/{id}', [EditDraftController::class, 'index'])->name('draft_list');
+// อัปเดตแบบร่าง (PUT จากฟอร์ม)
+Route::put('/draft/update/{id}', [EditDraftController::class, 'update'])->name('draft.update');
 
-    // route ลบใบงานใหญ่
-    Route::delete('/draft/{id}', [DraftController::class, 'deleteDraft'])->name('drafts.destroy');
+// ลบแบบร่าง
+Route::delete('/draft/{id}', [DraftController::class, 'deleteDraft'])->name('drafts.destroy');
 
-     //สำหรับบันทึกฟอร์ม
-    Route::get('/draft/update', [EditDraftController::class, 'update'])->name('draft.update');
-
-    Route::get('/draft/{id}', [EditDraftController::class, 'edit'])->name('draft.edit');
-
-    //route แก้ไข draft
-    //Route::get('/draft/{id}/edit', [DraftController::class, 'edit'])->name('draft.edit');
-
-    //route update draft
-    //Route::put('/draft/{id}', [EditDraftController::class, 'update'])->name('draft.update');
     // POST สำหรับบันทึกฟอร์ม
     Route::post('/form/create', [FormController::class, 'createWorkRequest'])->name('form.create');
 

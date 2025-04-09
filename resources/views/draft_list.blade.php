@@ -36,7 +36,7 @@
                             </td>
                             {{-- แก้ไข draft --}}
                             <td style="text-align: center;">
-                                <a href="{{ url('/draft' , $request->req_id ) }}" style="text-decoration: none;">
+                                <a href="{{ route('draft.edit', $request->req_id) }}" style="text-decoration: none;">
                                     <i class="fas fa-edit" style="font-size: 24px; color: #4B49AC;"></i>
                                 </a>
                                 {{-- ฟอร์มลบใบสั่งงาน --}}

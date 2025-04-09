@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB; // เพิ่มเพื่อใช้ transaction
 use Illuminate\Support\Facades\Auth;
 use App\Models\WorkRequest;
 use App\Models\Task;
 use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class EditDraftController extends Controller
 {
-    public function index()
-    {
-        $dept = Department::with('employees')->get();
-        return view('draft_details', compact('dept'));
-    }
+
 
     public function edit($id)
     {
@@ -35,44 +33,64 @@ class EditDraftController extends Controller
         return view('draft_details', compact('draft', 'dept'));
     }
 
+
+
     public function update(Request $request, $id)
     {
-        $draft = WorkRequest::findOrFail($id);
+        // ตรวจสอบข้อมูลฟอร์ม
+        $request->validate([
+            'task_name' => 'required|string|max:255',
+            'creator_status' => 'required|in:ind,dept',
+            'task_description' => 'required|string',
+            'submit_type' => 'required|in:draft,create',
+        ]);
 
-        // อัปเดตข้อมูลใบสั่งงาน
-        $draft->task_name = $request->input('task_name');
-        $draft->task_description = $request->input('task_description');
-        $draft->creator_status = $request->input('creator_status');
-        $draft->req_status = $request->input('submit_type') === 'create' ? 'submitted' : 'draft';
-        $draft->save();
+        DB::beginTransaction(); // เริ่ม transaction
 
-        // ลบงานย่อยที่ถูกลบ
-        $deletedTasks = explode(',', rtrim($request->input('deleted_tasks'), ','));
-        if (!empty($deletedTasks)) {
-            Task::whereIn('tsk_id', $deletedTasks)->delete();
+        try {
+            // หาใบสั่งงาน
+            $draft = WorkRequest::findOrFail($id);
+
+            // อัปเดตข้อมูลหลัก
+            $draft->req_name = $request->task_name;
+            $draft->req_create_type = $request->creator_status;
+            $draft->req_description = $request->task_description;
+            $draft->req_draft_status = $request->submit_type === 'draft' ? 'D' : 'S';
+            $draft->save();
+
+            // ลบงานย่อยเดิมทั้งหมดก่อน
+            $draft->tasks()->delete();
+
+            // เพิ่มงานย่อยใหม่
+            if ($request->has('subtask_name')) {
+                foreach ($request->subtask_name as $index => $subtaskName) {
+                    $empId = $request->emp[$index] ?? null;
+                    $assigneeType = ($empId !== null && $empId !== "0") ? 'ind' : 'dept';
+
+                    Task::create([
+                        'tsk_req_id'         => $draft->req_id,
+                        'tsk_assignee_type'  => $assigneeType,
+                        'tsk_emp_id' => (is_numeric($empId) && (int)$empId !== 0) ? (int)$empId : null,
+                        'tsk_dept_id'        => $request->dept[$index],
+                        'tsk_status'         => 'Pending',
+                        'tsk_name'           => $subtaskName,
+                        'tsk_description'    => $request->description[$index] ?? null,
+                        'tsk_due_date'       => $request->end_date[$index],
+                        'tsk_priority'       => $request->priority[$index],
+                        'tsk_update_date'    => now(),
+                    ]);
+                }
+            }
+
+            DB::commit(); // บันทึกการเปลี่ยนแปลงทั้งหมด
+
+            return redirect()->route('draft_list')->with('success', 'อัปเดตใบสั่งงานเรียบร้อยแล้ว');
+
+        } catch (\Exception $e) {
+            DB::rollback(); // ยกเลิกหากเกิด error
+            dd($e);
+            return redirect()->back()->withErrors(['error' => 'เกิดข้อผิดพลาดในการอัปเดต: ' . $e->getMessage()]);
         }
-
-        // อัปเดตหรือเพิ่มงานย่อยใหม่
-        $subtaskNames = $request->input('subtask_name');
-        $deptIds = $request->input('dept');
-        $empIds = $request->input('emp');
-        $priorities = $request->input('priority');
-        $endDates = $request->input('end_date');
-        $descriptions = $request->input('description');
-
-        foreach ($subtaskNames as $index => $subtaskName) {
-            Task::updateOrCreate(
-                ['tsk_req_id' => $draft->req_id, 'tsk_name' => $subtaskName],
-                [
-                    'tsk_dept_id' => $deptIds[$index],
-                    'tsk_emp_id' => $empIds[$index],
-                    'tsk_priority' => $priorities[$index],
-                    'tsk_due_date' => $endDates[$index],
-                    'tsk_description' => $descriptions[$index],
-                ]
-            );
-        }
-
-        return redirect()->route('draft.list')->with('success', 'แบบร่างถูกอัปเดตเรียบร้อย');
     }
+
 }

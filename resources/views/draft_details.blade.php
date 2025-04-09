@@ -14,7 +14,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <form action="{{ route('draft.update', $draft->draft_id) }}" method="POST" id="draft-form" novalidate>
+<form action="{{ route('draft.update', $draft->req_id) }}" method="POST" id="draft-form" novalidate>
         @method('PUT')
         @csrf
         <input type="hidden" name="submit_type" id="submit_type" value="create">
@@ -178,6 +178,8 @@
                                 <div class="col-6">
                                     <label class="form-label">วันสิ้นสุด <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" name="end_date[]" value="${subtask.tsk_due_date}" required>
+
+
                                 </div>
                             </div>
                             <div class="mb-3 mt-3">
