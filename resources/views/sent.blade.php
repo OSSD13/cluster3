@@ -210,7 +210,9 @@
                 cancelButtonText: 'ยกเลิก',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`/approve-request/${reqId}`, {
+                    const baseUrl = "{{ config('app.url') }}";
+                    const url = `${baseUrl}/approve-request/${reqId}`;
+                    fetch(url, {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

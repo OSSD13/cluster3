@@ -105,8 +105,9 @@
                     const empSelect = deptSelect.closest('.accordion-body').querySelector(
                         'select[name="emp[]"]');
                     empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
-
-                    fetch(`/form/employee/${deptId}`)
+                    const baseUrl = "{{ config('app.url') }}";
+                    const url = `${baseUrl}/form/employee/${deptId}`;
+                    fetch(url)
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(emp => {
