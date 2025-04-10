@@ -98,14 +98,14 @@ description[]
         * @Create Date : 2025-04-04
         */
         document.addEventListener('DOMContentLoaded', function () {
+            // เพิ่ม Event Listener สำหรับการเปลี่ยนแปลงค่าใน select[name="dept[]"]
             document.body.addEventListener('change', function (e) {
                 if (e.target && e.target.name === 'dept[]') {
                     const deptSelect = e.target;
                     const deptId = deptSelect.value;
 
                     // หา select ของ emp ที่อยู่ใน task เดียวกัน
-                    const empSelect = deptSelect.closest('.accordion-body').querySelector(
-                        'select[name="emp[]"]');
+                    const empSelect = deptSelect.closest('.accordion-body').querySelector('select[name="emp[]"]');
                     empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
                     const baseUrl = "{{ config('app.url') }}";
                     const url = `${baseUrl}/form/employees/${deptId}`;
@@ -123,6 +123,49 @@ description[]
                 }
             });
 
+            // เพิ่ม Event Listener สำหรับการคลิก dropdown ของ select[name="emp[]"]
+            document.body.addEventListener('focus', function (e) {
+                if (e.target && e.target.name === 'emp[]') {
+                    const empSelect = e.target;
+                    const deptSelect = empSelect.closest('.accordion-body').querySelector('select[name="dept[]"]');
+                    const deptId = deptSelect.value;
+
+                    if (!deptId) {
+                        Swal.fire({
+                            title: 'กรุณาเลือกแผนกก่อน',
+                            text: 'คุณต้องเลือกแผนกก่อนที่จะเลือกผู้รับมอบหมาย',
+                            icon: 'warning',
+                            confirmButtonText: 'ตกลง'
+                        });
+                        return;
+                    }
+
+                    // ดึงข้อมูลพนักงานจาก API
+                    empSelect.innerHTML = '<option disabled selected value="">-- กำลังโหลดพนักงาน --</option>';
+                    fetch(`/form/employee/${deptId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
+                            data.forEach(emp => {
+                                const option = document.createElement('option');
+                                option.value = emp.emp_id;
+                                option.text = emp.emp_name;
+                                empSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('เกิดข้อผิดพลาดในการโหลดพนักงาน:', error);
+                            Swal.fire({
+                                title: 'เกิดข้อผิดพลาด',
+                                text: 'ไม่สามารถโหลดข้อมูลพนักงานได้ กรุณาลองใหม่อีกครั้ง',
+                                icon: 'error',
+                                confirmButtonText: 'ตกลง'
+                            });
+                        });
+                }
+            }, true);
+
+            // โหลดข้อมูลงานย่อยจาก PHP
             const subtasks = @json($draft->tasks); // ดึงข้อมูลงานย่อยจาก PHP
             const taskList = document.getElementById("taskList"); // อ้างอิง taskList
 
@@ -134,38 +177,38 @@ description[]
                 newTask.id = `task-item-${index + 1}`;
                 newTask.setAttribute('data-task-id', subtask.tsk_id); // เพิ่ม data-task-id
                 newTask.innerHTML = `
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
-                                    งานย่อย ${index + 1}
-                                </button>
-                            </h2>
-                            <div id="${taskId}" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <div class="mb-3">
-                                        <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
-                                            <select class="form-select" name="dept[]" required>
-                                                <option selected disabled value="">กรุณาเลือก</option>
-                                                ${@json($dept).map(d => `
-                                                    <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
-                                                        ${d.dept_name}
-                                                    </option>
-                                                `).join('')}
-                                            </select>
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label">ผู้รับมอบหมาย</label>
-                                            <select class="form-select" name="emp[]">
-                                                <option selected disabled value="">กรุณาเลือก</option>
-                                                ${subtask.employee ? `<option value="${subtask.employee.emp_id}" selected>${subtask.employee.emp_name}</option>` : ''}
-                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${taskId}">
+                            งานย่อย ${index + 1}
+                        </button>
+                    </h2>
+                    <div id="${taskId}" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="mb-3">
+                                <label class="form-label">ชื่อใบงานย่อย <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="subtask_name[]" value="${subtask.tsk_name}" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">แผนกรับมอบหมาย <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="dept[]" required>
+                                        <option selected disabled value="">กรุณาเลือก</option>
+                                        ${@json($dept).map(d => `
+                                            <option value="${d.dept_id}" ${d.dept_id == subtask.tsk_dept_id ? 'selected' : ''}>
+                                                ${d.dept_name}
+                                            </option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">ผู้รับมอบหมาย</label>
+                                    <select class="form-select" name="emp[]">
+                                        <option selected disabled value="">-- เลือกพนักงาน --</option>
+                                        ${subtask.employee ? `<option value="${subtask.employee.emp_id}" selected>${subtask.employee.emp_name}</option>` : ''}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
                                         <div class="col-6">
                                             <label class="form-label">ความสำคัญ <span class="text-danger">*</span></label>
                                             <select class="form-select" name="priority[]" required>
@@ -188,10 +231,9 @@ description[]
                             <button type="button" class="btn btn-danger" onclick="removeTask(${index + 1})">ลบ</button>
                         </div>
                     </div>
-                </div>
-            `;
-            taskList.appendChild(newTask);
-        });
+                `;
+                taskList.appendChild(newTask);
+            });
 
             // อัปเดตตัวนับ task
             taskCount = subtasks.length + 1;
