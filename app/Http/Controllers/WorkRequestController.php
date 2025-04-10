@@ -169,10 +169,19 @@ class WorkRequestController extends Controller
 * @output : redirect กลับไปยัง route 'main-page' หลังจากบันทึกข้อมูลแล้ว
 * @author : Saruta Saisuwan 66160375
 * @Create Date : 2025-04-06
+* @Update Date : 2025-04-10
+* @Update By : Naphat Maneechansuk 66160099
 */
 
     public function updateTask(Request $req, $id)
     {
+        // ตรวจสอบความยาวของคอมเมนต์
+        $req->validate([
+            'tsk_comment' => 'nullable|string|max:500', // จำกัดความยาวไม่เกิน 1000 ตัวอักษร
+        ], [
+            'tsk_comment.max' => 'ความคิดเห็นต้องไม่เกิน 500 ตัวอักษร', // ข้อความแจ้งเตือน
+        ]);
+
         $task = Task::find($id);
         if ($req->tsk_status == 'Completed') {
             $task->tsk_completed_date = now();
