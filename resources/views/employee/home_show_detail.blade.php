@@ -5,6 +5,8 @@
 * @output : หน้าจอแสดงรายละเอียดใบงานพร้อมปุ่มเปลี่ยนสถานะและแสดงความคิดเห็น
 * @author : Saruta Saisuwan 66160375
 * @Create Date : 2025-03-20
+* @Update Date : 2025-04-10
+* @Update By : Naphat Maneechansuk 66160099
 --}}
 
  @extends('layouts.employee_layouts')
@@ -19,6 +21,15 @@
 
      </div>
      <div class="tab-content">
+         @if ($errors->any())
+             <div class="alert alert-danger">
+                 <ul>
+                     @foreach ($errors->all() as $error)
+                         <li>{{ $error }}</li>
+                     @endforeach
+                 </ul>
+             </div>
+         @endif
          <table class="table">
              <thead>
                  <tr>
@@ -205,8 +216,30 @@
          document.getElementById("tsk_status").value = statusValue; // กำหนดค่า value ของ input hidden
      }
 
+
      function comfirm_save(event) {
-         event.preventDefault();
+         event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
+
+         const commentField = document.getElementById('floatingTextarea2');
+         const maxLength = 1000;
+         const currentLength = commentField.value.length;
+
+         // ตรวจสอบว่าความยาวของข้อความเกินกำหนดหรือไม่
+         if (currentLength > maxLength) {
+             Swal.fire({
+                 icon: 'error',
+                 title: 'ข้อความยาวเกินไป',
+                 text: 'กรุณาแก้ไขข้อความให้ไม่เกิน 1000 ตัวอักษร',
+                 confirmButtonText: 'ตกลง',
+                 customClass: {
+                     confirmButton: 'btn btn-primary'
+                 },
+                 buttonsStyling: false
+             });
+             return; // หยุดการทำงาน ไม่ให้ส่งฟอร์ม
+         }
+
+         // หากข้อความไม่เกินกำหนด ให้แสดง SweetAlert ยืนยันการบันทึก
          const swalWithBootstrapButtons = Swal.mixin({
              customClass: {
                 title: "swal-title-small",
@@ -215,54 +248,30 @@
              },
              buttonsStyling: false
          });
+
          swalWithBootstrapButtons.fire({
-             title: "คุณต้องการเปลี่ยนแปลงข้อมูลหรือไม่?",
+             title: "คุณต้องการบันทึกข้อมูลหรือไม่?",
              text: "",
              icon: "warning",
              showCancelButton: true,
-
              confirmButtonText: "ยืนยัน",
              cancelButtonText: "ยกเลิก",
              reverseButtons: true
-
-
          }).then((result) => {
              if (result.isConfirmed) {
-                 event.target.submit();
+                 document.getElementById("taskForm").submit(); // ส่งฟอร์ม
              }
          });
      }
 
-
-    //  async function comfirm_reject(event) {
-    //      event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
-
-    //      const {
-    //          value: reason
-    //      } = await Swal.fire({
-    //          title: "กรุณากรอกเหตุผลการปฏิเสธ",
-    //          input: "text",
-    //          inputLabel: " ",
-    //          showCancelButton: true,
-    //          cancelButtonText: 'ยกเลิก',
-    //          confirmButtonText: 'ยืนยัน',
-    //          inputValidator: (value) => {
-    //              if (!value) {
-    //                  return "กรุณากรอกเหตุผล!";
-    //              }
-    //          }
-    //      });
-
-
-    //      if (reason) {
-    //          // เซ็ตค่าที่ต้องการส่ง
-    //          document.getElementById("tsk_status").value = "Rejected";
-    //          document.getElementById("tsk_comment_reject").value = reason;
-
-    //          // ส่งฟอร์ม
-    //          document.getElementById("taskForm").submit();
-    //      }
-    //  }
+      /*
+         * comfirm_reject()
+         * comfirm_reject Employee
+         * @input : Employee name
+         * @output : Employee name in table
+         * @author : Naphat Maneechansuk 66160099
+         * @Create Date : 2025-04-10
+     */
     async function comfirm_reject(event) {
     event.preventDefault(); // ป้องกันการ submit ฟอร์มโดยทันที
 
@@ -293,6 +302,35 @@
     }
 }
 
+    /*
+         * comfirm_reject()
+         * comfirm_reject Employee
+         * @input : Employee name
+         * @output : Employee name in table
+         * @author : Naphat Maneechansuk 66160099
+         * @Create Date : 2025-04-10
+     */
+document.getElementById('floatingTextarea2').addEventListener('input', function (e) {
+    const maxLength = 1000;
+    const currentLength = e.target.value.length;
+
+    if (currentLength > maxLength) {
+        e.target.value = e.target.value.substring(0, maxLength);
+
+        // ใช้ SweetAlert แทน alert และให้หายไปเองใน 3 วินาที
+        Swal.fire({
+            icon: 'warning',
+            title: 'ข้อความยาวเกินไป',
+            text: 'คุณสามารถใส่ข้อความได้สูงสุด ' + maxLength + ' ตัวอักษร',
+            showConfirmButton: false, // ซ่อนปุ่มตกลง
+            timer: 3000, // ตั้งเวลา 3 วินาที
+            timerProgressBar: true, // แสดงแถบเวลา
+            customClass: {
+                popup: 'swal-popup-small' // เพิ่มคลาสสำหรับปรับแต่ง (ถ้าต้องการ)
+            }
+        });
+    }
+});
 
  </script>
  @endsection
