@@ -369,7 +369,7 @@
                 text: 'โปรดยืนยันว่าคุณต้องการสร้างใบสั่งงานนี้',
                 icon: 'success',
                 showCancelButton: true,
-                confirmButtonText: 'ยืนยัน',
+                confirmButtonText: 'สร้างเลย',
                 cancelButtonText: 'ยกเลิก',
                 reverseButtons: true,
                 buttonsStyling: false,

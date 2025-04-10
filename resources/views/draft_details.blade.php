@@ -142,7 +142,9 @@ description[]
 
                     // ดึงข้อมูลพนักงานจาก API
                     empSelect.innerHTML = '<option disabled selected value="">-- กำลังโหลดพนักงาน --</option>';
-                    fetch(`/form/employee/${deptId}`)
+                    const baseUrl = "{{ config('app.url') }}";
+                    const url = `${baseUrl}/form/employee/${deptId}`;
+                    fetch(url)
                         .then(response => response.json())
                         .then(data => {
                             empSelect.innerHTML = '<option disabled selected value="">-- เลือกพนักงาน --</option>';
