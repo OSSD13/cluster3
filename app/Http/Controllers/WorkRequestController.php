@@ -27,7 +27,6 @@ class WorkRequestController extends Controller
         $currentUser = Session::get('user');
 
         $workRequestSubmit = WorkRequest::where('req_draft_status', 'S')
-            ->where('req_draft_status', '!=', 'A')
             ->get();
 
         $task = [
@@ -164,7 +163,7 @@ class WorkRequestController extends Controller
 /*
 * updateTask(Request $req, $id)
 * อัปเดตสถานะและข้อมูลของงานตาม ID ที่ระบุ หากสถานะเป็น Completed จะบันทึกวันที่เสร็จงานด้วย
-* @input : 
+* @input :
 *   - $req (Illuminate\Http\Request) => ข้อมูลที่รับมาจากฟอร์ม เช่น สถานะ ผู้รับผิดชอบ ความเห็น ฯลฯ
 *   - $id (int) => รหัสงาน (Task ID)
 * @output : redirect กลับไปยัง route 'main-page' หลังจากบันทึกข้อมูลแล้ว
@@ -190,7 +189,7 @@ class WorkRequestController extends Controller
     /*
 * moreDetail($id)
 * แสดงรายละเอียดของงานทั้งหมดที่เกี่ยวข้องกับใบคำร้อง (Work Request) ที่มี ID ตามที่ระบุ
-* @input : 
+* @input :
 *   - $id (int) => รหัสใบคำร้อง (req_id)
 * @output : view 'employee.home_more_detail' ที่แสดงรายการงานทั้งหมดในใบคำร้องนั้น ๆ
 * @author : Kidrakon Rattanahiran
@@ -269,7 +268,7 @@ class WorkRequestController extends Controller
  /*
 * archiveDetail($id)
 * แสดงรายละเอียดของใบงาน (ที่อยู่ในสถานะ Archive) และรายการ Task ที่เกี่ยวข้อง
-* @input : 
+* @input :
 *   - $id : รหัสของใบคำร้องงาน (req_id)
 * @output : view 'employee.archive_detail' พร้อมข้อมูล:
 *   - reqName : ชื่อใบงาน
@@ -302,7 +301,7 @@ class WorkRequestController extends Controller
 /*
 * archiveDetailSelf($id, $empId)
 * แสดงรายละเอียดใบคำร้อง และรายการ Task เฉพาะของพนักงานที่ระบุ (ใช้สำหรับดูงานที่ตัวเองได้รับมอบหมายใน Archive)
-* @input : 
+* @input :
 *   - $id : รหัสของใบคำร้อง (req_id)
 *   - $empId : รหัสของพนักงาน (emp_id)
 * @output : view 'employee.archive_detail_self' พร้อมข้อมูล:
