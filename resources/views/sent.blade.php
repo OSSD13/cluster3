@@ -58,7 +58,7 @@
                                 $allCompleted =
                                     count($statuses) > 0 && collect($statuses)->every(fn($s) => $s === 'Completed');
 
-                                $canApprove = $req->req_status === 'Completed'; // ใช้ req_status ที่อัปเดตมาจาก Controller แล้ว
+                                $canApprove = in_array($req->req_status, ['Completed', 'Rejected']); // ใช้ req_status ที่อัปเดตมาจาก Controller แล้ว
 
                                 $statusText = 'รอดำเนินการ';
                                 $statusClass = 'status-dot-1';
