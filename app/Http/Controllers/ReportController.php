@@ -77,7 +77,7 @@ class ReportController extends Controller
     // ดึงข้อมูลงานโดย join กับ work_requests และกรองเฉพาะ req_status = 'S'
     $tasks = Task::where('tsk_emp_id', $userId)
         ->whereHas('workRequest', function ($query) {
-            $query->where('req_draft_status', 'A');
+            $query->where('req_draft_status','!=', 'D');
         });
 
     if ($year) {
@@ -125,7 +125,7 @@ class ReportController extends Controller
     public function getTaskStatisticsCompany(Request $request)
     {
         $tasks = Task::whereHas('workRequest', function ($query) {
-            $query->where('req_draft_status', 'A');
+            $query->where('req_draft_status','!=', 'D');
         });
 
         $year = $request->input('year');
