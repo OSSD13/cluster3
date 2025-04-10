@@ -127,8 +127,10 @@ class SentController extends Controller
         $workRequest = WorkRequest::findOrFail($id);
 
         if ($workRequest->req_status === 'Completed' || $workRequest->req_status === 'Rejected') {
-            $workRequest->req_draft_status = 'A'; // เปลี่ยนสถานะ
+            $workRequest->req_draft_status = 'A'; // อัปเดตสถานะ
+            $workRequest->req_completed_date = now(); // เก็บวันที่และเวลาเมื่อกดยอมรับ
             $workRequest->save();
+
             return response()->json(['success' => true]);
         }
 

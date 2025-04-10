@@ -38,12 +38,26 @@
             <p class="me-3"><strong>คำอธิบาย</strong></p>
             <p style="margin-left: 90px;">{{ $reqDescription }}</p> <!-- placeholder -->
         </div>
-        @foreach ($tasks as $task)
+        @php
+            // หาใบงานแรกที่ถูกปฏิเสธ
+            $rejectedIndex = null;
+            $rejectedComment = null;
+
+            foreach ($tasks as $index => $task) {
+                if ($task->tsk_status === 'Rejected') {
+                    $rejectedIndex = $index + 1; // เริ่มที่ 1
+                    $rejectedComment = $task->tsk_comment_reject ?? 'ไม่มีความคิดเห็น';
+                    break;
+                }
+            }
+        @endphp
+
+        @if ($rejectedIndex)
             <div class="d-flex" style="padding: 10px 0; margin-left: 20px; border-top: 1px solid #E9E9E9;">
-                <p class="me-3"><strong>เหตุผลการปฏิเสธ</strong></p>
-                <p style="margin-left: 35px;">{{ $task->tsk_comment_reject ?? 'ไม่มีความคิดเห็น' }}</p>
+                <p class="me-3"><strong>เหตุผลการปฏิเสธ (ลำดับงานที่{{ $rejectedIndex }})</strong></p>
+                <p style="margin-left: 35px;">{{ $rejectedComment }}</p>
             </div>
-        @endforeach
+        @endif
     </div>
 
     {{-- Tasks Table Section --}}
