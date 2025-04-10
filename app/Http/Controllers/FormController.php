@@ -69,9 +69,9 @@ class FormController extends Controller
             'priority.*'       => 'required|in:L,M,H',
             'end_date'         => 'required|array',
             'end_date.*'       => 'required|date',
-            'task_description' => 'required|string|max:1000',
+            'task_description' => 'required|string',
             'description'      => 'required|array|min:1',
-            'description.*'    => 'required|string|max:1000',
+            'description.*'    => 'required|string',
         ]);
         DB::beginTransaction();
 
@@ -93,7 +93,7 @@ class FormController extends Controller
             $workRequest = WorkRequest::create([
                 'req_create_type'   => $request->input('creator_status'), // ind / dept
                 'req_emp_id'        => $employeeId,
-                'req_dept_id'       => $request->creator_status === 'dept' ? $employeeDept : null,
+                'req_dept_id '       => $employeeDept,
                 'req_status'        => 'Pending',
                 'req_name'          => $request->input('task_name'),
                 'req_description'   => $request->input('task_description'),

@@ -1,4 +1,4 @@
-{{-- 
+{{--
 * my_tasks.blade.php
 * แสดงรายการงานที่ได้รับมอบหมายของผู้ใช้ แบ่งตามสถานะงาน (งานที่ได้รับ, กำลังดำเนินการ, เสร็จสิ้น)
 * @input : $tasks (ข้อมูลงานที่ได้รับมอบหมายของผู้ใช้ในแต่ละสถานะ)
@@ -133,7 +133,6 @@
 
                     @if(isset($tasks['completed']['my']) && count($tasks['completed']['my']) > 0)
                     @foreach ($tasks['completed']['my'] as $task)
-                    @if ( $workRequests[$task->tsk_req_id]->req_status != 'Completed' )
                     <tr class="clickable-row" data-href="{{ route('show', ['id' => $task->tsk_id]) }}">
                         <td class="col-3" style="padding-left:32px;">{{ $workRequests[$task->tsk_req_id]->req_name}}</td>
                         <td class="col-3">{{ $task->tsk_name }}</td>
@@ -158,7 +157,6 @@
                         </td>
                         <td class="text-danger">{{ \Carbon\Carbon::parse($task->tsk_due_date)->locale('th')->isoFormat('D MMMM YYYY HH:mm') }}</td>
                     </tr>
-                    @endif
                     @endforeach
                     @else
                     <tr>
