@@ -142,7 +142,7 @@
                                             $date = \Carbon\Carbon::parse($latestDueDate);
                                             $day = $date->format('d');
                                             $month = $thaiMonths[$date->month];
-                                            $year = $date->year + 543;
+                                            $year = $date->year;
                                             $time = $date->format('H:i');
                                         @endphp
                                         <div>{{ "$day $month $year" }}</div>
