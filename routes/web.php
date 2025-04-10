@@ -44,7 +44,7 @@ Route::middleware(['employee'])->group(function () {
     Route::delete('/draft/{id}', [DraftController::class, 'delete'])->name('drafts.delete');
 
     // Route สำหรับดึงข้อมูลพนักงานตามแผนก
-    Route::get('/form/employees/{id}', [EmployeeController::class, 'getEmployeesByDepartment']);
+    Route::get('/form/employee/{deptId}', [EmployeeController::class, 'getEmployeesByDepartment']);
     // POST สำหรับบันทึกฟอร์ม
     Route::post('/form/create', [FormController::class, 'createWorkRequest'])->name('form.create');
     // AJAX: ดึงรายชื่อพนักงานตามแผนก
