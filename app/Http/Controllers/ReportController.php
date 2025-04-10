@@ -46,7 +46,7 @@ class ReportController extends Controller
 {
     // กรองเฉพาะ WorkRequest ที่มีสถานะ 'A'
     $workRequests = WorkRequest::with(['employee', 'department', 'tasks.employee', 'tasks.department'])
-        ->where('req_draft_status', 'A') // เพิ่มเงื่อนไขนี้
+        ->where('req_draft_status','!=', 'D') // เพิ่มเงื่อนไขนี้
         ->get();
 
     // หากต้องการกรอง tasks ให้ตรงกับ req_id (จริง ๆ Laravel ควรจัดการให้แล้วจากความสัมพันธ์)
