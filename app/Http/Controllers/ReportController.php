@@ -43,17 +43,20 @@ class ReportController extends Controller
     * @Create Date : 2025-04-05
     */
     public function showReportTable()
-    {
-        $workRequests = WorkRequest::with(['employee', 'department', 'tasks.employee', 'tasks.department'])
-            ->get();
+{
+    // กรองเฉพาะ WorkRequest ที่มีสถานะ 'A'
+    $workRequests = WorkRequest::with(['employee', 'department', 'tasks.employee', 'tasks.department'])
+        ->where('req_draft_status', 'A') // เพิ่มเงื่อนไขนี้
+        ->get();
 
-        // หากต้องการกรองข้อมูล tasks เฉพาะที่ตรงกับ req_id ของแต่ละ WorkRequest
-        foreach ($workRequests as $workRequest) {
-            $workRequest->tasks = $workRequest->tasks->where('tsk_req_id', $workRequest->req_id);
-        }
-
-        return view('report.report_table', compact('workRequests'));
+    // หากต้องการกรอง tasks ให้ตรงกับ req_id (จริง ๆ Laravel ควรจัดการให้แล้วจากความสัมพันธ์)
+    foreach ($workRequests as $workRequest) {
+        $workRequest->tasks = $workRequest->tasks->where('tsk_req_id', $workRequest->req_id);
     }
+
+    return view('report.report_table', compact('workRequests'));
+}
+
 
     /*
     * getTaskStatistics(Request $request)
