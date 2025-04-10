@@ -64,52 +64,53 @@ class ReportController extends Controller
     * @Create Date : 2025-04-07
     */
     public function getTaskStatistics(Request $request)
-    {
-        $user = session('user'); // ดึงข้อมูลผู้ใช้จาก session
-        $userId = $user->emp_id; // ใช้ emp_id ของผู้ใช้
+{
+    $user = session('user');
+    $userId = $user->emp_id;
 
-        // รับค่าปีและเดือนจาก request
-        $year = $request->input('year');
-        $month = $request->input('month');
+    $year = $request->input('year');
+    $month = $request->input('month');
 
-        // ดึงข้อมูลงานของผู้ใช้
-        $tasks = Task::where('tsk_emp_id', $userId);
-
-        // กรองข้อมูลตามปีและเดือน
-        if ($year) {
-            $tasks->whereYear('tsk_due_date', $year - 543);
-        }
-        if ($month && $month != 'all') {
-            $tasks->whereMonth('tsk_due_date', $month);
-        }
-
-        $tasks = $tasks->get();
-
-        // แยกประเภทงาน
-        $completedTasks = $tasks->filter(function ($task) {
-            return $task->tsk_status === 'Completed' && $task->tsk_completed_date !== null;
+    // ดึงข้อมูลงานโดย join กับ work_requests และกรองเฉพาะ req_status = 'S'
+    $tasks = Task::where('tsk_emp_id', $userId)
+        ->whereHas('workRequest', function ($query) {
+            $query->where('req_draft_status', 'A');
         });
 
-        $delayedTasks = $tasks->filter(function ($task) {
-            return $task->tsk_status === 'Completed' &&
-                $task->tsk_completed_date !== null &&
-                $task->tsk_completed_date > $task->tsk_due_date; // เปรียบเทียบวันที่
-        });
-
-        $rejectedTasks = $tasks->filter(function ($task) {
-            return $task->tsk_status === 'Rejected';
-        });
-
-        // สร้างสถิติ
-        $statistics = [
-            'total' => $tasks->count(),
-            'completed' => $completedTasks->count(),
-            'delayed' => $delayedTasks->count(),
-            'rejected' => $rejectedTasks->count(),
-        ];
-
-        return response()->json($statistics); // ส่งข้อมูลกลับในรูปแบบ JSON
+    if ($year) {
+        $tasks->whereYear('tsk_due_date', $year - 543);
     }
+
+    if ($month && $month != 'all') {
+        $tasks->whereMonth('tsk_due_date', $month);
+    }
+
+    $tasks = $tasks->get();
+
+    $completedTasks = $tasks->filter(function ($task) {
+        return $task->tsk_status === 'Completed' && $task->tsk_completed_date !== null;
+    });
+
+    $delayedTasks = $tasks->filter(function ($task) {
+        return $task->tsk_status === 'Completed' &&
+            $task->tsk_completed_date !== null &&
+            $task->tsk_completed_date > $task->tsk_due_date;
+    });
+
+    $rejectedTasks = $tasks->filter(function ($task) {
+        return $task->tsk_status === 'Rejected';
+    });
+
+    $statistics = [
+        'total' => $tasks->count(),
+        'completed' => $completedTasks->count(),
+        'delayed' => $delayedTasks->count(),
+        'rejected' => $rejectedTasks->count(),
+    ];
+
+    return response()->json($statistics);
+}
+
     /*
     * getTaskStatisticsCompany(Request $request)
     * get work request statistics for the company
@@ -120,7 +121,9 @@ class ReportController extends Controller
     */
     public function getTaskStatisticsCompany(Request $request)
     {
-        $tasks = Task::query();
+        $tasks = Task::whereHas('workRequest', function ($query) {
+            $query->where('req_draft_status', 'A');
+        });
 
         $year = $request->input('year');
         $month = $request->input('month');
