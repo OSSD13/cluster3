@@ -231,7 +231,7 @@
                 text: 'เมื่อกดยืนยัน ใบงานจะถูกจัดเก็บ',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'ใช่, ยืนยัน!',
+                confirmButtonText: 'ยืนยัน',
                 cancelButtonText: 'ยกเลิก',
                 reverseButtons: true,
                 buttonsStyling: false,
