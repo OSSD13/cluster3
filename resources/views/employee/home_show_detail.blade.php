@@ -311,7 +311,7 @@
          * @Create Date : 2025-04-10
      */
 document.getElementById('floatingTextarea2').addEventListener('input', function (e) {
-    const maxLength = 1000;
+    const maxLength = 500;
     const currentLength = e.target.value.length;
 
     if (currentLength > maxLength) {
