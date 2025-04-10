@@ -109,7 +109,6 @@ class EditDraftController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback(); // ยกเลิกหากเกิด error
-            dd($e);
             return redirect()->back()->withErrors(['error' => 'เกิดข้อผิดพลาดในการอัปเดต: ' . $e->getMessage()]);
         }
     }
