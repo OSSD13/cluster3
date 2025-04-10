@@ -38,6 +38,12 @@
             <p class="me-3"><strong>คำอธิบาย</strong></p>
             <p style="margin-left: 90px;">{{ $reqDescription }}</p> <!-- placeholder -->
         </div>
+        @foreach ($tasks as $task)
+            <div class="d-flex" style="padding: 10px 0; margin-left: 20px; border-top: 1px solid #E9E9E9;">
+                <p class="me-3"><strong>เหตุผลการปฏิเสธ</strong></p>
+                <p style="margin-left: 35px;">{{ $task->tsk_comment_reject ?? 'ไม่มีความคิดเห็น' }}</p>
+            </div>
+        @endforeach
     </div>
 
     {{-- Tasks Table Section --}}
